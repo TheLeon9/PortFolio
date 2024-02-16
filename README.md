@@ -3,7 +3,9 @@
 Welcome to my online portfolio! 💎 And Step into my digital realm! 🌏
 Feel free to wander around and discover the wonders of my online portfolio. 🥷🏻
 
-**Table of Contents**
+---
+
+# ✨ Table of Contents
 
 - [Introduction](#%EF%B8%8F-introduction)
 - [Inspiration](#-inspiration)
@@ -19,7 +21,7 @@ Feel free to wander around and discover the wonders of my online portfolio. 🥷
 
 ## ⛩️ Introduction
 
-Hey 👋🏻, I'm Moracchini Florian, a :flag_fr: passionate web developer and designer. This portfolio is my creative hub, where I showcase projects, explore ideas, and narrate my digital journey.
+Hey 👋🏻, I'm Moracchini Florian, a 🟦⬜🟥 passionate web developer and designer. This portfolio is my creative hub, where I showcase projects, explore ideas, and narrate my digital journey. 🎮
 
 ## 🌠 Inspiration
 
@@ -82,10 +84,10 @@ For any inquiries, suggestions, or collaboration opportunities, don't hesitate t
 
 ## 🧑🏻‍💻 Author
 
-Created with 💙 by TheLeon.
+Created by TheLeon 🔥.
 
 > "Creativity is intelligence having fun." - Albert Einstein ☄️
 
 Thanks for visiting my portfolio! 🩵
 
-And as we say in France : Merci ! 👊🏻
+And as we say in France : Merci ! 💙🤍❤️
