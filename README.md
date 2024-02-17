@@ -14,7 +14,7 @@ Feel free to wander around and discover the wonders of my online portfolio. 🥷
 - [Technologies Used](#-technologies-used)
 - [Site URL](#-site-url)
 - [License](#-license)
-- [Contact](#-contact)
+- [Contact](#%EF%B8%8F-contact)
 - [Author](#-author)
 
 ---
