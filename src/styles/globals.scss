@@ -7,15 +7,15 @@
 // ------------------------------+
 
 * {
-  box-sizing: unset;
-  font-family: "Orbitron", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-  letter-spacing: normal;
+  overflow: hidden;
+  letter-spacing: $letter_spacing;
+  line-height: $line_height;
 }
 
 // ------------------------------+
@@ -24,52 +24,40 @@ body {
 //
 // ------------------------------+
 
-// .p {
-//   color: $white_color;
-//   font-size: $font_size;
-//   font-family: $second_font;
-//   &_small_small {
-//     font-size: $small_small_font_size;
-//   }
-//   &_small {
-//     font-size: $small_font_size;
-//   }
-//   &_medium {
-//     font-size: $medium_font_size;
-//   }
-//   &_big {
-//     font-size: $big_font_size;
-//   }
-// }
-// .span {
-//   color: $first_color;
-//   font-size: $font_size;
-//   font-family: $second_font;
-//   &_small {
-//     font-size: $small_font_size;
-//   }
-//   &_medium {
-//     font-size: $medium_font_size;
-//   }
-//   &_big {
-//     font-size: $big_font_size;
-//   }
-//   &_light {
-//     color: $second_color;
-//   }
-//   &_light_small {
-//     color: $second_color;
-//     font-size: $small_font_size;
-//   }
-//   &_light_medium {
-//     color: $second_color;
-//     font-size: $medium_font_size;
-//   }
-//   &_light_big {
-//     color: $second_color;
-//     font-size: $big_font_size;
-//   }
-// }
+p {
+  font-family: $second_font;
+
+  @media only screen and (max-width: $phone_width) {
+    font-size: $small_small_font_size;
+  }
+}
+
+.p {
+  &_small_small {
+    font-size: $small_small_font_size;
+  }
+  &_small {
+    font-size: $small_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+    }
+  }
+  &_medium {
+    font-size: $medium_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+    }
+  }
+  &_big {
+    font-size: $big_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+    }
+  }
+  &_bold {
+    font-weight: $font_weight_bold;
+  }
+}
 
 // ------------------------------+
 //
@@ -77,12 +65,12 @@ body {
 //
 // ------------------------------+
 
-// *::selection {
-//   background-color: $white_color;
-//   color: $black_color;
-// }
+*::selection {
+  background-color: $black_color;
+  color: $light_blue;
+}
 
-// *::-moz-selection {
-//   background-color: $white_color;
-//   color: $black_color;
-// }
+*::-moz-selection {
+  background-color: $black_color;
+  color: $light_blue;
+}

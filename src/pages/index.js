@@ -1,7 +1,7 @@
 import style from '@/styles/index/index.module.scss';
 
 function Index() {
-  return <div>Bienvenue sur mon portfolio Next.js !</div>;
+  return <div></div>;
 }
 
 export default Index;

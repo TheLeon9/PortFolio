@@ -1,11 +1,212 @@
+@import '@/styles/variables.scss';
+
 // ------------------------------+
 //
 //          NAV BAR
 //
 // ------------------------------+
 
-.header {
-  width: 600px;
-  height: 100px;
-  background-color: blue;
+.header_cont {
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 2%;
+  left: 50%;
+  transform: translate(-50%, -2%);
+
+  @media only screen and (max-width: $phone_width) {
+    width: 96%;
+    height: 100px;
+  }
+
+  .header {
+    width: 20%;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: $white_color;
+    border-radius: $border_radius;
+
+    @media only screen and (max-width: $phone_width) {
+      height: 40px;
+      width: 100%;
+    }
+  }
+
+  .header_center {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $white_color;
+    border-radius: $border_radius;
+
+    @media only screen and (max-width: $phone_width) {
+      height: 60px;
+      width: 60px;
+    }
+
+    .btn_logo {
+      background: none;
+      border: none;
+      cursor: pointer;
+      outline: none;
+
+      .navbar_logo {
+        @media only screen and (max-width: $phone_width) {
+          width: 28px;
+          height: 28px;
+        }
+      }
+    }
+  }
+
+  .nav_bar_link {
+    width: 80px;
+    overflow: hidden;
+    position: relative;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+
+    @media only screen and (max-width: $phone_width) {
+      width: 48px;
+      height: 20px;
+    }
+
+    p {
+      display: inline-block;
+      background-image: $gradient_blue;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      &:nth-child(1) {
+        transform-origin: top;
+        transition: transform $transition_time ease-in-out;
+      }
+      &:nth-child(2) {
+        transform: translate3d(0, 120%, 0);
+        position: absolute;
+        opacity: 1;
+        transition: all $transition_time ease-in-out;
+      }
+    }
+
+    &:hover p:nth-child(1) {
+      transform: translateY(-120%);
+    }
+    &:hover p:nth-child(2) {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      bottom: 0%;
+      left: 50%;
+      transform: translate(-50%, -0%);
+      opacity: 1;
+      z-index: 2;
+      width: 0%;
+      height: $border_width;
+      background: $gradient_blue;
+      transition: width $transition_time ease-in-out;
+    }
+
+    &:hover:before {
+      width: 50%;
+    }
+  }
+}
+
+// ------------------------------+
+//
+//       NAV BAR OPEN
+//
+// ------------------------------+
+
+.navbar_close_text {
+  display: flex;
+}
+
+.navbar_close {
+  animation: grows $transition_time forwards;
+
+  @media only screen and (max-width: $phone_width) {
+    animation: growsPhone $transition_time forwards;
+  }
+
+  .navbar_logo {
+    transition: $transition;
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes grows {
+  from {
+    width: 120px;
+  }
+  to {
+    width: 600px;
+  }
+}
+
+@keyframes growsPhone {
+  from {
+    width: 60px;
+  }
+  to {
+    width: 96%;
+  }
+}
+
+// ------------------------------+
+//
+//        NAV BAR CLOSE
+//
+// ------------------------------+
+
+.navbar_open_text {
+  display: none;
+}
+
+.navbar_open {
+  animation: shrink $transition_time forwards;
+
+  @media only screen and (max-width: $phone_width) {
+    animation: shrinkPhone $transition_time forwards;
+  }
+
+  .navbar_logo {
+    transition: $transition;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shrink {
+  from {
+    width: 600px;
+  }
+  to {
+    width: 120px;
+  }
+}
+
+@keyframes shrinkPhone {
+  from {
+    width: 96%;
+  }
+  to {
+    width: 60px;
+  }
 }
