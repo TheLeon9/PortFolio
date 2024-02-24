@@ -2,12 +2,111 @@
 
 // ------------------------------+
 //
-//          SHARE BTN 
+//          SHARE BTN
 //
 // ------------------------------+
 
 .share_btn_cont {
-  width: 100px;
-  height: 100px;
-  background-color: red;
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  right: 2%;
+  top: 2%;
+
+  .btn_github,
+  .btn_link,
+  .btn_share {
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: $circle_border_radius;
+    cursor: pointer;
+    outline: none;
+    transition: $transition;
+
+    &:hover {
+      transform: rotate(20deg);
+
+      @keyframes rotateAnimation {
+        0% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(45deg);
+        }
+        75% {
+          transform: rotate(-45deg);
+        }
+        100% {
+          transform: rotate(0deg);
+        }
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        height: 46px;
+        width: 46px;
+        border: solid $border_width_big $light_mauve;
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+        border-radius: $circle_border_radius;
+        animation: rotateAnimation 2s linear infinite;
+      }
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .btn_share {
+    &.btn_share_open {
+      border: none;
+      background: $white_color;
+    }
+
+    &.btn_share_close {
+      border: solid $border_width $white_color;
+      background: transparent;
+      img {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  .btn_github,
+  .btn_link {
+    border: none;
+    background: $white_color;
+
+    &.btn_github_open {
+      top: 0px;
+      opacity: 1;
+      z-index: -1;
+    }
+
+    &.btn_github_close {
+      top: 60px;
+      opacity: 1;
+      z-index: 1;
+    }
+
+    &.btn_link_open {
+      top: 0px;
+      opacity: 1;
+      z-index: -1;
+    }
+
+    &.btn_link_close {
+      top: 120px;
+      opacity: 1;
+      z-index: 1;
+    }
+  }
 }

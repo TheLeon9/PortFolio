@@ -7,7 +7,7 @@
 // ------------------------------+
 
 .header_cont {
-  height: 120px;
+  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,7 +23,7 @@
 
   .header {
     width: 20%;
-    height: 100px;
+    height: 80px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -37,8 +37,8 @@
   }
 
   .header_center {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -154,7 +154,7 @@
 
 @keyframes grows {
   from {
-    width: 120px;
+    width: 100px;
   }
   to {
     width: 600px;
@@ -198,7 +198,7 @@
     width: 600px;
   }
   to {
-    width: 120px;
+    width: 100px;
   }
 }
 

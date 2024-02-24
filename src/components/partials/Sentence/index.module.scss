@@ -7,7 +7,27 @@
 // ------------------------------+
 
 .sentence_cont {
-  width: 100px;
-  height: 100px;
-  background-color: red;
+  position: absolute;
+  left: 2%;
+  bottom: 2%;
+
+  @media only screen and (max-width: $phone_width) {
+    bottom: 0%;
+  }
+
+  .sentence {
+    font-family: $first_font;
+    font-size: $medium_font_size;
+    font-weight: $font_weight_bold;
+    display: inline-block;
+    background-image: $gradient_blue;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+      text-align: center;
+    }
+  }
 }
