@@ -35,7 +35,7 @@ const Sentence = () => {
         <span className={`word ${style.word}`}>n</span>
         <span className={`word ${style.word}`}>e</span>
         &nbsp;
-        <span className={`word ${style.word}`}>·</span>
+        <div className={`word ${style.word_dot}`}></div>
         &nbsp;
         <span className={`word ${style.word}`}>C</span>
         <span className={`word ${style.word}`}>r</span>
@@ -44,7 +44,7 @@ const Sentence = () => {
         <span className={`word ${style.word}`}>t</span>
         <span className={`word ${style.word}`}>e</span>
         &nbsp;
-        <span className={`word ${style.word}`}>·</span>
+        <div className={`word ${style.word_dot}`}></div>
         &nbsp;
         <span className={`word ${style.word}`}>I</span>
         <span className={`word ${style.word}`}>n</span>

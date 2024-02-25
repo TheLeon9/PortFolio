@@ -7,7 +7,181 @@
 // ------------------------------+
 
 .scroll_btn_cont {
-  width: 100px;
-  height: 100px;
-  background-color: red;
+  position: absolute;
+  right: 2%;
+  bottom: 2%;
+  width: 88px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media only screen and (max-width: $phone_width) {
+    bottom: 0%;
+  }
+
+  .scroll_circle_right,
+  .scroll_circle_left {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -20px;
+    background-color: transparent;
+    opacity: 1;
+    border-top: solid $border_width transparent;
+    border-left: solid $border_width transparent;
+    border-right: solid $border_width transparent;
+    border-bottom: solid $border_width $light_mauve;
+    border-radius: $circle_border_radius;
+  }
+
+  .scroll_circle_left {
+    animation: scrollCircleLeft $big_transition_time infinite linear;
+    @keyframes scrollCircleLeft {
+      0%,
+      100% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 0;
+      }
+      51% {
+        opacity: 1;
+        transform: rotate(0deg);
+      }
+      74% {
+        opacity: 1;
+        transform: rotate(160deg);
+      }
+      75% {
+        opacity: 0;
+      }
+    }
+  }
+
+  .scroll_circle_right {
+    animation: scrollCircleRight $big_transition_time infinite linear;
+    @keyframes scrollCircleRight {
+      0%,
+      100% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 0;
+      }
+      51% {
+        opacity: 1;
+        transform: rotate(0deg);
+      }
+      74% {
+        transform: rotate(-160deg);
+        opacity: 1;
+      }
+      75% {
+        opacity: 0;
+      }
+    }
+  }
+
+  .scroll_circle_dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: $light_mauve;
+    border-radius: $circle_border_radius;
+
+    animation: scrollCircleDot $big_transition_time infinite linear;
+
+    $transalte_circle_do: 10px;
+
+    @media only screen and (max-width: $phone_width) {
+      $transalte_circle_do: 4px;
+    }
+    
+    @keyframes scrollCircleDot {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      25%,
+      26% {
+        transform: translateY($transalte_circle_do);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+      51%,
+      74% {
+        opacity: 0;
+      }
+      75% {
+        opacity: 1;
+        transform: translateY(-30px);
+      }
+    }
+  }
+
+  .scroll_down_sentence {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-family: $first_font;
+    font-weight: $font_weight_regular;
+    color: $white_color;
+    font-size: $small_small_font_size;
+
+    $rotation_up: 10deg;
+    $rotation_down: -10deg;
+    $transalte: 10px;
+
+    @media only screen and (max-width: $phone_width) {
+      $rotation_up: 4deg;
+      $rotation_down: -4deg;
+      $transalte: 4px;
+    }
+
+    .word_scroll {
+      animation: scrollAnimation $big_transition_time infinite linear;
+      transform-origin: right;
+
+      @keyframes scrollAnimation {
+        0% {
+          transform: translateY(0) rotate(0deg);
+        }
+        25% {
+          transform: translateY($transalte) rotate($rotation_up);
+        }
+        50% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+      }
+    }
+
+    .word_down {
+      animation: downAnimation $big_transition_time infinite linear;
+      transform-origin: left;
+
+      @keyframes downAnimation {
+        0% {
+          transform: translateY(0) rotate(0deg);
+        }
+        25% {
+          transform: translateY($transalte) rotate($rotation_down);
+        }
+        50% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+      }
+    }
+  }
 }

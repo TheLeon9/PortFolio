@@ -18,12 +18,19 @@
   .sentence {
     font-family: $first_font;
     font-size: $medium_font_size;
-    font-weight: $font_weight_bold;
+    font-weight: $font_weight_regular;
     display: inline-block;
-    background-image: $gradient_blue;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
+    color: $white_color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .word_dot {
+      width: 4px;
+      height: 4px;
+      background-color: $light_mauve;
+      border-radius: $circle_border_radius;
+    }
 
     @media only screen and (max-width: $phone_width) {
       font-size: $small_small_font_size;
