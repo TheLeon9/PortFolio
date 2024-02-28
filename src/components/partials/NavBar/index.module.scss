@@ -122,6 +122,19 @@
       transition: width $transition_time ease-in-out;
     }
 
+    &.active {
+      p:nth-child(1) {
+        transform: translateY(-120%);
+      }
+      p:nth-child(2) {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+      &::before {
+        width: 40%;
+      }
+    }
+
     &:hover:before {
       width: 40%;
     }

@@ -5,7 +5,7 @@ import style from './index.module.scss';
 
 import Logo from 'p/img/logo/logo_fm.svg';
 
-const NavBar = () => {
+const NavBar = ({ setActiveSection, activeSection }) => {
   const [navBarOpen, setNavBarOpen] = useState(false);
   const [navBarOpenText, setNavBarOpenText] = useState(true);
 
@@ -51,23 +51,28 @@ const NavBar = () => {
           navBarOpen ? style.navbar_open : style.navbar_close
         }`}
       >
+        {/* Button About */}
         <button
+          onClick={() => setActiveSection('About')}
           className={`${style.nav_bar_link} ${
             navBarOpenText ? style.navbar_open_text : style.navbar_close_text
-          }`}
+          } ${activeSection === 'About' ? style.active : ''}`}
         >
           <p className={`p_medium p_bold`}>About</p>
           <p className={`p_medium p_bold`}>About</p>
         </button>
+        {/* Button Contact */}
         <button
+          onClick={() => setActiveSection('Contact')}
           className={`${style.nav_bar_link} ${
             navBarOpenText ? style.navbar_open_text : style.navbar_close_text
-          }`}
+          } ${activeSection === 'Contact' ? style.active : ''}`}
         >
           <p className={`p_medium p_bold`}>Contact</p>
           <p className={`p_medium p_bold`}>Contact</p>
         </button>
         <div className={style.header_center}>
+          {/* Button Nav Bar */}
           <button onClick={handleHeaderClick} className={style.btn_logo}>
             <Image
               src={Logo.src}
@@ -78,18 +83,22 @@ const NavBar = () => {
             />
           </button>
         </div>
+        {/* Button Projects */}
         <button
+          onClick={() => setActiveSection('Projects')}
           className={`${style.nav_bar_link} ${
             navBarOpenText ? style.navbar_open_text : style.navbar_close_text
-          }`}
+          } ${activeSection === 'Projects' ? style.active : ''}`}
         >
           <p className={`p_medium p_bold`}>Projects</p>
           <p className={`p_medium p_bold`}>Projects</p>
         </button>
+        {/* Button Skills */}
         <button
+          onClick={() => setActiveSection('Skills')}
           className={`${style.nav_bar_link} ${
             navBarOpenText ? style.navbar_open_text : style.navbar_close_text
-          }`}
+          } ${activeSection === 'Skills' ? style.active : ''}`}
         >
           <p className={`p_medium p_bold`}>Skills</p>
           <p className={`p_medium p_bold`}>Skills</p>

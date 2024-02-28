@@ -15,9 +15,9 @@ const ShareBtn = () => {
 
   useEffect(() => {
     if (shareOpen) {
-      setLogoPath(CloseShare.src);
+      setLogoPath(CloseShare);
     } else {
-      setLogoPath(LogoShare.src);
+      setLogoPath(LogoShare);
     }
   }, [shareOpen]);
 
@@ -27,14 +27,16 @@ const ShareBtn = () => {
 
   return (
     <div className={style.share_btn_cont}>
+      {/* Open and Close Share Button */}
       <button
         onClick={handleShareClicked}
         className={`${style.btn_share} ${
           shareOpen ? style.btn_share_close : style.btn_share_open
         }`}
       >
-        <Image src={logoPath} alt="Logo Share" width={20} height={20} />
+        <Image src={logoPath.src} alt="Logo Share" width={20} height={20} />
       </button>
+      {/* GitHub Button */}
       <Link href="https://github.com/TheLeon9" target="_blank">
         <button
           className={`${style.btn_github} ${
@@ -49,6 +51,7 @@ const ShareBtn = () => {
           />
         </button>
       </Link>
+      {/* LinkedIn Button */}
       <Link
         href="https://www.linkedin.com/in/florian-moracchini/"
         target="_blank"
