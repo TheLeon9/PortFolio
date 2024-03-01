@@ -12,4 +12,27 @@
   overflow: hidden;
   position: relative;
   background-color: $black_color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .home_btn_cont {
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: $layout_margin;
+    left: $layout_margin;
+
+    .home_btn {
+      border: none;
+      background: none;
+      outline: none;
+
+      .home_logo{
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+      }
+    }
+  }
 }

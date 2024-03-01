@@ -17,11 +17,9 @@ const NavBar = ({ setActiveSection, activeSection }) => {
     const timer = setTimeout(() => {
       setNavBarOpenText(false);
 
-      // Clear the timer to avoid memory leaks
       return () => clearTimeout(timer);
     }, delayOpen);
 
-    // Clear the timer if the component is unmounted before the delay is reached
     return () => clearTimeout(timer);
   }, []);
 
@@ -72,6 +70,11 @@ const NavBar = ({ setActiveSection, activeSection }) => {
           <p className={`p_medium p_bold`}>Contact</p>
         </button>
         <div className={style.header_center}>
+          {/* Light Mauve Dot Around Button */}
+          <div className={style.dot_top_left}></div>
+          <div className={style.dot_top_right}></div>
+          <div className={style.dot_bottom_right}></div>
+          <div className={style.dot_bottom_left}></div>
           {/* Button Nav Bar */}
           <button onClick={handleHeaderClick} className={style.btn_logo}>
             <Image
