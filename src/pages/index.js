@@ -1,7 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import style from '@/styles/index/index.module.scss';
 
-const IndexPage = ({ activeSection }) => {
+const IndexPage = () => {
+  const [activeSection, setActiveSection] = useState('');
+
+  useEffect(() => {
+    const storedActiveSection = localStorage.getItem('activeSection');
+    setActiveSection(storedActiveSection || '');
+
+    const handleStorageChange = () => {
+      const updatedActiveSection = localStorage.getItem('activeSection');
+      setActiveSection(updatedActiveSection || '');
+    };
+
+    window.addEventListener('storageChange', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storageChange', handleStorageChange);
+    };
+  }, []);
+
   useEffect(() => {
     console.log(activeSection);
   }, [activeSection]);

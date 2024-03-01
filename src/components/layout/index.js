@@ -9,9 +9,10 @@ import Sentence from '@/components/partials/Sentence';
 const Layout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('');
 
-  // useEffect(() => {
-  //   console.log(activeSection);
-  // }, [activeSection]);
+  useEffect(() => {
+    localStorage.setItem('activeSection', activeSection);
+    window.dispatchEvent(new Event('storageChange'));
+  }, [activeSection]);
 
   return (
     <div className={style.global_cont}>
