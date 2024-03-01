@@ -13,6 +13,11 @@
   top: $layout_margin;
   right: $layout_margin;
 
+  @media only screen and (max-width: $phone_width) {
+    width: 28px;
+    height: 28px;
+  }
+
   .btn_github,
   .btn_link,
   .btn_share {
@@ -27,6 +32,11 @@
     outline: none;
     transition: $transition;
 
+    @media only screen and (max-width: $phone_width) {
+      width: 28px;
+      height: 28px;
+    }
+
     &:hover {
       transform: rotate(20deg);
 
@@ -39,12 +49,22 @@
         border-top-color: transparent;
         border-bottom-color: transparent;
         border-radius: $circle_border_radius;
+
+        @media only screen and (max-width: $phone_width) {
+          width: 34px;
+          height: 34px;
+        }
       }
     }
 
     img {
       width: 20px;
       height: 20px;
+
+      @media only screen and (max-width: $phone_width) {
+        width: 14px;
+        height: 14px;
+      }
     }
   }
 
@@ -60,6 +80,11 @@
       img {
         width: 14px;
         height: 14px;
+
+        @media only screen and (max-width: $phone_width) {
+          width: 10px;
+          height: 10px;
+        }
       }
     }
   }
@@ -79,6 +104,10 @@
       top: 60px;
       opacity: 1;
       z-index: 1;
+
+      @media only screen and (max-width: $phone_width) {
+        top: 38px;
+      }
     }
 
     &.btn_link_open {
@@ -91,6 +120,10 @@
       top: 120px;
       opacity: 1;
       z-index: 1;
+      
+      @media only screen and (max-width: $phone_width) {
+        top: 76px;
+      }
     }
   }
 }

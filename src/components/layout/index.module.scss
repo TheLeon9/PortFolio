@@ -28,10 +28,15 @@
       background: none;
       outline: none;
 
-      .home_logo{
+      .home_logo {
         width: 40px;
         height: 40px;
         cursor: pointer;
+        
+        @media only screen and (max-width: $phone_width) {
+          width: 28px;
+          height: 28px;
+        }
       }
     }
   }
