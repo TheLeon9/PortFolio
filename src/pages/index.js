@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import style from '@/styles/index/index.module.scss';
 
+import SectionPresentation from '@/components/UI/SectionPresentation';
+
 const IndexPage = () => {
   const [activeSection, setActiveSection] = useState('');
 
@@ -20,40 +22,45 @@ const IndexPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(activeSection);
-  }, [activeSection]);
+  // useEffect(() => {
+  //   console.log(activeSection);
+  // }, [activeSection]);
 
   return (
-    <div>
+    <div className={style.global_page_container}>
       {activeSection === '' && (
-        <section>
-          <p>Home</p>
-        </section>
+        <SectionPresentation
+          presentationTitle="MORACCHINI FLORIAN"
+          presentationText="Home"
+        />
       )}
 
       {activeSection === 'About' && (
-        <section>
-          <p>About</p>
-        </section>
+        <SectionPresentation
+          presentationTitle="ABOUT"
+          presentationText="Learn more about who I am and what I do"
+        />
       )}
 
       {activeSection === 'Contact' && (
-        <section>
-          <p>Contact</p>
-        </section>
+        <SectionPresentation
+          presentationTitle="CONTACT"
+          presentationText="Find out how to get in touch with me"
+        />
       )}
 
       {activeSection === 'Projects' && (
-        <section>
-          <p>Projets</p>
-        </section>
+        <SectionPresentation
+          presentationTitle="PROJECTS"
+          presentationText="Explore a showcase of my diverse projects"
+        />
       )}
 
       {activeSection === 'Skills' && (
-        <section>
-          <p>Skills</p>
-        </section>
+        <SectionPresentation
+          presentationTitle="SKILLS"
+          presentationText="Discover the various skills and technologies I work with"
+        />
       )}
     </div>
   );

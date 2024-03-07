@@ -21,6 +21,10 @@ const Layout = ({ children }) => {
     setActiveSection('');
   };
 
+  // 3D
+
+  // PAGE LOADING
+  
   return (
     <div className={style.global_cont}>
       {/* Corner Top Left */}

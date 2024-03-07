@@ -27,6 +27,7 @@ body {
 p {
   font-family: $second_font;
   color: $white_color;
+  font-weight: $font_weight_regular;
 
   @media only screen and (max-width: $phone_width) {
     font-size: $small_small_font_size;

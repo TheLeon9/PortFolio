@@ -1,0 +1,69 @@
+@import '@/styles/variables.scss';
+
+// ------------------------------+
+//
+//      SECTION PRESENTATION
+//
+// ------------------------------+
+
+.section_presentation_cont {
+  position: absolute;
+  left: $inner_margin;
+  bottom: $inner_margin;
+  width: 480px;
+  height: 200px;
+
+  @media only screen and (max-width: $phone_width) {
+    width: 50%;
+    height: 20%;
+  }
+
+  .presentation_title {
+    font-family: $first_font;
+    color: $white_color;
+    font-size: $title_font_size;
+    font-weight: $font_weight_bold;
+    position: relative;
+
+    &::before {
+      content: '';
+      width: 80px;
+      height: $border_width_big;
+      background-color: $light_mauve;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+      @media only screen and (max-width: $phone_width) {
+        width: 40px;
+        height: $border_width;
+      }
+    }
+
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_font_size;
+    }
+  }
+
+  p {
+    margin-top: $small_margin;
+
+    span {
+      position: relative;
+      &::before {
+        content: '';
+        width: 16px;
+        height: $border_width_big;
+        background-color: $light_mauve;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+
+        @media only screen and (max-width: $phone_width) {
+          width: 6px;
+          height: $border_width;
+        }
+      }
+    }
+  }
+}
