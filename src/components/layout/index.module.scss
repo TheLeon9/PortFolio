@@ -11,7 +11,6 @@
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background-color: $black_color;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,12 +31,19 @@
         width: 40px;
         height: 40px;
         cursor: pointer;
-        
+
         @media only screen and (max-width: $phone_width) {
           width: 28px;
           height: 28px;
         }
       }
     }
+  }
+
+  .webgl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
   }
 }

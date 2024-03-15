@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "gsap": "^3.12.5",
+    "lil-gui": "^0.19.2",
     "next": "^13.5.4",
     "postprocessing": "^6.34.3",
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.71.0",
-    "three": "^0.161.0"
+    "three": "^0.161.0",
+    "three-custom-shader-material": "5.4"
   },
   "devDependencies": {
     "eslint": "^8",
