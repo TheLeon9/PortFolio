@@ -5,7 +5,6 @@ import style from './index.module.scss';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import GUI from 'lil-gui';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 // Shaders
@@ -30,19 +29,19 @@ const Layout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('');
   const [isLoading, setLoader] = useState(false);
 
+  //--------------------------------------------------+
+  //
+  // Color SCSS
+  //
+  //--------------------------------------------------+
+
+  const white_color = '#f8f8ff';
+  const black_color = '#1c1c1c';
+  const dark_blue = '#0132b5';
+  const medium_blue = '#2c75ff';
+  const light_blue = '#26c4ec';
+
   useEffect(() => {
-    //--------------------------------------------------+
-    //
-    // Gui
-    //
-    //--------------------------------------------------+
-
-    const gui = new GUI({ width: 325 });
-
-    const folderUniforms = gui.addFolder('Uniforms');
-    const folderWrapUniforms = gui.addFolder('Wrap Uniforms');
-    const folderMaterial = gui.addFolder('Material');
-    const folderColors = gui.addFolder('Colors');
     const debugObject = {};
 
     //--------------------------------------------------+
@@ -55,15 +54,20 @@ const Layout = ({ children }) => {
 
     const scene = new THREE.Scene();
 
+    // Background
+    scene.background = new THREE.Color(white_color);
+
     //--------------------------------------------------+
     //
     // Material - Gui Add
     //
     //--------------------------------------------------+
 
-    debugObject.mainColor = '#26c4ec';
-    debugObject.secondColor = '#9370db';
+    // Wobble
+    debugObject.mainColor = white_color;
+    debugObject.secondColor = light_blue;
 
+    // Wobble
     const uniforms = {
       uTime: new THREE.Uniform(0),
       uPositionFrequency: new THREE.Uniform(0.5),
@@ -112,43 +116,60 @@ const Layout = ({ children }) => {
       depthPacking: THREE.RGBADepthPacking,
     });
 
-    // Tweaks lil-gui
-    // Folder Uniforms
-    folderUniforms
-      .add(uniforms.uPositionFrequency, 'value', 0, 2, 0.001)
-      .name('uPositionFrequency');
-    folderUniforms
-      .add(uniforms.uTimeFrequency, 'value', 0, 2, 0.001)
-      .name('uTimeFrequency');
-    folderUniforms
-      .add(uniforms.uStrength, 'value', 0, 2, 0.001)
-      .name('uStrength');
+    //--------------------------------------------------+
+    //
+    // Gui
+    //
+    //--------------------------------------------------+
 
-    // Folder Wrap Uniforms
-    folderWrapUniforms
-      .add(uniforms.uWarpPositionFrequency, 'value', 0, 2, 0.001)
-      .name('uWarpPositionFrequency');
-    folderWrapUniforms
-      .add(uniforms.uWarpTimeFrequency, 'value', 0, 2, 0.001)
-      .name('uWarpTimeFrequency');
-    folderWrapUniforms
-      .add(uniforms.uWarpStrength, 'value', 0, 2, 0.001)
-      .name('uWarpStrength');
+    // Check if there is '#debug' in the URL
+    const isDebug = window.location.hash.includes('#debug');
 
-    // Folder Material
-    folderMaterial.add(material, 'metalness', 0, 1, 0.001);
-    folderMaterial.add(material, 'roughness', 0, 1, 0.001);
-    folderMaterial.add(material, 'transmission', 0, 1, 0.001);
-    folderMaterial.add(material, 'ior', 0, 10, 0.001);
-    folderMaterial.add(material, 'thickness', 0, 10, 0.001);
+    if (isDebug) {
+      const gui = new GUI({ width: 325 });
 
-    // Colors
-    folderColors
-      .addColor(debugObject, 'mainColor')
-      .onChange(() => uniforms.uMainColor.value.set(debugObject.mainColor));
-    folderColors
-      .addColor(debugObject, 'secondColor')
-      .onChange(() => uniforms.uSecondColor.value.set(debugObject.secondColor));
+      // Wobble Sphere
+      const folderUniforms = gui.addFolder('Uniforms');
+      const folderWrapUniforms = gui.addFolder('Wrap Uniforms');
+      const folderMaterial = gui.addFolder('Material');
+      const folderColors = gui.addFolder('Colors');
+
+      // Tweaks lil-gui
+      // Folder Uniforms
+      folderUniforms
+        .add(uniforms.uPositionFrequency, 'value', 0, 1, 0.001)
+        .name('uPositionFrequency');
+      folderUniforms
+        .add(uniforms.uTimeFrequency, 'value', 0, 1, 0.001)
+        .name('uTimeFrequency');
+      folderUniforms
+        .add(uniforms.uStrength, 'value', 0, 0.8, 0.001)
+        .name('uStrength');
+
+      // Folder Wrap Uniforms
+      folderWrapUniforms
+        .add(uniforms.uWarpPositionFrequency, 'value', 0, 0.5, 0.001)
+        .name('uWarpPositionFrequency');
+      folderWrapUniforms
+        .add(uniforms.uWarpTimeFrequency, 'value', 0, 1, 0.001)
+        .name('uWarpTimeFrequency');
+      folderWrapUniforms
+        .add(uniforms.uWarpStrength, 'value', 0, 1.8, 0.001)
+        .name('uWarpStrength');
+
+      // Folder Material
+      folderMaterial.add(material, 'transmission', 0, 1, 0.001);
+
+      // Colors
+      folderColors
+        .addColor(debugObject, 'mainColor')
+        .onChange(() => uniforms.uMainColor.value.set(debugObject.mainColor));
+      folderColors
+        .addColor(debugObject, 'secondColor')
+        .onChange(() =>
+          uniforms.uSecondColor.value.set(debugObject.secondColor)
+        );
+    }
 
     //--------------------------------------------------+
     //
@@ -157,27 +178,29 @@ const Layout = ({ children }) => {
     //--------------------------------------------------+
 
     // IcoSphere
-    let geometry = new THREE.IcosahedronGeometry(2.5, 50);
-    geometry = mergeVertices(geometry);
-    geometry.computeTangents();
+    let sphereGeometry = new THREE.IcosahedronGeometry(2.4, 50);
+    sphereGeometry = mergeVertices(sphereGeometry);
+    sphereGeometry.computeTangents();
 
     // Mesh
-    const wobble = new THREE.Mesh(geometry, material);
+    const wobble = new THREE.Mesh(sphereGeometry, material);
     wobble.customDepthMaterial = depthMaterial;
-    wobble.receiveShadow = true;
-    wobble.castShadow = true;
+    wobble.position.y = 0.6;
     scene.add(wobble);
 
-    // Plane
-    const plane = new THREE.Mesh(
-      new THREE.PlaneGeometry(15, 15, 15),
-      new THREE.MeshStandardMaterial()
-    );
-    plane.receiveShadow = true;
-    plane.rotation.y = Math.PI;
-    plane.position.y = -5;
-    plane.position.z = 5;
-    scene.add(plane);
+    // Wave Plane
+    let planeGeometry = new THREE.PlaneGeometry(30, 10, 100, 100);
+    planeGeometry = mergeVertices(planeGeometry);
+    planeGeometry.computeTangents();
+
+    // Wave Plane Mesh
+    const wavePlane = new THREE.Mesh(planeGeometry, material);
+    wavePlane.customDepthMaterial = depthMaterial;
+    wavePlane.rotation.y = Math.PI;
+    wavePlane.rotation.x = THREE.MathUtils.degToRad(90);
+    wavePlane.position.y = -4;
+    wavePlane.position.z = 1;
+    scene.add(wavePlane);
 
     //--------------------------------------------------+
     //
@@ -185,14 +208,16 @@ const Layout = ({ children }) => {
     //
     //--------------------------------------------------+
 
-    const directionalLight = new THREE.DirectionalLight('#ffffff', 3);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.set(1024, 1024);
-    directionalLight.shadow.camera.far = 15;
-    directionalLight.shadow.normalBias = 0.05;
-    directionalLight.position.set(0.25, 2, -2.25);
+    const light = new THREE.HemisphereLight(white_color, black_color, 4);
+    scene.add(light);
 
-    scene.add(directionalLight);
+    //--------------------------------------------------+
+    //
+    // FOG
+    //
+    //--------------------------------------------------+
+
+    scene.fog = new THREE.Fog(white_color, 1, 80);
 
     //--------------------------------------------------+
     //
@@ -228,24 +253,15 @@ const Layout = ({ children }) => {
     //--------------------------------------------------+
 
     const camera = new THREE.PerspectiveCamera(
-      35,
+      50,
       sizes.width / sizes.height,
       0.1,
       100
     );
 
     // Camera Position
-    camera.position.set(13, -3, -5);
+    camera.position.set(0, 0, 10);
     scene.add(camera);
-
-    //--------------------------------------------------+
-    //
-    // Controls
-    //
-    //--------------------------------------------------+
-
-    const controls = new OrbitControls(camera, canvas);
-    controls.enableDamping = true;
 
     //--------------------------------------------------+
     //
@@ -293,9 +309,9 @@ const Layout = ({ children }) => {
     composer.addPass(renderPass);
 
     const bloomPass = new UnrealBloomPass();
-    bloomPass.strength = 0.1;
-    bloomPass.radius = 1;
-    bloomPass.threshold = 0.1;
+    bloomPass.strength = 0.09;
+    bloomPass.radius = 0.2;
+    bloomPass.threshold = 0.2;
     composer.addPass(bloomPass);
 
     //--------------------------------------------------+
@@ -311,9 +327,6 @@ const Layout = ({ children }) => {
 
       // Materials
       uniforms.uTime.value = elapsedTime;
-
-      // Update controls
-      controls.update();
 
       // Render
       composer.render();
