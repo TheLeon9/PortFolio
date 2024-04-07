@@ -31,7 +31,7 @@
     border-top: solid $border_width transparent;
     border-left: solid $border_width transparent;
     border-right: solid $border_width transparent;
-    border-bottom: solid $border_width $light_mauve;
+    border-bottom: solid $border_width $medium_blue;
     border-radius: $circle_border_radius;
   }
 
@@ -87,7 +87,7 @@
     position: absolute;
     width: 4px;
     height: 4px;
-    background-color: $light_mauve;
+    background-color: $medium_blue;
     border-radius: $circle_border_radius;
 
     animation: scrollCircleDot $big_transition_time infinite linear;

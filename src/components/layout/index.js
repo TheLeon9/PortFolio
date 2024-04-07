@@ -27,7 +27,7 @@ import LogoWhite from 'p/img/logo/logo_fm_white.svg';
 
 const Layout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('');
-  const [isLoading, setLoader] = useState(false);
+  const [isLoading, setLoader] = useState(true);
 
   //--------------------------------------------------+
   //
@@ -40,6 +40,7 @@ const Layout = ({ children }) => {
   const dark_blue = '#0132b5';
   const medium_blue = '#2c75ff';
   const light_blue = '#26c4ec';
+  const fogColor = '#d3d3d3';
 
   useEffect(() => {
     const debugObject = {};
@@ -96,7 +97,7 @@ const Layout = ({ children }) => {
       metalness: 0,
       roughness: 0.5,
       color: '#ffffff',
-      transmission: 0,
+      transmission: 0.1,
       ior: 1.5,
       thickness: 1.5,
       transparent: true,
@@ -217,7 +218,7 @@ const Layout = ({ children }) => {
     //
     //--------------------------------------------------+
 
-    scene.fog = new THREE.Fog(white_color, 1, 80);
+    scene.fog = new THREE.Fog(fogColor, 1, 60);
 
     //--------------------------------------------------+
     //
@@ -336,10 +337,6 @@ const Layout = ({ children }) => {
     };
 
     animate();
-
-    setTimeout(() => {
-      setLoader(false);
-    }, 2000);
   }, []);
 
   //--------------------------------------------------+
@@ -348,14 +345,14 @@ const Layout = ({ children }) => {
   //
   //--------------------------------------------------+
 
-  // useEffect(() => {
-  //   localStorage.setItem('activeSection', activeSection);
-  //   window.dispatchEvent(new Event('storageChange'));
-  // }, [activeSection]);
+  useEffect(() => {
+    localStorage.setItem('activeSection', activeSection);
+    window.dispatchEvent(new Event('storageChange'));
+  }, [activeSection]);
 
-  // const handleHomeClick = () => {
-  //   setActiveSection('');
-  // };
+  const handleHomeClick = () => {
+    setActiveSection('');
+  };
 
   return (
     <div className={style.global_cont}>
@@ -364,47 +361,45 @@ const Layout = ({ children }) => {
       {/* 3D Container */}
       <canvas className={style.webgl} id="webgl"></canvas>
 
-      {/* Mettre le code du dessous ici */}
+      {/* Loader */}
+      {isLoading ? (
+        <Loader setLoader={setLoader} />
+      ) : (
+        <>
+          {/* Corner Top Left */}
+          <div className={style.home_btn_cont}>
+            {/* Button Home */}
+            <button onClick={handleHomeClick} className={style.home_btn}>
+              <Image
+                src={LogoWhite.src}
+                alt="Logo FM"
+                width={40}
+                height={40}
+                className={style.home_logo}
+              />
+            </button>
+          </div>
+
+          {/* Corner Top Right */}
+          <ShareBtn />
+
+          {/* Corner Bottom Right */}
+          <ScrollBtn />
+
+          {/* Corner Bottom Left */}
+          <Sentence />
+
+          {/* Navigation Bar */}
+          <NavBar
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+          />
+
+          {children}
+        </>
+      )}
     </div>
   );
 };
 
 export default Layout;
-
-// {/* Loader */}
-// {isLoading ? (
-//   <Loader />
-// ) : (
-//   <>
-//     {/* Corner Top Left */}
-//     <div className={style.home_btn_cont}>
-//       {/* Button Home */}
-//       <button onClick={handleHomeClick} className={style.home_btn}>
-//         <Image
-//           src={LogoWhite.src}
-//           alt="Logo FM"
-//           width={40}
-//           height={40}
-//           className={style.home_logo}
-//         />
-//       </button>
-//     </div>
-
-//     {/* Corner Top Right */}
-//     <ShareBtn />
-
-//     {/* Corner Bottom Right */}
-//     <ScrollBtn />
-
-//     {/* Corner Bottom Left */}
-//     <Sentence />
-
-//     {/* Navigation Bar */}
-//     <NavBar
-//       activeSection={activeSection}
-//       setActiveSection={setActiveSection}
-//     />
-
-//     {children}
-//   </>
-// )}

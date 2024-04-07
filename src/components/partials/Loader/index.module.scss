@@ -6,17 +6,208 @@
 //
 // ------------------------------+
 
-.loading_cont {
+$corner_width: 560px;
+$corner_width_phone: 260px;
+$transparent_percentage: 20%;
+
+.loader_cont {
   width: 100%;
   height: 100%;
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   z-index: 10;
-  background-color: $black_color;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+  // Corner
+  .loader_corner_right,
+  .loader_corner_left {
+    width: 50%;
+    height: 100%;
+    background-color: $black_color;
+  }
+
+  .loader_corner_left {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    &::before {
+      content: '';
+      width: 100%;
+      height: $border_width;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        transparent $transparent_percentage,
+        $medium_blue calc(100% - ($corner_width / 2)),
+        transparent calc(100% - ($corner_width / 2))
+      );
+
+      @media only screen and (max-width: $phone_width) {
+        background: linear-gradient(
+          to right,
+          transparent,
+          $medium_blue calc(100% - ($corner_width_phone / 2)),
+          transparent calc(100% - ($corner_width_phone / 2))
+        );
+      }
+    }
+
+    &::after {
+      content: '';
+      width: calc($corner_width / 2);
+      height: $corner_width;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translate(0, -50%);
+      border-top-left-radius: $corner_width;
+      border-bottom-left-radius: $corner_width;
+      border-left: solid $border_width $medium_blue;
+      @media only screen and (max-width: $phone_width) {
+        width: calc($corner_width_phone / 2);
+        height: $corner_width_phone;
+        border-top-left-radius: $corner_width_phone;
+        border-bottom-left-radius: $corner_width_phone;
+      }
+    }
+  }
+
+  .loader_corner_right {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    &::before {
+      content: '';
+      width: 100%;
+      height: $border_width;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(
+        to left,
+        transparent 0%,
+        transparent $transparent_percentage,
+        $medium_blue calc(100% - ($corner_width / 2)),
+        transparent calc(100% - ($corner_width / 2))
+      );
+
+      @media only screen and (max-width: $phone_width) {
+        background: linear-gradient(
+          to left,
+          transparent,
+          $medium_blue calc(100% - ($corner_width_phone / 2)),
+          transparent calc(100% - ($corner_width_phone / 2))
+        );
+      }
+    }
+
+    &::after {
+      content: '';
+      width: calc($corner_width / 2);
+      height: $corner_width;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(0, -50%);
+      border-top-right-radius: $corner_width;
+      border-bottom-right-radius: $corner_width;
+      border-right: solid $border_width $medium_blue;
+      @media only screen and (max-width: $phone_width) {
+        width: calc($corner_width_phone / 2);
+        height: $corner_width_phone;
+        border-top-right-radius: $corner_width_phone;
+        border-bottom-right-radius: $corner_width_phone;
+      }
+    }
+  }
+
+  // Center
+  .loader_cont_center {
+    width: 60%;
+    height: 40%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    @media only screen and (max-width: $phone_width) {
+      height: 60%;
+    }
+
+    .loader_logo_white {
+      width: 120px;
+      height: 120px;
+
+      @media only screen and (max-width: $phone_width) {
+        width: 80px;
+        height: 80px;
+      }
+    }
+
+    .loader_text_cont {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: $big_margin;
+
+      .loader_percentage,
+      .loader_title {
+        font-family: $first_font;
+        font-size: $medium_font_size;
+        font-weight: $font_weight_regular;
+        color: $white_color;
+
+        @media only screen and (max-width: $phone_width) {
+          font-size: $small_small_font_size;
+          text-align: center;
+        }
+      }
+
+      .loader_percentage {
+        margin-bottom: $small_margin;
+        position: relative;
+        width: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &::after {
+          content: '%';
+          position: absolute;
+          right: -10px;
+        }
+      }
+
+      .loader_title {
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .word_dot {
+          width: 4px;
+          height: 4px;
+          background-color: $medium_blue;
+          border-radius: $circle_border_radius;
+          margin: 0 $small_margin;
+        }
+      }
+    }
+  }
 
   @media only screen and (max-width: $phone_width) {
   }
