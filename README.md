@@ -1,7 +1,7 @@
 # 🦁 My Port Folio
 
 Welcome to my online portfolio! 💎 And Step into my digital realm! 🌏
-Feel free to wander around and discover the wonders of my online portfolio. 🥷🏻
+Feel free to wander around and discover the wonders of my online portfolio. 🥷🏻🌌
 
 ---
 

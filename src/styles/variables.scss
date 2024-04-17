@@ -12,6 +12,7 @@ $gradient_blue: linear-gradient(
 );
 
 // border
+$small_border_radius: 4px;
 $border_radius: 10px;
 $circle_border_radius: 50%;
 $border_width: 1px;
@@ -20,7 +21,7 @@ $border_width_big: 2px;
 // font
 $first_font: 'Orbitron', sans-serif;
 $second_font: 'Nunito', sans-serif;
-$font_weight_bold: bold;
+$font_weight_bold: 600;
 $font_weight_regular: normal;
 
 // font size
@@ -34,7 +35,7 @@ $title_font_size: 32px;
 // text
 $text_indent: 20px;
 $letter_spacing: normal;
-$line_height: 1.6;
+$line_height: normal;
 
 // animation
 $transition: 0.6s all;
@@ -46,7 +47,7 @@ $small_margin: 10px;
 $margin: 20px;
 $big_margin: 40px;
 
-$layout_margin: 2%;
+$layout_margin: 20px;
 $inner_margin: 0%;
 
 // phone

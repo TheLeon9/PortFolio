@@ -367,9 +367,9 @@ const Layout = ({ children }) => {
       ) : (
         <>
           {/* Corner Top Left */}
-          <div className={style.home_btn_cont}>
+          {/* <div className={style.home_btn_cont}> */}
             {/* Button Home */}
-            <button onClick={handleHomeClick} className={style.home_btn}>
+            {/* <button onClick={handleHomeClick} className={style.home_btn}>
               <Image
                 src={LogoWhite.src}
                 alt="Logo FM"
@@ -378,22 +378,22 @@ const Layout = ({ children }) => {
                 className={style.home_logo}
               />
             </button>
-          </div>
+          </div> */}
 
           {/* Corner Top Right */}
-          <ShareBtn />
+          {/* <ShareBtn /> */}
 
           {/* Corner Bottom Right */}
-          <ScrollBtn />
+          {/* <ScrollBtn /> */}
 
           {/* Corner Bottom Left */}
-          <Sentence />
+          {/* <Sentence /> */}
 
           {/* Navigation Bar */}
-          <NavBar
+          {/* <NavBar
             activeSection={activeSection}
             setActiveSection={setActiveSection}
-          />
+          /> */}
 
           {children}
         </>

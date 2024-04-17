@@ -8,61 +8,56 @@
 
 .section_presentation_cont {
   position: absolute;
-  left: $inner_margin;
+  left: calc($inner_margin + $big_margin);
   bottom: $inner_margin;
   width: 480px;
   height: 200px;
 
   @media only screen and (max-width: $phone_width) {
-    width: 50%;
+    width: 100%;
     height: 20%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    text-align: center;
   }
 
   .presentation_title {
     font-family: $first_font;
-    color: $white_color;
+    color: $black_color;
     font-size: $title_font_size;
     font-weight: $font_weight_bold;
-    position: relative;
+    text-transform: uppercase;
 
-    &::before {
-      content: '';
-      width: 80px;
-      height: $border_width_big;
-      background-color: $medium_blue;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-
-      @media only screen and (max-width: $phone_width) {
-        width: 40px;
-        height: $border_width;
-      }
+    .presentation_title_colored {
+      color: $dark_blue;
     }
 
     @media only screen and (max-width: $phone_width) {
-      font-size: $small_font_size;
+      font-size: $medium_font_size;
     }
   }
 
-  p {
-    margin-top: $small_margin;
+  .span_text_cont {
+    display: flex;
+    font-family: $second_font;
+    color: $black_color;
+    font-size: $big_font_size;
+    font-weight: $font_weight_regular;
+    margin-top: $margin;
 
-    span {
-      position: relative;
-      &::before {
-        content: '';
-        width: 16px;
-        height: $border_width_big;
-        background-color: $medium_blue;
-        position: absolute;
-        bottom: 0;
-        right: 0;
+    .span_rotate_cont {
+      width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $white_color;
+      background: $dark_blue;
+      border-radius: $small_border_radius;
+      text-transform: uppercase;
+      transform-origin:center center;
 
-        @media only screen and (max-width: $phone_width) {
-          width: 6px;
-          height: $border_width;
-        }
+      &:not(:first-child) {
+        margin-left: 2px;
       }
     }
   }

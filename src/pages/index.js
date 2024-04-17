@@ -30,7 +30,8 @@ const IndexPage = () => {
     <div className={style.global_page_container}>
       {activeSection === '' && (
         <SectionPresentation
-          presentationTitle="MORACCHINI FLORIAN"
+          presentationTitle="MORACCHINI"
+          presentationTitleColored="FLORIAN"
           presentationText="Home"
         />
       )}
@@ -38,6 +39,7 @@ const IndexPage = () => {
       {activeSection === 'About' && (
         <SectionPresentation
           presentationTitle="ABOUT"
+          presentationTitleColored="ME"
           presentationText="Learn more about who I am and what I do"
         />
       )}
@@ -45,20 +47,23 @@ const IndexPage = () => {
       {activeSection === 'Contact' && (
         <SectionPresentation
           presentationTitle="CONTACT"
+          presentationTitleColored="ME"
           presentationText="Find out how to get in touch with me"
         />
       )}
 
       {activeSection === 'Projects' && (
         <SectionPresentation
-          presentationTitle="PROJECTS"
+          presentationTitle="MY"
+          presentationTitleColored="PROJECTS"
           presentationText="Explore a showcase of my diverse projects"
         />
       )}
 
       {activeSection === 'Skills' && (
         <SectionPresentation
-          presentationTitle="SKILLS"
+          presentationTitle="MY"
+          presentationTitleColored="SKILLS"
           presentationText="Discover the various skills and technologies I work with"
         />
       )}
