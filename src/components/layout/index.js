@@ -66,7 +66,7 @@ const Layout = ({ children }) => {
 
     // Wobble
     debugObject.mainColor = white_color;
-    debugObject.secondColor = light_blue;
+    debugObject.secondColor = dark_blue;
 
     // Wobble
     const uniforms = {

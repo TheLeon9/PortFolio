@@ -3,71 +3,74 @@ import style from './index.module.scss';
 import { gsap } from 'gsap';
 
 const SectionPresentation = (props) => {
+  const [isDev, setIsDev] = useState(true);
+
   useEffect(() => {
-    const spanArray = Array.from(
-      document.querySelectorAll('.span_rotate_cont')
-    );
+    const spanArray = Array.from(document.querySelectorAll('.span_rotate'));
 
-    let indexDelay = 0;
+    let indexDelay = 1;
+    const indexDelayAdd = 0.1;
+    const animDuration = 0.5;
 
-    const animateLeftToRight = () => {
+    const animate = () => {
       spanArray.forEach((singleSpan, index) => {
         gsap.from(singleSpan, {
           delay: indexDelay,
-          duration: 0.5,
-          rotationY: 90,
+          duration: animDuration,
+          rotationY: 360,
           ease: 'power2.out',
-          // onUpdate: changeLettersLeftToRight,
+          onUpdate: changeLetters(index + 1),
           onComplete: () => {
             if (index === spanArray.length - 1) {
               indexDelay = 0;
-              spanArray.reverse();
-              animateRightToLeft();
+              console.log('là aussi');
+              setIsDev(!isDev);
+              setTimeout(animate, 2000);
             }
           },
         });
-        indexDelay += 0.1;
+        indexDelay += indexDelayAdd;
       });
     };
 
-    const animateRightToLeft = () => {
-      spanArray.forEach((singleSpan, index) => {
-        gsap.from(singleSpan, {
-          delay: indexDelay,
-          duration: 0.5,
-          rotationY: 90,
-          ease: 'power2.out',
-          // onUpdate: changeLettersLeftToRight,
-          onComplete: () => {
-            if (index === spanArray.length - 1) {
-              indexDelay = 0;
-              spanArray.reverse();
-              animateLeftToRight();
-            }
-          },
+    const changeLetters = (index) => {
+      if (index > 2) {
+        let lettersToChange = [];
+        if (isDev) {
+          lettersToChange = [
+            { selector: '.span_rotate:nth-child(3)', letter: 'v' },
+            { selector: '.span_rotate:nth-child(4)', letter: 'e' },
+            { selector: '.span_rotate:nth-child(5)', letter: 'l' },
+            { selector: '.span_rotate:nth-child(6)', letter: 'o' },
+            { selector: '.span_rotate:nth-child(7)', letter: 'p' },
+            { selector: '.span_rotate:nth-child(8)', letter: 'e' },
+            { selector: '.span_rotate:nth-child(9)', letter: 'r' },
+          ];
+        } else if (!isDev) {
+          lettersToChange = [
+            { selector: '.span_rotate_cont:nth-child(3)', letter: 's' },
+            { selector: '.span_rotate_cont:nth-child(4)', letter: 'i' },
+            { selector: '.span_rotate_cont:nth-child(5)', letter: 'g' },
+            { selector: '.span_rotate_cont:nth-child(6)', letter: 'n' },
+            { selector: '.span_rotate_cont:nth-child(7)', letter: 'e' },
+            { selector: '.span_rotate_cont:nth-child(8)', letter: 'r' },
+            { selector: '.span_rotate_cont:nth-child(9)', letter: '' },
+          ];
+        }
+        lettersToChange.forEach(({ selector, letter }) => {
+          gsap.to(selector, { duration: 0.5, textContent: letter, delay: 0.1 });
         });
-        indexDelay += 0.1;
-      });
+      }
     };
 
-    // const changeLettersLeftToRight = () => {
-    //   const lettersToChange = [
-    //     { selector: '.span_rotate_cont:nth-child(3) span', letter: 'V' },
-    //     { selector: '.span_rotate_cont:nth-child(4) span', letter: 'E' },
-    //     { selector: '.span_rotate_cont:nth-child(5) span', letter: 'L' },
-    //     { selector: '.span_rotate_cont:nth-child(6) span', letter: 'O' },
-    //     { selector: '.span_rotate_cont:nth-child(7) span', letter: 'P' },
-    //     { selector: '.span_rotate_cont:nth-child(8) span', letter: 'E' },
-    //     { selector: '.span_rotate_cont:nth-child(9) span', letter: 'R' },
-    //   ];
+    animate();
+  });
 
-    //   lettersToChange.forEach(({ selector, letter }) => {
-    //     gsap.to(selector, { duration: 0.5, textContent: letter, delay: 0.1 });
-    //   });
-    // };
-
-    animateLeftToRight();
-  }, []);
+  // useEffect(() => {
+  //   // animate();
+  //   setLaunchAnim(!launchAnim);
+  //   // setTimeout(animate, 2000);
+  // }, [isDev]);
 
   return (
     <section className={style.section_presentation_cont}>
@@ -77,42 +80,24 @@ const SectionPresentation = (props) => {
           {props.presentationTitleColored}
         </span>
       </h1>
-      <div className={style.span_text_cont}>
+      <p className={style.span_text_cont}>
         {props.presentationText === 'Home' ? (
           <>
             Creative&nbsp;Web&nbsp;
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>D</span>
-            </div>
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>e</span>
-            </div>
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>v</span>
-            </div>
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>e</span>
-            </div>
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>l</span>
-            </div>
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>o</span>
-            </div>
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>p</span>
-            </div>
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>e</span>
-            </div>
-            <div className={`span_rotate_cont ${style.span_rotate_cont}`}>
-              <span>r</span>
-            </div>
+            <span className={`span_rotate`}>D</span>
+            <span className={`span_rotate`}>e</span>
+            <span className={`span_rotate`}>v</span>
+            <span className={`span_rotate`}>e</span>
+            <span className={`span_rotate`}>l</span>
+            <span className={`span_rotate`}>o</span>
+            <span className={`span_rotate`}>p</span>
+            <span className={`span_rotate`}>e</span>
+            <span className={`span_rotate`}>r</span>
           </>
         ) : (
           <span>{text}</span>
         )}
-      </div>
+      </p>
     </section>
   );
 };

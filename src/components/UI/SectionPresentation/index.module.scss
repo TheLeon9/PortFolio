@@ -11,7 +11,7 @@
   left: calc($inner_margin + $big_margin);
   bottom: $inner_margin;
   width: 480px;
-  height: 200px;
+  height: 140px;
 
   @media only screen and (max-width: $phone_width) {
     width: 100%;
@@ -45,20 +45,9 @@
     font-weight: $font_weight_regular;
     margin-top: $margin;
 
-    .span_rotate_cont {
-      width: 28px;
-      display: flex;
+    @media only screen and (max-width: $phone_width) {
       align-items: center;
       justify-content: center;
-      color: $white_color;
-      background: $dark_blue;
-      border-radius: $small_border_radius;
-      text-transform: uppercase;
-      transform-origin:center center;
-
-      &:not(:first-child) {
-        margin-left: 2px;
-      }
     }
   }
 }
