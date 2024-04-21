@@ -117,10 +117,7 @@
 
     p {
       display: inline-block;
-      background-image: $gradient_blue;
-      color: transparent;
-      -webkit-background-clip: text;
-      background-clip: text;
+      color: $dark_blue;
 
       &:nth-child(1) {
         transform-origin: top;
@@ -151,7 +148,7 @@
       opacity: 1;
       width: 0%;
       height: $border_width_big;
-      background: $gradient_blue;
+      background: $dark_blue;
       transition: width $transition_time ease-in-out;
     }
 
