@@ -1,7 +1,7 @@
 // color
 $white_color: #f8f8ff;
 $black_color: #040B12;
-// $black_color: #1c1c1c;
+$text_color: #1c1c1c;
 $dark_blue: #0132b5;
 $medium_blue: #2c75ff;
 $light_blue: #26c4ec;
@@ -43,13 +43,14 @@ $transition: 0.6s all;
 $transition_time: 0.6s;
 $big_transition_time: 2.8s ;
 
+$text_animation: 1s;
+
 // margin
 $small_margin: 10px;
 $margin: 20px;
 $big_margin: 40px;
 
 $layout_margin: 20px;
-$inner_margin: 0%;
 
 // phone
 $phone_width: 1000px;

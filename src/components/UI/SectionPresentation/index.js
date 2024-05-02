@@ -10,17 +10,16 @@ const SectionPresentation = (props) => {
           {props.presentationTitleColored}
         </span>
       </h1>
-      <p className={`p_big ${style.span_text_cont}`}>
+      <p className={`${style.span_text_cont}`}>
         {props.presentationText === 'Home' ? (
           <>
-            Creative&nbsp; Web&nbsp; &nbsp;
+            Creative&nbsp;Web&nbsp;
             <span className={style.span_animation_cont}>
               <span className={style.span_hook}>[</span>
               <span className={style.span_developer}>Developer</span>
               <span className={style.span_designer}>Designer</span>
               <span className={style.span_hook}>]</span>
             </span>
-            &nbsp;
           </>
         ) : (
           <span>{text}</span>

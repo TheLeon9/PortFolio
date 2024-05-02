@@ -23,8 +23,6 @@ import ShareBtn from '@/components/partials/ShareBtn';
 import Sentence from '@/components/UI/Sentence';
 import Loader from '@/components/partials/Loader';
 
-import LogoWhite from 'p/img/logo/logo_fm_white.svg';
-
 const Layout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('');
   const [isLoading, setLoader] = useState(true);
