@@ -20,7 +20,6 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import NavBar from '@/components/partials/NavBar';
 import ScrollBtn from '@/components/partials/ScrollBtn';
 import ShareBtn from '@/components/partials/ShareBtn';
-import Sentence from '@/components/UI/Sentence';
 import Loader from '@/components/partials/Loader';
 
 const Layout = ({ children }) => {
@@ -382,10 +381,7 @@ const Layout = ({ children }) => {
           {/* <ShareBtn /> */}
 
           {/* Corner Bottom Right */}
-          {/* <ScrollBtn /> */}
-
-          {/* Corner Bottom Left */}
-          {/* <Sentence /> */}
+          <ScrollBtn />
 
           {/* Navigation Bar */}
           {/* <NavBar

@@ -78,7 +78,7 @@ const SectionPresentation = (props) => {
         />
         <div className={style.loader_text_cont}>
           <p className={style.loader_percentage}>{percentage}</p>
-          <Sentence />
+          <Sentence white="true" />
         </div>
       </div>
     </div>

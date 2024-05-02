@@ -1,5 +1,6 @@
 import React from 'react';
 import style from './index.module.scss';
+import Sentence from '@/components/UI/Sentence';
 
 const SectionPresentation = (props) => {
   return (
@@ -25,6 +26,7 @@ const SectionPresentation = (props) => {
           <span>{text}</span>
         )}
       </p>
+      <Sentence white="false" />
     </section>
   );
 };

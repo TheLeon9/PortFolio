@@ -7,15 +7,11 @@
 // ------------------------------+
 
 .loader_title {
-  width: 90%;
-  font-family: $first_font;
-  font-size: $medium_font_size;
+  width: 100%;
   font-weight: $font_weight_regular;
-  color: $white_color;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   animation: fadeIn $text_animation ease-in;
+  display: flex;
+  align-items: center;
 
   @keyframes fadeIn {
     from {
@@ -28,9 +24,27 @@
     }
   }
 
-  @media only screen and (max-width: $phone_width) {
-    font-size: $small_small_font_size;
-    text-align: center;
+  &_white {
+    font-family: $first_font;
+    font-size: $medium_font_size;
+    color: $white_color;
+    justify-content: center;
+
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+    }
+  }
+
+  &_black {
+    font-family: $second_font;
+    font-size: $font_size;
+    color: $text_color;
+    margin-top: $margin;
+    justify-content: flex-start;
+
+    @media only screen and (max-width: $phone_width) {
+      justify-content: center;
+    }
   }
 
   .word_dot {
