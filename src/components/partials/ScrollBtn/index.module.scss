@@ -8,16 +8,29 @@
 
 .scroll_btn_cont {
   position: absolute;
-  right: $layout_margin;;
-  bottom: $layout_margin;;
-  width: 88px;
-  height: 20px;
+  left: 50%;
+  bottom: $layout_margin;
+  transform: translate(-50%, 0);
+  width: 110px;
+  height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: fadeIn $text_animation ease-in-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, $big_margin);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
 
   @media only screen and (max-width: $phone_width) {
-    bottom: 0%;
+    bottom: 0;
   }
 
   .scroll_circle_right,
@@ -31,12 +44,12 @@
     border-top: solid $border_width transparent;
     border-left: solid $border_width transparent;
     border-right: solid $border_width transparent;
-    border-bottom: solid $border_width $medium_blue;
+    border-bottom: solid $border_width $main_color;
     border-radius: $circle_border_radius;
   }
 
   .scroll_circle_left {
-    animation: scrollCircleLeft $big_transition_time infinite linear;
+    animation: scrollCircleLeft $big_transition_time infinite ease-in-out;
     @keyframes scrollCircleLeft {
       0%,
       100% {
@@ -87,17 +100,16 @@
     position: absolute;
     width: 4px;
     height: 4px;
-    background-color: $medium_blue;
+    background-color: $main_color;
     border-radius: $circle_border_radius;
-
     animation: scrollCircleDot $big_transition_time infinite linear;
 
-    $transalte_circle_do: 10px;
+    $translate_circle_do: 10px;
 
     @media only screen and (max-width: $phone_width) {
-      $transalte_circle_do: 4px;
+      $translate_circle_do: 4px;
     }
-    
+
     @keyframes scrollCircleDot {
       0%,
       100% {
@@ -105,7 +117,7 @@
       }
       25%,
       26% {
-        transform: translateY($transalte_circle_do);
+        transform: translateY($translate_circle_do);
         opacity: 1;
       }
       50% {
@@ -124,62 +136,71 @@
   }
 
   .scroll_down_sentence {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
     font-family: $first_font;
-    font-weight: $font_weight_regular;
-    color: $white_color;
-    font-size: $small_small_font_size;
+    font-weight: $font_weight_bold;
+    color: $text_color;
+    font-size: $small_font_size;
+    text-transform: lowercase;
 
     $rotation_up: 10deg;
     $rotation_down: -10deg;
-    $transalte: 10px;
+    $translate: 4px;
 
-    @media only screen and (max-width: $phone_width) {
-      $rotation_up: 4deg;
-      $rotation_down: -4deg;
-      $transalte: 4px;
-    }
+    .dot {
+      width: 4px;
+      height: 4px;
+      background-color: transparent;
+      border-radius: $circle_border_radius;
 
-    .word_scroll {
-      animation: scrollAnimation $big_transition_time infinite linear;
-      transform-origin: right;
+      &::before {
+        content: 'scroll';
+        position: absolute;
+        top: 50%;
+        left: 0%;
+        transform: translate(0%, -50%);
+        animation: scrollAnimation $big_transition_time infinite linear;
+        transform-origin: right;
 
-      @keyframes scrollAnimation {
-        0% {
-          transform: translateY(0) rotate(0deg);
-        }
-        25% {
-          transform: translateY($transalte) rotate($rotation_up);
-        }
-        50% {
-          transform: translateY(0);
-        }
-        100% {
-          transform: translateY(0) rotate(0deg);
+        @keyframes scrollAnimation {
+          0% {
+            transform: translate(0, -50%) rotate(0deg);
+          }
+          25% {
+            transform: translate(0, calc(-50% + $translate))
+              rotate($rotation_up);
+          }
+          50% {
+            transform: translate(0, -50%);
+          }
+          100% {
+            transform: translate(0, -50%) rotate(0deg);
+          }
         }
       }
-    }
 
-    .word_down {
-      animation: downAnimation $big_transition_time infinite linear;
-      transform-origin: left;
+      &::after {
+        content: 'down';
+        position: absolute;
+        top: 50%;
+        right: 0%;
+        transform: translate(0%, -50%);
+        animation: downAnimation $big_transition_time infinite linear;
+        transform-origin: left;
 
-      @keyframes downAnimation {
-        0% {
-          transform: translateY(0) rotate(0deg);
-        }
-        25% {
-          transform: translateY($transalte) rotate($rotation_down);
-        }
-        50% {
-          transform: translateY(0);
-        }
-        100% {
-          transform: translateY(0) rotate(0deg);
+        @keyframes downAnimation {
+          0% {
+            transform: translate(0, -50%) rotate(0deg);
+          }
+          25% {
+            transform: translate(0, calc(-50% + $translate))
+              rotate($rotation_down);
+          }
+          50% {
+            transform: translate(0, -50%);
+          }
+          100% {
+            transform: translate(0, -50%) rotate(0deg);
+          }
         }
       }
     }

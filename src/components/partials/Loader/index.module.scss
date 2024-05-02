@@ -44,7 +44,7 @@ $transparent_percentage: 2%;
         to right,
         transparent 0%,
         transparent $transparent_percentage,
-        $dark_blue calc(100% - ($corner_width / 2)),
+        $main_color calc(100% - ($corner_width / 2)),
         transparent calc(100% - ($corner_width / 2))
       );
 
@@ -52,7 +52,7 @@ $transparent_percentage: 2%;
         background: linear-gradient(
           to right,
           transparent,
-          $dark_blue calc(100% - ($corner_width_phone / 2)),
+          $main_color calc(100% - ($corner_width_phone / 2)),
           transparent calc(100% - ($corner_width_phone / 2))
         );
       }
@@ -69,9 +69,9 @@ $transparent_percentage: 2%;
       transform: translate(0, -50%);
       border-top-left-radius: $corner_width;
       border-bottom-left-radius: $corner_width;
-      border-left: solid $border_width $dark_blue;
-      border-top: solid $border_width $dark_blue;
-      border-bottom: solid $border_width $dark_blue;
+      border-left: solid $border_width $main_color;
+      border-top: solid $border_width $main_color;
+      border-bottom: solid $border_width $main_color;
       @media only screen and (max-width: $phone_width) {
         width: calc($corner_width_phone / 2);
         height: $corner_width_phone;
@@ -99,7 +99,7 @@ $transparent_percentage: 2%;
         to left,
         transparent 0%,
         transparent $transparent_percentage,
-        $dark_blue calc(100% - ($corner_width / 2)),
+        $main_color calc(100% - ($corner_width / 2)),
         transparent calc(100% - ($corner_width / 2))
       );
 
@@ -107,7 +107,7 @@ $transparent_percentage: 2%;
         background: linear-gradient(
           to left,
           transparent,
-          $dark_blue calc(100% - ($corner_width_phone / 2)),
+          $main_color calc(100% - ($corner_width_phone / 2)),
           transparent calc(100% - ($corner_width_phone / 2))
         );
       }
@@ -124,9 +124,9 @@ $transparent_percentage: 2%;
       transform: translate(0, -50%);
       border-top-right-radius: $corner_width;
       border-bottom-right-radius: $corner_width;
-      border-right: solid $border_width $dark_blue;
-      border-top: solid $border_width $dark_blue;
-      border-bottom: solid $border_width $dark_blue;
+      border-right: solid $border_width $main_color;
+      border-top: solid $border_width $main_color;
+      border-bottom: solid $border_width $main_color;
 
       @media only screen and (max-width: $phone_width) {
         width: calc($corner_width_phone / 2);

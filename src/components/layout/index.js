@@ -33,8 +33,8 @@ const Layout = ({ children }) => {
   //--------------------------------------------------+
 
   const white_color = '#f8f8ff';
-  const black_color = '#1c1c1c';
-  const dark_blue = '#0132b5';
+  const black_color = '#040B12';
+  const main_color = '#0132b5';
   const medium_blue = '#2c75ff';
   const light_blue = '#26c4ec';
   const fogColor = '#d3d3d3';
@@ -62,8 +62,8 @@ const Layout = ({ children }) => {
     //--------------------------------------------------+
 
     // Wobble
-    debugObject.mainColor = white_color;
-    debugObject.secondColor = dark_blue;
+    debugObject.mainColor = main_color;
+    debugObject.secondColor = white_color;
 
     // Wobble
     const uniforms = {
@@ -363,24 +363,10 @@ const Layout = ({ children }) => {
         <Loader setLoader={setLoader} />
       ) : (
         <>
-          {/* Corner Top Left */}
-          {/* <div className={style.home_btn_cont}> */}
-            {/* Button Home */}
-            {/* <button onClick={handleHomeClick} className={style.home_btn}>
-              <Image
-                src={LogoWhite.src}
-                alt="Logo FM"
-                width={40}
-                height={40}
-                className={style.home_logo}
-              />
-            </button>
-          </div> */}
-
           {/* Corner Top Right */}
           {/* <ShareBtn /> */}
 
-          {/* Corner Bottom Right */}
+          {/* Scroll Btn container */}
           <ScrollBtn />
 
           {/* Navigation Bar */}

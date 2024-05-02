@@ -8,8 +8,7 @@ const ScrollBtn = () => {
       <div className={style.scroll_circle_right}></div>
       <div className={style.scroll_circle_dot}></div>
       <h6 className={style.scroll_down_sentence}>
-        <span className={style.word_scroll}>scroll</span>
-        <span className={style.word_down}>down</span>
+        <div className={style.dot}></div>
       </h6>
     </div>
   );

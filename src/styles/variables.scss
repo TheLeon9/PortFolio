@@ -2,14 +2,14 @@
 $white_color: #f8f8ff;
 $black_color: #040B12;
 $text_color: #1c1c1c;
-$dark_blue: #0132b5;
+$main_color: #0132b5;
 $medium_blue: #2c75ff;
 $light_blue: #26c4ec;
 $gradient_blue: linear-gradient(
   to right,
   $light_blue,
   $medium_blue,
-  $dark_blue
+  $main_color
 );
 
 // border

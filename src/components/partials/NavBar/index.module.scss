@@ -117,7 +117,7 @@
 
     p {
       display: inline-block;
-      color: $dark_blue;
+      color: $main_color;
 
       &:nth-child(1) {
         transform-origin: top;
@@ -148,7 +148,7 @@
       opacity: 1;
       width: 0%;
       height: $border_width_big;
-      background: $dark_blue;
+      background: $main_color;
       transition: width $transition_time ease-in-out;
     }
 
