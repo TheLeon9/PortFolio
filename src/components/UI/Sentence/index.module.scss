@@ -1,0 +1,43 @@
+@import '@/styles/variables.scss';
+
+// ------------------------------+
+//
+//          SENTENCE
+//
+// ------------------------------+
+
+.loader_title {
+  width: 90%;
+  font-family: $first_font;
+  font-size: $medium_font_size;
+  font-weight: $font_weight_regular;
+  color: $white_color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 1s ease-in;
+
+  @media only screen and (max-width: $phone_width) {
+    font-size: $small_small_font_size;
+    text-align: center;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  .word_dot {
+    width: 4px;
+    height: 4px;
+    background-color: $dark_blue;
+    border-radius: $circle_border_radius;
+    margin: 0 $small_margin;
+  }
+}

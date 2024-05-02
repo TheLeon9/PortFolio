@@ -20,7 +20,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import NavBar from '@/components/partials/NavBar';
 import ScrollBtn from '@/components/partials/ScrollBtn';
 import ShareBtn from '@/components/partials/ShareBtn';
-import Sentence from '@/components/partials/Sentence';
+import Sentence from '@/components/UI/Sentence';
 import Loader from '@/components/partials/Loader';
 
 import LogoWhite from 'p/img/logo/logo_fm_white.svg';

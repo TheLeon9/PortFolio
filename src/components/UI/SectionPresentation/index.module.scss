@@ -69,7 +69,7 @@
 
       .span_developer {
         transform-origin: top;
-        animation: swaptop 6s 2s infinite alternate ease-in-out;
+        animation: swaptop 4s 1s infinite alternate ease-in-out;
 
         @keyframes swaptop {
           40% {
@@ -86,7 +86,7 @@
         position: absolute;
         left: 50%;
         transform: translate(-50%, 120%);
-        animation: swapbot 6s 2s infinite alternate ease-in-out;
+        animation: swapbot 4s 1s infinite alternate ease-in-out;
 
         @keyframes swapbot {
           40% {

@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import style from './index.module.scss';
+import Sentence from '@/components/UI/Sentence';
 
 import Image from 'next/image';
 import { gsap } from 'gsap';
 
 import LogoWhite from 'p/img/logo/logo_fm_white.svg';
+import BlueCircle from 'p/img/loading/blue_ornament_circle.svg';
 
 const SectionPresentation = (props) => {
   const [percentage, setPercentage] = useState(0);
@@ -47,8 +49,8 @@ const SectionPresentation = (props) => {
 
   const animateCorners = () => {
     setTimeout(() => {
-      gsap.to(cornerLeftRef.current, { duration: 2, left: "-60%" });
-      gsap.to(cornerRightRef.current, { duration: 2, right: "-60%" });
+      gsap.to(cornerLeftRef.current, { duration: 2, left: '-60%' });
+      gsap.to(cornerRightRef.current, { duration: 2, right: '-60%' });
       setTimeout(() => {
         props.setLoader(false);
       }, 1200);
@@ -61,6 +63,13 @@ const SectionPresentation = (props) => {
       <div ref={cornerRightRef} className={style.loader_corner_right}></div>
       <div ref={loaderContCenterRef} className={style.loader_cont_center}>
         <Image
+          src={BlueCircle.src}
+          alt="BlueCircle"
+          width={120}
+          height={120}
+          className={style.blue_circle}
+        />
+        <Image
           src={LogoWhite.src}
           alt="Logo FM White"
           width={120}
@@ -69,11 +78,7 @@ const SectionPresentation = (props) => {
         />
         <div className={style.loader_text_cont}>
           <p className={style.loader_percentage}>{percentage}</p>
-          <h2 className={style.loader_title}>
-            Imagine <div className={style.word_dot}></div>
-            Create <div className={style.word_dot}></div>
-            Inspire
-          </h2>
+          <Sentence />
         </div>
       </div>
     </div>

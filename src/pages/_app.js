@@ -5,7 +5,7 @@ import '@/styles/variables.scss';
 
 import Layout from '@/components/layout';
 
-import Logo from 'p/img/logo/logo_fm.svg';
+import Logo from 'p/img/logo/logo_fm_white.svg';
 
 function MyApp({ Component, pageProps }) {
   return (
