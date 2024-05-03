@@ -155,16 +155,16 @@ $transparent_percentage: 2%;
     }
 
     .blue_circle {
-      width: calc($corner_width - 10px);
-      height: calc($corner_width - 10px);
+      width: calc($corner_width - $small_margin);
+      height: calc($corner_width - $small_margin);
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
 
       @media only screen and (max-width: $phone_width) {
-        width: calc($corner_width_phone - 10px);
-        height: calc($corner_width_phone - 10px);
+        width: calc($corner_width_phone - $small_margin);
+        height: calc($corner_width_phone - $small_margin);
       }
     }
 
@@ -176,7 +176,7 @@ $transparent_percentage: 2%;
       @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(-10px);
+          transform: translateY($text_animation_negative_margin);
         }
         to {
           opacity: 1;

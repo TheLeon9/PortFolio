@@ -16,7 +16,7 @@
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY($text_animation_margin);
     }
     to {
       opacity: 1;

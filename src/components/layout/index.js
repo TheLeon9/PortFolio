@@ -22,6 +22,8 @@ import ScrollBtn from '@/components/partials/ScrollBtn';
 import ShareBtn from '@/components/partials/ShareBtn';
 import Loader from '@/components/partials/Loader';
 
+import Logo from 'p/img/logo/logo_fm_black.svg';
+
 const Layout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('');
   const [isLoading, setLoader] = useState(true);
@@ -364,10 +366,23 @@ const Layout = ({ children }) => {
       ) : (
         <>
           {/* Corner Top Right */}
-          {/* <ShareBtn /> */}
+          <ShareBtn />
+
+          {/* Button Home */}
+          <div className={style.home_btn_cont}>
+            <button onClick={handleHomeClick} className={style.home_btn}>
+              <Image
+                src={Logo.src}
+                alt="Logo FM Black"
+                width={40}
+                height={40}
+                className={style.home_logo}
+              />
+            </button>
+          </div>
 
           {/* Scroll Btn container */}
-          <ScrollBtn />
+          {/* <ScrollBtn /> */}
 
           {/* Navigation Bar */}
           {/* <NavBar

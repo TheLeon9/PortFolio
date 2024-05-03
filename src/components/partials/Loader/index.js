@@ -5,7 +5,7 @@ import Sentence from '@/components/UI/Sentence';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 
-import LogoWhite from 'p/img/logo/logo_fm_white.svg';
+import LogoWhiteAnimated from 'p/img/loading/logo_fm_white_animated.svg';
 import BlueCircle from 'p/img/loading/blue_ornament_circle.svg';
 
 const SectionPresentation = (props) => {
@@ -70,7 +70,7 @@ const SectionPresentation = (props) => {
           className={style.blue_circle}
         />
         <Image
-          src={LogoWhite.src}
+          src={LogoWhiteAnimated.src}
           alt="Logo FM White"
           width={120}
           height={120}

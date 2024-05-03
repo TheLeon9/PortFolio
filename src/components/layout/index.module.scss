@@ -21,7 +21,23 @@
     width: 40px;
     position: absolute;
     top: $layout_margin;
-    left: $layout_margin;
+    left: 50%;
+    transform: translate(-50%, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn $text_animation ease-in-out;
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, $text_animation_negative_margin);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
 
     .home_btn {
       border: none;

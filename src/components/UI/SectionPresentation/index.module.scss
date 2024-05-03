@@ -33,7 +33,7 @@
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateX($big_margin);
+        transform: translateX($text_animation_margin);
       }
       to {
         opacity: 1;
@@ -61,7 +61,7 @@
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateX($big_margin);
+        transform: translateX($text_animation_margin);
       }
       to {
         opacity: 1;

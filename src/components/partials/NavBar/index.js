@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import style from './index.module.scss';
 
-import Logo from 'p/img/logo/logo_fm.svg';
+import Logo from 'p/img/logo/logo_fm_black.svg';
 
 const NavBar = ({ setActiveSection, activeSection }) => {
   const [navBarOpen, setNavBarOpen] = useState(false);

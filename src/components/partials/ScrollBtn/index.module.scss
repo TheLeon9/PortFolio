@@ -17,19 +17,20 @@
   justify-content: center;
   align-items: center;
   animation: fadeIn $text_animation ease-in-out;
-
+  
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translate(-50%, $big_margin);
+      transform: translate(-50%, $text_animation_margin);
     }
     to {
       opacity: 1;
       transform: translate(-50%, 0);
     }
   }
-
+  
   @media only screen and (max-width: $phone_width) {
+    width: 100px;
     bottom: 0;
   }
 
@@ -141,6 +142,10 @@
     color: $text_color;
     font-size: $small_font_size;
     text-transform: lowercase;
+    
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+    }
 
     $rotation_up: 10deg;
     $rotation_down: -10deg;
