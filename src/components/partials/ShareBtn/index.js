@@ -5,13 +5,15 @@ import Link from 'next/link';
 import style from './index.module.scss';
 
 import CloseShare from 'p/img/share_img/close_share.svg';
-import LogoGitHub from 'p/img/share_img/logo_github.svg';
-import LogoLinkedin from 'p/img/share_img/logo_linkedin.svg';
-import LogoShare from 'p/img/share_img/logo_share.svg';
+import LogoGitHub from 'p/img/share_img/github_logo.svg';
+import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
+import LogoMail from 'p/img/share_img/mail_logo.svg';
+import LogoShare from 'p/img/share_img/share_logo.svg';
 
 const ShareBtn = () => {
   const [shareOpen, setShareOpen] = useState(false);
   const [logoPath, setLogoPath] = useState('');
+  const imgWH = 20;
 
   useEffect(() => {
     if (shareOpen) {
@@ -27,6 +29,10 @@ const ShareBtn = () => {
 
   return (
     <div className={style.share_btn_cont}>
+      <p className={`p p_bold ${style.btn_title}`}>
+        <span>social</span>
+        <span>social</span>
+      </p>
       {/* Open and Close Share Button */}
       <button
         onClick={handleShareClicked}
@@ -34,20 +40,25 @@ const ShareBtn = () => {
           shareOpen ? style.btn_share_close : style.btn_share_open
         }`}
       >
-        <Image src={logoPath.src} alt="Logo Share" width={20} height={20} />
+        <Image
+          src={logoPath.src}
+          alt="Logo Share"
+          width={imgWH}
+          height={imgWH}
+        />
       </button>
       {/* GitHub Button */}
       <Link href="https://github.com/TheLeon9" target="_blank">
         <button
           className={`${style.btn_github} ${
-            shareOpen ? style.btn_github_close : style.btn_github_open
+            shareOpen ? style.btn_close : style.btn_open
           }`}
         >
           <Image
             src={LogoGitHub.src}
             alt="Logo GitHub"
-            width={20}
-            height={20}
+            width={imgWH}
+            height={imgWH}
           />
         </button>
       </Link>
@@ -58,14 +69,29 @@ const ShareBtn = () => {
       >
         <button
           className={`${style.btn_link} ${
-            shareOpen ? style.btn_link_close : style.btn_link_open
+            shareOpen ? style.btn_close : style.btn_open
           }`}
         >
           <Image
             src={LogoLinkedin.src}
             alt="Logo Linkedin"
-            width={20}
-            height={20}
+            width={imgWH}
+            height={imgWH}
+          />
+        </button>
+      </Link>
+      {/* Mail Button */}
+      <Link href="" target="_blank">
+        <button
+          className={`${style.btn_mail} ${
+            shareOpen ? style.btn_close : style.btn_open
+          }`}
+        >
+          <Image
+            src={LogoMail.src}
+            alt="Logo Mail"
+            width={imgWH}
+            height={imgWH}
           />
         </button>
       </Link>

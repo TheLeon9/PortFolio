@@ -12,12 +12,60 @@
   position: absolute;
   top: $layout_margin;
   right: $layout_margin;
+  animation: fadeIn $text_animation ease-in-out;
 
-  @media only screen and (max-width: $phone_width) {
-    width: 28px;
-    height: 28px;
+  &:hover {
+    .btn_title {
+      span:nth-child(1) {
+        transform: translateY(-120%);
+      }
+      span:nth-child(2) {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
   }
 
+  .btn_title {
+    width: 60px;
+    height: 28px;
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    transform: translate(0%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      display: inline-block;
+
+      &:nth-child(1) {
+        transform-origin: top;
+        transition: transform $transition_time ease-in-out;
+      }
+      &:nth-child(2) {
+        transform: translate3d(0, 120%, 0);
+        position: absolute;
+        opacity: 1;
+        transition: all $transition_time ease-in-out;
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX($text_animation_margin);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .btn_mail,
   .btn_github,
   .btn_link,
   .btn_share {
@@ -32,51 +80,20 @@
     outline: none;
     transition: $transition;
 
-    @media only screen and (max-width: $phone_width) {
-      width: 28px;
-      height: 28px;
-    }
-
-    &:hover {
-      transform: rotate(20deg);
-
-      &::after {
-        content: '';
-        position: absolute;
-        height: 46px;
-        width: 46px;
-        border: solid $border_width_big $medium_blue;
-        border-top-color: transparent;
-        border-bottom-color: transparent;
-        border-radius: $circle_border_radius;
-
-        @media only screen and (max-width: $phone_width) {
-          width: 34px;
-          height: 34px;
-        }
-      }
-    }
-
     img {
       width: 20px;
       height: 20px;
-
-      @media only screen and (max-width: $phone_width) {
-        width: 14px;
-        height: 14px;
-      }
     }
   }
 
   .btn_share {
+    &.btn_share_close,
     &.btn_share_open {
       border: none;
       background: $white_color;
     }
 
     &.btn_share_close {
-      border: solid $border_width $white_color;
-      background: transparent;
       img {
         width: 14px;
         height: 14px;
@@ -89,40 +106,43 @@
     }
   }
 
+  .btn_github {
+    opacity: 0;
+    z-index: -1;
+    top: calc($big_margin + $small_margin);
+  }
+
+  .btn_link {
+    opacity: 0;
+    z-index: -1;
+    top: calc(($big_margin + $small_margin) * 2);
+  }
+
+  .btn_mail {
+    opacity: 0;
+    z-index: -1;
+    top: calc(($big_margin + $small_margin) * 3);
+  }
+
   .btn_github,
+  .btn_mail,
   .btn_link {
     border: none;
-    background: $white_color;
+    background: none;
 
-    &.btn_github_open {
-      top: 0px;
-      opacity: 1;
+    &.btn_open {
+      transform: translateY($text_animation_negative_margin);
+      opacity: 0;
       z-index: -1;
     }
 
-    &.btn_github_close {
-      top: 60px;
-      opacity: 1;
+    &.btn_close {
+      transform: translateY(0);
+      opacity: 0.6;
       z-index: 1;
 
-      @media only screen and (max-width: $phone_width) {
-        top: 38px;
-      }
-    }
-
-    &.btn_link_open {
-      top: 0px;
-      opacity: 1;
-      z-index: -1;
-    }
-
-    &.btn_link_close {
-      top: 120px;
-      opacity: 1;
-      z-index: 1;
-      
-      @media only screen and (max-width: $phone_width) {
-        top: 76px;
+      &:hover {
+        opacity: 1;
       }
     }
   }

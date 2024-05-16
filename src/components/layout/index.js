@@ -23,6 +23,7 @@ import ShareBtn from '@/components/partials/ShareBtn';
 import Loader from '@/components/partials/Loader';
 
 import Logo from 'p/img/logo/logo_fm_black.svg';
+import { damp } from 'three/src/math/MathUtils';
 
 const Layout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('');
@@ -37,8 +38,6 @@ const Layout = ({ children }) => {
   const white_color = '#f8f8ff';
   const black_color = '#040B12';
   const main_color = '#0132b5';
-  const medium_blue = '#2c75ff';
-  const light_blue = '#26c4ec';
   const fogColor = '#d3d3d3';
 
   useEffect(() => {
@@ -186,7 +185,7 @@ const Layout = ({ children }) => {
     const wobble = new THREE.Mesh(sphereGeometry, material);
     wobble.customDepthMaterial = depthMaterial;
     wobble.position.y = 0.6;
-    scene.add(wobble);
+    // scene.add(wobble);
 
     // Wave Plane
     let planeGeometry = new THREE.PlaneGeometry(30, 10, 100, 100);
@@ -200,7 +199,35 @@ const Layout = ({ children }) => {
     wavePlane.rotation.x = THREE.MathUtils.degToRad(90);
     wavePlane.position.y = -4;
     wavePlane.position.z = 1;
-    scene.add(wavePlane);
+    // scene.add(wavePlane);
+
+    // Gradial Material
+    let radialMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        colorInt: { value: new THREE.Color(main_color) },
+        colorExt: { value: new THREE.Color(black_color) },
+        ratio: { value: window.innerWidth / window.innerHeight },
+      },
+      transparent: true,
+      vertexShader: `varying vec2 vUv;
+      void main(){
+        vUv = uv;
+        gl_Position = vec4(position, 1.);
+      }`,
+      fragmentShader: `varying vec2 vUv;
+      uniform vec3 colorInt;
+      uniform vec3 colorExt;
+      uniform float ratio;
+      void main(){
+        vec2 uv = (vUv - 0.5) * vec2(ratio, 1.);
+        gl_FragColor = vec4( mix( colorInt, colorExt, length(uv)), .4);
+      }`,
+    });
+    
+    // Background radial
+    const radialPlaneGeometry = new THREE.PlaneGeometry(2, 2);
+    const radialPlane = new THREE.Mesh(radialPlaneGeometry, radialMaterial);
+    // scene.add(radialPlane);
 
     //--------------------------------------------------+
     //
@@ -217,7 +244,8 @@ const Layout = ({ children }) => {
     //
     //--------------------------------------------------+
 
-    scene.fog = new THREE.Fog(fogColor, 1, 60);
+    // scene.fog = new THREE.Fog(fogColor, 0, 500);
+    // scene.fog = new THREE.FogExp2( black_color, 0.02 );
 
     //--------------------------------------------------+
     //
@@ -382,7 +410,7 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Scroll Btn container */}
-          {/* <ScrollBtn /> */}
+          <ScrollBtn />
 
           {/* Navigation Bar */}
           {/* <NavBar
