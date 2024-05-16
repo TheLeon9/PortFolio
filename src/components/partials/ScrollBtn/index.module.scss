@@ -31,7 +31,7 @@
   
   @media only screen and (max-width: $phone_width) {
     width: 100px;
-    bottom: 0;
+    bottom: calc($layout_margin / 2);
   }
 
   .scroll_circle_right,

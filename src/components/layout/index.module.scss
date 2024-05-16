@@ -28,6 +28,10 @@
     align-items: center;
     animation: fadeIn $text_animation ease-in-out;
 
+    @media only screen and (max-width: $phone_width) {
+      top: calc($layout_margin / 2);
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;

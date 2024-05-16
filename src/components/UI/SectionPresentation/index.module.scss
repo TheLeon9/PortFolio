@@ -102,7 +102,7 @@
           }
           60%,
           100% {
-            transform: translateY(-120%);
+            transform: translateY($text_animation_negative_margin);
           }
         }
       }

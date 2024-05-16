@@ -14,6 +14,11 @@
   right: $layout_margin;
   animation: fadeIn $text_animation ease-in-out;
 
+  @media only screen and (max-width: $phone_width) {
+    top: calc($layout_margin / 2);
+    right: calc($layout_margin / 2);
+  }
+
   &:hover {
     .btn_title {
       span:nth-child(1) {
@@ -28,7 +33,7 @@
 
   .btn_title {
     width: 60px;
-    height: 28px;
+    height: 26px;
     overflow: hidden;
     position: absolute;
     top: 50%;
@@ -46,7 +51,7 @@
         transition: transform $transition_time ease-in-out;
       }
       &:nth-child(2) {
-        transform: translate3d(0, 120%, 0);
+        transform: translate3d(0, $text_animation_margin, 0);
         position: absolute;
         opacity: 1;
         transition: all $transition_time ease-in-out;
