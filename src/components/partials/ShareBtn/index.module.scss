@@ -42,6 +42,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: $first_font;
+    font-weight: $font_weight_bold;
+    color: $text_color;
+    font-size: $small_font_size;
+    text-transform: lowercase;
+    
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+    }
 
     span {
       display: inline-block;

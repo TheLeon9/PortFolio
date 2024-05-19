@@ -29,7 +29,7 @@ const ShareBtn = () => {
 
   return (
     <div className={style.share_btn_cont}>
-      <p className={`p p_bold ${style.btn_title}`}>
+      <p className={style.btn_title}>
         <span>social</span>
         <span>social</span>
       </p>
