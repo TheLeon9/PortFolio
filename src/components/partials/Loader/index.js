@@ -60,7 +60,8 @@ const SectionPresentation = (props) => {
         duration: 2,
         ease: 'power1.inOut',
       });
-
+      
+      // We change the rotation of the wobble Plane to animate it during the opening
       gsap.to(props.wobblePlateRef.current.rotation, {
         x: THREE.MathUtils.degToRad(90),
         duration: 2,
