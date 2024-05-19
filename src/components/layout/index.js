@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import style from './index.module.scss';
 
@@ -23,11 +23,12 @@ import ShareBtn from '@/components/partials/ShareBtn';
 import Loader from '@/components/partials/Loader';
 
 import Logo from 'p/img/logo/logo_fm_black.svg';
-import { damp } from 'three/src/math/MathUtils';
 
 const Layout = ({ children }) => {
   const [activeSection, setActiveSection] = useState('');
   const [isLoading, setLoader] = useState(true);
+  const wobbleRef = useRef();
+  const wobblePlateRef = useRef();
 
   //--------------------------------------------------+
   //
@@ -72,9 +73,9 @@ const Layout = ({ children }) => {
       uPositionFrequency: new THREE.Uniform(0.5),
       uTimeFrequency: new THREE.Uniform(0.4),
       uStrength: new THREE.Uniform(0.3),
-      uWarpPositionFrequency: new THREE.Uniform(0.38),
-      uWarpTimeFrequency: new THREE.Uniform(0.12),
-      uWarpStrength: new THREE.Uniform(1.7),
+      uWarpPositionFrequency: new THREE.Uniform(0.4),
+      uWarpTimeFrequency: new THREE.Uniform(0.1),
+      uWarpStrength: new THREE.Uniform(1.8),
 
       // Colors
       uMainColor: new THREE.Uniform(new THREE.Color(debugObject.mainColor)),
@@ -113,6 +114,29 @@ const Layout = ({ children }) => {
 
       // MeshDepthMaterial
       depthPacking: THREE.RGBADepthPacking,
+    });
+
+    // Gradial Material
+    let radialMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        colorInt: { value: new THREE.Color(main_color) },
+        colorExt: { value: new THREE.Color(black_color) },
+        ratio: { value: window.innerWidth / window.innerHeight },
+      },
+      transparent: true,
+      vertexShader: `varying vec2 vUv;
+          void main(){
+            vUv = uv;
+            gl_Position = vec4(position, 1.);
+          }`,
+      fragmentShader: `varying vec2 vUv;
+          uniform vec3 colorInt;
+          uniform vec3 colorExt;
+          uniform float ratio;
+          void main(){
+            vec2 uv = (vUv - 0.5) * vec2(ratio, 1.);
+            gl_FragColor = vec4( mix( colorInt, colorExt, length(uv)), .4);
+          }`,
     });
 
     //--------------------------------------------------+
@@ -177,7 +201,7 @@ const Layout = ({ children }) => {
     //--------------------------------------------------+
 
     // IcoSphere
-    let sphereGeometry = new THREE.IcosahedronGeometry(2.4, 50);
+    let sphereGeometry = new THREE.IcosahedronGeometry(2.4, 40);
     sphereGeometry = mergeVertices(sphereGeometry);
     sphereGeometry.computeTangents();
 
@@ -185,10 +209,14 @@ const Layout = ({ children }) => {
     const wobble = new THREE.Mesh(sphereGeometry, material);
     wobble.customDepthMaterial = depthMaterial;
     wobble.position.y = 0.6;
-    // scene.add(wobble);
+
+    // We postion it in front of the camera so we can animate it at the beginning
+    wobble.position.z = 6;
+    scene.add(wobble);
+    wobbleRef.current = wobble;
 
     // Wave Plane
-    let planeGeometry = new THREE.PlaneGeometry(30, 10, 100, 100);
+    let planeGeometry = new THREE.PlaneGeometry(26, 8, 40, 40);
     planeGeometry = mergeVertices(planeGeometry);
     planeGeometry.computeTangents();
 
@@ -196,38 +224,16 @@ const Layout = ({ children }) => {
     const wavePlane = new THREE.Mesh(planeGeometry, material);
     wavePlane.customDepthMaterial = depthMaterial;
     wavePlane.rotation.y = Math.PI;
-    wavePlane.rotation.x = THREE.MathUtils.degToRad(90);
+    wavePlane.rotation.x = THREE.MathUtils.degToRad(100);
     wavePlane.position.y = -4;
     wavePlane.position.z = 1;
-    // scene.add(wavePlane);
+    scene.add(wavePlane);
+    wobblePlateRef.current = wavePlane;
 
-    // Gradial Material
-    let radialMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        colorInt: { value: new THREE.Color(main_color) },
-        colorExt: { value: new THREE.Color(black_color) },
-        ratio: { value: window.innerWidth / window.innerHeight },
-      },
-      transparent: true,
-      vertexShader: `varying vec2 vUv;
-      void main(){
-        vUv = uv;
-        gl_Position = vec4(position, 1.);
-      }`,
-      fragmentShader: `varying vec2 vUv;
-      uniform vec3 colorInt;
-      uniform vec3 colorExt;
-      uniform float ratio;
-      void main(){
-        vec2 uv = (vUv - 0.5) * vec2(ratio, 1.);
-        gl_FragColor = vec4( mix( colorInt, colorExt, length(uv)), .4);
-      }`,
-    });
-    
     // Background radial
     const radialPlaneGeometry = new THREE.PlaneGeometry(2, 2);
     const radialPlane = new THREE.Mesh(radialPlaneGeometry, radialMaterial);
-    // scene.add(radialPlane);
+    scene.add(radialPlane);
 
     //--------------------------------------------------+
     //
@@ -244,7 +250,7 @@ const Layout = ({ children }) => {
     //
     //--------------------------------------------------+
 
-    // scene.fog = new THREE.Fog(fogColor, 0, 500);
+    // scene.fog = new THREE.Fog(fogColor, 0, 100);
     // scene.fog = new THREE.FogExp2( black_color, 0.02 );
 
     //--------------------------------------------------+
@@ -337,9 +343,9 @@ const Layout = ({ children }) => {
     composer.addPass(renderPass);
 
     const bloomPass = new UnrealBloomPass();
-    bloomPass.strength = 0.09;
-    bloomPass.radius = 0.2;
-    bloomPass.threshold = 0.2;
+    bloomPass.strength = 0.01;
+    bloomPass.radius = 0.1;
+    bloomPass.threshold = 0.1;
     composer.addPass(bloomPass);
 
     //--------------------------------------------------+
@@ -390,7 +396,11 @@ const Layout = ({ children }) => {
 
       {/* Loader */}
       {isLoading ? (
-        <Loader setLoader={setLoader} />
+        <Loader
+          setLoader={setLoader}
+          wobbleRef={wobbleRef}
+          wobblePlateRef={wobblePlateRef}
+        />
       ) : (
         <>
           {/* Corner Top Right */}

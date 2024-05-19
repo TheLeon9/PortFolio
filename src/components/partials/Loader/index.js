@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import style from './index.module.scss';
 import Sentence from '@/components/UI/Sentence';
 
+import * as THREE from 'three';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 
@@ -25,7 +26,7 @@ const SectionPresentation = (props) => {
       if (percentage >= 97) {
         setPercentage(100);
       }
-    }, 60);
+    }, 40);
     return () => clearInterval(interval);
   }, [percentage]);
 
@@ -49,8 +50,23 @@ const SectionPresentation = (props) => {
 
   const animateCorners = () => {
     setTimeout(() => {
+      // We open the "wall"
       gsap.to(cornerLeftRef.current, { duration: 2, left: '-60%' });
       gsap.to(cornerRightRef.current, { duration: 2, right: '-60%' });
+
+      // We change the position of the wobble sphere to animate it during the opening
+      gsap.to(props.wobbleRef.current.position, {
+        z: 0,
+        duration: 2,
+        ease: 'power1.inOut',
+      });
+
+      gsap.to(props.wobblePlateRef.current.rotation, {
+        x: THREE.MathUtils.degToRad(90),
+        duration: 2,
+        ease: 'power1.inOut',
+      });
+
       setTimeout(() => {
         props.setLoader(false);
       }, 1200);
