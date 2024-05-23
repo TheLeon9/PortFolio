@@ -23,7 +23,7 @@ const SectionPresentation = (props) => {
             </span>
           </>
         ) : (
-          <span>{text}</span>
+          <span>{props.presentationText}</span>
         )}
       </p>
       <Sentence white="false" />

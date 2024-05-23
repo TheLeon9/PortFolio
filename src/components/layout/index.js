@@ -25,7 +25,7 @@ import Loader from '@/components/partials/Loader';
 import Logo from 'p/img/logo/logo_fm_black.svg';
 
 const Layout = ({ children }) => {
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState('0');
   const [isLoading, setLoader] = useState(true);
   const wobbleRef = useRef();
   const wobblePlateRef = useRef();
@@ -384,7 +384,7 @@ const Layout = ({ children }) => {
   }, [activeSection]);
 
   const handleHomeClick = () => {
-    setActiveSection('');
+    setActiveSection('0');
   };
 
   return (
@@ -403,7 +403,7 @@ const Layout = ({ children }) => {
         />
       ) : (
         <>
-          {/* Corner Top Right */}
+          {/* Btn Share container */}
           <ShareBtn />
 
           {/* Button Home */}
@@ -423,10 +423,10 @@ const Layout = ({ children }) => {
           <ScrollBtn />
 
           {/* Navigation Bar */}
-          {/* <NavBar
+          <NavBar
             activeSection={activeSection}
             setActiveSection={setActiveSection}
-          /> */}
+          />
 
           {children}
         </>

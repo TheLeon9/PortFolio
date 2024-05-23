@@ -4,15 +4,20 @@ import style from '@/styles/index/index.module.scss';
 import SectionPresentation from '@/components/UI/SectionPresentation';
 
 const IndexPage = () => {
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState('0');
 
   useEffect(() => {
-    const storedActiveSection = localStorage.getItem('activeSection');
-    setActiveSection(storedActiveSection || '');
 
+    // We get the active section
+    const storedActiveSection = localStorage.getItem('activeSection');
+
+    // We set the active section or we set it at empty
+    setActiveSection(storedActiveSection || '0');
+
+    // If we change the active section we update it
     const handleStorageChange = () => {
       const updatedActiveSection = localStorage.getItem('activeSection');
-      setActiveSection(updatedActiveSection || '');
+      setActiveSection(updatedActiveSection || '0');
     };
 
     window.addEventListener('storageChange', handleStorageChange);
@@ -22,13 +27,13 @@ const IndexPage = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   console.log(activeSection);
-  // }, [activeSection]);
+  useEffect(() => {
+    console.log(activeSection);
+  }, [activeSection]);
 
   return (
     <div className={style.global_page_container}>
-      {activeSection === '' && (
+      {activeSection === '0' && (
         <SectionPresentation
           presentationTitle="MORACCHINI"
           presentationTitleColored="FLORIAN"
@@ -36,7 +41,7 @@ const IndexPage = () => {
         />
       )}
 
-      {activeSection === 'About' && (
+      {activeSection === '1' && (
         <SectionPresentation
           presentationTitle="ABOUT"
           presentationTitleColored="ME"
@@ -44,7 +49,7 @@ const IndexPage = () => {
         />
       )}
 
-      {activeSection === 'Contact' && (
+      {activeSection === '2' && (
         <SectionPresentation
           presentationTitle="CONTACT"
           presentationTitleColored="ME"
@@ -52,7 +57,7 @@ const IndexPage = () => {
         />
       )}
 
-      {activeSection === 'Projects' && (
+      {activeSection === '3' && (
         <SectionPresentation
           presentationTitle="MY"
           presentationTitleColored="PROJECTS"
@@ -60,7 +65,7 @@ const IndexPage = () => {
         />
       )}
 
-      {activeSection === 'Skills' && (
+      {activeSection === '4' && (
         <SectionPresentation
           presentationTitle="MY"
           presentationTitleColored="SKILLS"

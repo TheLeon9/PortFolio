@@ -13,6 +13,18 @@
   top: $layout_margin;
   right: $layout_margin;
   animation: fadeIn $text_animation ease-in-out;
+  z-index: $top_zindex;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX($text_animation_margin);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 
   @media only screen and (max-width: $phone_width) {
     top: calc($layout_margin / 2);
@@ -68,17 +80,6 @@
     }
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateX($text_animation_margin);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
   .btn_mail,
   .btn_github,
   .btn_link,
@@ -122,19 +123,16 @@
 
   .btn_github {
     opacity: 0;
-    z-index: -1;
     top: calc($big_margin + $small_margin);
   }
 
   .btn_link {
     opacity: 0;
-    z-index: -1;
     top: calc(($big_margin + $small_margin) * 2);
   }
 
   .btn_mail {
     opacity: 0;
-    z-index: -1;
     top: calc(($big_margin + $small_margin) * 3);
   }
 
@@ -143,17 +141,17 @@
   .btn_link {
     border: none;
     background: none;
+    z-index: -1;
 
     &.btn_open {
       transform: translateY($text_animation_negative_margin);
       opacity: 0;
-      z-index: -1;
     }
 
     &.btn_close {
       transform: translateY(0);
-      opacity: 0.6;
-      z-index: 1;
+      opacity: $less_opacity;
+      z-index: $top_zindex;
 
       &:hover {
         opacity: 1;
