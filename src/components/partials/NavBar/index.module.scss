@@ -7,9 +7,8 @@
 // ------------------------------+
 
 .header_cont {
-  height: 220px;
+  height: 180px;
   width: 40px;
-  background-color: red;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -23,7 +22,7 @@
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX($text_animation_margin);
+      transform: translateX($text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -38,7 +37,7 @@
 
   .change_active_section {
     width: 100%;
-    height: 10%;
+    height: 20px;
     background: transparent;
     border: none;
     outline: none;
@@ -48,62 +47,86 @@
     cursor: pointer;
     transition: $transition;
     opacity: $less_opacity;
-    
+
     &:hover {
       opacity: 1;
     }
-    
+
     img {
       width: 20px;
       height: 20px;
     }
   }
 
-  .nav_title_section {
-    width: 60px;
-    height: 26px;
-    overflow: hidden;
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    transform: translate(0%, -50%);
+  $activeWH: 40px;
+  $notActiveWH: 10px;
+
+  .nav_bar_link_active,
+  .nav_bar_link_not_active {
+    background-color: $white_color;
+    border-radius: $circle_border_radius;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: $transition;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: $first_font;
-    font-weight: $font_weight_bold;
-    color: $text_color;
-    font-size: $small_font_size;
-    text-transform: capitalize;
-    
-    @media only screen and (max-width: $phone_width) {
-      font-size: $small_small_font_size;
+    position: relative;
+  }
+
+  .nav_bar_link_not_active {
+    width: $notActiveWH;
+    height: $notActiveWH;
+
+    .nav_title_section,
+    .nav_title_btn {
+      display: none;
+    }
+  }
+
+  .nav_bar_link_active {
+    width: $activeWH;
+    height: $activeWH;
+
+    @keyframes appearNext {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 
-    span {
-      display: inline-block;
+    .nav_title_btn {
+      font-family: $first_font;
+      font-weight: $font_weight_bold;
+      color: $text_color;
+      font-size: $small_small_font_size;
+      transition: $transition;
+      animation: appearNext $transition_time ease-in-out;
+    }
 
-      &:nth-child(1) {
-        transform-origin: top;
-        transition: transform $transition_time ease-in-out;
-      }
-      &:nth-child(2) {
-        transform: translate3d(0, $text_animation_margin, 0);
-        position: absolute;
-        opacity: 1;
-        transition: all $transition_time ease-in-out;
-      }
+    .nav_title_section {
+      width: 100px;
+      height: 26px;
+      overflow: hidden;
+      position: absolute;
+      top: 50%;
+      left: 110%;
+      transform: translate(0%, -50%);
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-family: $first_font;
+      font-weight: $font_weight_bold;
+      color: $text_color;
+      font-size: $small_font_size;
+      text-transform: capitalize;
+      animation: appearNext $transition_time ease-in-out;
 
-      &:hover {
-        .btn_title {
-          span:nth-child(1) {
-            transform: translateY(-120%);
-          }
-          span:nth-child(2) {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
+      @media only screen and (max-width: $phone_width) {
+        font-size: $small_small_font_size;
       }
     }
   }

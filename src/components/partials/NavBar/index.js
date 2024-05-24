@@ -4,6 +4,8 @@ import Image from 'next/image';
 import style from './index.module.scss';
 
 import Logo from 'p/img/logo/logo_fm_black.svg';
+import ChevronUp from 'p/img/chevron/chevron_up.svg';
+import ChevronDown from 'p/img/chevron/chevron_down.svg';
 
 const NavBar = ({ setActiveSection, activeSection }) => {
   const imgWH = 20;
@@ -15,7 +17,7 @@ const NavBar = ({ setActiveSection, activeSection }) => {
   };
 
   const ActiveSectionAdd = () => {
-    if (activeSection < 4) {
+    if (parseInt(activeSection) < 4) {
       setActiveSection(parseInt(activeSection) + 1);
     }
   };
@@ -24,72 +26,87 @@ const NavBar = ({ setActiveSection, activeSection }) => {
     <header className={style.header_cont}>
       {/* Button Substrac */}
       <button
-        onClick={() => ActiveSectionSubstrac('')}
+        onClick={() => ActiveSectionSubstrac()}
         className={style.change_active_section}
       >
-        <Image src={Logo.src} alt="Logo Home" width={imgWH} height={imgWH} />
+        <Image
+          src={ChevronUp.src}
+          alt="Logo Home"
+          width={imgWH}
+          height={imgWH}
+        />
       </button>
       {/* Button Home */}
       <button
-        onClick={() => setActiveSection('')}
-        className={`${style.nav_bar_link} ${
-          activeSection === '0'
+        onClick={() => setActiveSection('0')}
+        className={
+          activeSection == '0'
             ? style.nav_bar_link_active
-            : 'nav_bar_link_not_active'
-        }`}
+            : style.nav_bar_link_not_active
+        }
       >
-        <Image src={Logo.src} alt="Logo Home" width={imgWH} height={imgWH} />
-        <p className={style.nav_title_section}>
-          <span>About</span>
-          <span>About</span>
-        </p>
+        <p className={style.nav_title_btn}>0{activeSection}</p>
+        <p className={style.nav_title_section}>Home</p>
       </button>
       {/* Button About */}
-      {/* <button
-          onClick={() => setActiveSection('About')}
-          className={`${style.nav_bar_link} ${
-            navBarOpenText ? style.navbar_open_text : style.navbar_close_text
-          } ${activeSection === 'About' ? style.active : ''}`}
-        >
-          <p className={`p_medium p_bold`}>About</p>
-          <p className={`p_medium p_bold`}>About</p>
-        </button> */}
+      <button
+        onClick={() => setActiveSection('1')}
+        className={
+          activeSection == '1'
+            ? style.nav_bar_link_active
+            : style.nav_bar_link_not_active
+        }
+      >
+        <p className={style.nav_title_btn}>0{activeSection}</p>
+        <p className={style.nav_title_section}>About</p>
+      </button>
       {/* Button Contact */}
-      {/* <button
-          onClick={() => setActiveSection('Contact')}
-          className={`${style.nav_bar_link} ${
-            navBarOpenText ? style.navbar_open_text : style.navbar_close_text
-          } ${activeSection === 'Contact' ? style.active : ''}`}
-        >
-          <p className={`p_medium p_bold`}>Contact</p>
-          <p className={`p_medium p_bold`}>Contact</p>
-        </button> */}
+      <button
+        onClick={() => setActiveSection('2')}
+        className={
+          activeSection == '2'
+            ? style.nav_bar_link_active
+            : style.nav_bar_link_not_active
+        }
+      >
+        <p className={style.nav_title_btn}>0{activeSection}</p>
+        <p className={style.nav_title_section}>Contact</p>
+      </button>
       {/* Button Projects */}
-      {/* <button
-          onClick={() => setActiveSection('Projects')}
-          className={`${style.nav_bar_link} ${
-            navBarOpenText ? style.navbar_open_text : style.navbar_close_text
-          } ${activeSection === 'Projects' ? style.active : ''}`}
-        >
-          <p className={`p_medium p_bold`}>Projects</p>
-          <p className={`p_medium p_bold`}>Projects</p>
-        </button> */}
+      <button
+        onClick={() => setActiveSection('3')}
+        className={
+          activeSection == '3'
+            ? style.nav_bar_link_active
+            : style.nav_bar_link_not_active
+        }
+      >
+        <p className={style.nav_title_btn}>0{activeSection}</p>
+        <p className={style.nav_title_section}>Projects</p>
+      </button>
       {/* Button Skills */}
-      {/* <button
-          onClick={() => setActiveSection('Skills')}
-          className={`${style.nav_bar_link} ${
-            navBarOpenText ? style.navbar_open_text : style.navbar_close_text
-          } ${activeSection === 'Skills' ? style.active : ''}`}
-        >
-          <p className={`p_medium p_bold`}>Skills</p>
-          <p className={`p_medium p_bold`}>Skills</p>
-        </button> */}
+      <button
+        onClick={() => setActiveSection('4')}
+        className={
+          activeSection == '4'
+            ? style.nav_bar_link_active
+            : style.nav_bar_link_not_active
+        }
+      >
+        <p className={style.nav_title_btn}>0{activeSection}</p>
+        <p className={style.nav_title_section}>Skills</p>
+      </button>
       {/* Button Add */}
       <button
-        onClick={() => ActiveSectionAdd('')}
+        onClick={() => ActiveSectionAdd()}
         className={style.change_active_section}
       >
-        <Image src={Logo.src} alt="Logo Home" width={imgWH} height={imgWH} />
+        <Image
+          src={ChevronDown.src}
+          alt="Logo Home"
+          width={imgWH}
+          height={imgWH}
+        />
       </button>
     </header>
   );

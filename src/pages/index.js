@@ -27,9 +27,10 @@ const IndexPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(activeSection);
-  }, [activeSection]);
+  // useEffect(() => {
+  //   console.log(activeSection);
+  //   console.log(typeof(activeSection));
+  // }, [activeSection]);
 
   return (
     <div className={style.global_page_container}>
