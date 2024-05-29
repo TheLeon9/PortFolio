@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -10,18 +10,10 @@ import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
 import LogoMail from 'p/img/share_img/mail_logo.svg';
 import LogoShare from 'p/img/share_img/share_logo.svg';
 
+import { imgWH } from '@/constants/constants';
+
 const ShareBtn = () => {
   const [shareOpen, setShareOpen] = useState(false);
-  const [logoPath, setLogoPath] = useState('');
-  const imgWH = 20;
-
-  useEffect(() => {
-    if (shareOpen) {
-      setLogoPath(CloseShare);
-    } else {
-      setLogoPath(LogoShare);
-    }
-  }, [shareOpen]);
 
   const handleShareClicked = () => {
     setShareOpen(!shareOpen);
@@ -41,7 +33,7 @@ const ShareBtn = () => {
         }`}
       >
         <Image
-          src={logoPath.src}
+          src={shareOpen ? CloseShare.src : LogoShare.src}
           alt="Logo Share"
           width={imgWH}
           height={imgWH}

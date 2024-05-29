@@ -22,11 +22,18 @@ import ScrollBtn from '@/components/partials/ScrollBtn';
 import ShareBtn from '@/components/partials/ShareBtn';
 import Loader from '@/components/partials/Loader';
 
+import { sections } from '@/constants/constants';
+
 import Logo from 'p/img/logo/logo_fm_black.svg';
 
 const Layout = ({ children }) => {
-  const [activeSection, setActiveSection] = useState('0');
+  // Loader
   const [isLoading, setLoader] = useState(true);
+
+  //  Active Session
+  const [activeSection, setActiveSection] = useState('0');
+
+  // 3D ref
   const wobbleRef = useRef();
   const wobblePlateRef = useRef();
 
@@ -39,7 +46,7 @@ const Layout = ({ children }) => {
   const white_color = '#f8f8ff';
   const black_color = '#040B12';
   const main_color = '#0132b5';
-  const fogColor = '#d3d3d3';
+  // const fogColor = '#d3d3d3';
 
   useEffect(() => {
     const debugObject = {};
@@ -343,9 +350,12 @@ const Layout = ({ children }) => {
     composer.addPass(renderPass);
 
     const bloomPass = new UnrealBloomPass();
-    bloomPass.strength = 0.01;
-    bloomPass.radius = 0.1;
-    bloomPass.threshold = 0.1;
+    bloomPass.strength = 0;
+    bloomPass.radius = 0;
+    bloomPass.threshold = 0;
+    // bloomPass.strength = 0.01;
+    // bloomPass.radius = 0.1;
+    // bloomPass.threshold = 0.1;
     composer.addPass(bloomPass);
 
     //--------------------------------------------------+
@@ -379,13 +389,84 @@ const Layout = ({ children }) => {
   //--------------------------------------------------+
 
   useEffect(() => {
+    // Get the active section from localStorage
+    const storedActiveSection = localStorage.getItem('activeSection');
+    setActiveSection(storedActiveSection || '0');
+
+    // If we change the active section we update it
+    const handleStorageChange = () => {
+      const updatedActiveSection = localStorage.getItem('activeSection');
+      setActiveSection(updatedActiveSection || '0');
+    };
+
+    window.addEventListener('storageChange', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storageChange', handleStorageChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Update localStorage and notify other components when activeSection changes
     localStorage.setItem('activeSection', activeSection);
     window.dispatchEvent(new Event('storageChange'));
   }, [activeSection]);
 
-  const handleHomeClick = () => {
-    setActiveSection('0');
+  // useEffect(() => {
+  //   console.log(activeSection);
+  //   console.log(typeof(activeSection));
+  // }, [activeSection]);
+
+  //--------------------------------------------------+
+  //
+  //  Change the active section on scroll
+  //
+  //--------------------------------------------------+
+
+  // Change de section if we can
+  const changeSection = (index) => {
+    if (index >= 0 && index < sections.length) {
+      const sectionElement = document.querySelector('.global_page_container');
+      if (sectionElement) {
+        gsap.to(sectionElement, {
+          x: -50,
+          opacity: 0,
+          duration: 0.6,
+          onComplete: () => {
+            setActiveSection(index.toString());
+            // Reset animation properties for the next activation
+            gsap.set(sectionElement, { x: 0, opacity: 1, delay: 0.2 });
+          },
+        });
+      } else {
+        setActiveSection(index.toString());
+      }
+    }
   };
+
+  // Simulated scroll event
+  const handleScroll = (event) => {
+    const { deltaY } = event;
+    const currentIndex = parseInt(activeSection, 10);
+
+    if (deltaY > 0) {
+      // Scroll down
+      changeSection(currentIndex + 1);
+    } else if (deltaY < 0) {
+      // Scroll up
+      changeSection(currentIndex - 1);
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener for simulated scroll
+    window.addEventListener('wheel', handleScroll);
+
+    // Remove event listener when component unmounts
+    return () => {
+      window.removeEventListener('wheel', handleScroll);
+    };
+  }, [activeSection]);
 
   return (
     <div className={style.global_cont}>
@@ -403,12 +484,21 @@ const Layout = ({ children }) => {
         />
       ) : (
         <>
+          {/* Wall */}
+          {/* <div
+            className={style.wall}
+            style={{
+              opacity: wallOpacity,
+              transform: `translateX(${wallPosition}px)`,
+            }}
+          ></div> */}
+
           {/* Btn Share container */}
           <ShareBtn />
 
           {/* Button Home */}
           <div className={style.home_btn_cont}>
-            <button onClick={handleHomeClick} className={style.home_btn}>
+            <button onClick={() => changeSection(0)} className={style.home_btn}>
               <Image
                 src={Logo.src}
                 alt="Logo FM Black"
@@ -423,12 +513,10 @@ const Layout = ({ children }) => {
           <ScrollBtn />
 
           {/* Navigation Bar */}
-          <NavBar
-            activeSection={activeSection}
-            setActiveSection={setActiveSection}
-          />
+          <NavBar activeSection={activeSection} changeSection={changeSection} />
 
-          {children}
+          {/* {children} */}
+          {React.cloneElement(children, { activeSection })}
         </>
       )}
     </div>
