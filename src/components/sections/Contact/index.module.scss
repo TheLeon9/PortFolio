@@ -1,0 +1,24 @@
+@import '@/styles/variables.scss';
+
+// ------------------------------+
+//
+//      SECTION CONTACT
+//
+// ------------------------------+
+
+.section_contact_cont {
+  position: absolute;
+  left: calc($layout_margin + $big_margin);
+  bottom: calc($big_margin + $small_margin);
+  width: 480px;
+  height: 140px;
+
+  @media only screen and (max-width: $phone_width) {
+    width: 100%;
+    height: 20%;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    text-align: center;
+  }
+}
