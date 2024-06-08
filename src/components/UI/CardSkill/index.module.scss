@@ -1,0 +1,37 @@
+@import '@/styles/variables.scss';
+
+// ------------------------------+
+//
+//          CARD LIST
+//
+// ------------------------------+
+
+.card_skill {
+  width: 100px;
+  height: 40px;
+  padding: $small_margin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $white_color_rgba;
+  border: solid $border_width $white_color;
+  border-radius: $border_radius;
+  margin: $small_margin;
+  box-shadow: 0 0 10px $white_color;
+  transition: $transition;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $white_color;
+    box-shadow: 0 0 20px $main_color;
+
+    .card_title {
+      color: $main_color;
+    }
+  }
+
+  .card_title {
+    font-weight: bold;
+    transition: $transition;
+  }
+}

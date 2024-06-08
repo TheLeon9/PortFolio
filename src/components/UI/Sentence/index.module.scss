@@ -9,9 +9,9 @@
 .loader_title {
   width: 100%;
   font-weight: $font_weight_regular;
-  animation: fadeIn $text_animation ease-in;
   display: flex;
   align-items: center;
+  animation: fadeIn $text_animation ease-in;
 
   @keyframes fadeIn {
     from {

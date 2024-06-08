@@ -263,14 +263,8 @@ const Layout = ({ children }) => {
     const radialPlaneGeometry = new THREE.PlaneGeometry(2, 2);
     const radialPlane = new THREE.Mesh(radialPlaneGeometry, radialMaterial);
 
-    // Reduce size of elements if on mobile
-    // if (isMobile) {
-    //   wobble.scale.set(0.5, 0.5, 0.5);
-    //   wavePlane.scale.set(0.5, 0.5, 0.5);
-    //   radialPlane.scale.set(0.5, 0.5, 0.5);
-    // }
-
-    scene.add(wobble, wavePlane, radialPlane);
+    // scene.add(wobble, wavePlane, radialPlane);
+    scene.add(wobble,radialPlane);
 
     //--------------------------------------------------+
     //
@@ -455,7 +449,7 @@ const Layout = ({ children }) => {
 
   // Change de section if we can
   const changeSection = (index) => {
-    if (index >= 0 && index < sections.length) {
+    if (index >= 0 && index < sections.length && index != activeSection) {
       const sectionElement = document.querySelector('.global_page_container');
       if (sectionElement) {
         gsap.to(sectionElement, {
