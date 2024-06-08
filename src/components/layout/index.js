@@ -207,8 +207,20 @@ const Layout = ({ children }) => {
     //
     //--------------------------------------------------+
 
+    // Check if screen width is less than 1000px
+    const isMobile = window.innerWidth < 1000;
+
     // IcoSphere
-    let sphereGeometry = new THREE.IcosahedronGeometry(2.4, 40);
+    var icoWidth = 0;
+    var icoDetails = 0;
+    if (isMobile) {
+      icoWidth = 1.6;
+      icoDetails = 30;
+    } else {
+      icoWidth = 2.4;
+      icoDetails = 40;
+    }
+    let sphereGeometry = new THREE.IcosahedronGeometry(icoWidth, icoDetails);
     sphereGeometry = mergeVertices(sphereGeometry);
     sphereGeometry.computeTangents();
 
@@ -219,11 +231,22 @@ const Layout = ({ children }) => {
 
     // We postion it in front of the camera so we can animate it at the beginning
     wobble.position.z = 6;
-    scene.add(wobble);
     wobbleRef.current = wobble;
 
     // Wave Plane
-    let planeGeometry = new THREE.PlaneGeometry(26, 8, 40, 40);
+    var planeW = 0;
+    var planeH = 0;
+    var planeDetailsXY = 0;
+    if (isMobile) {
+      planeW = 20;
+      planeH = 4;
+      planeDetailsXY = 20;
+    } else {
+      planeW = 26;
+      planeH = 8;
+      planeDetailsXY = 40;
+    }
+    let planeGeometry = new THREE.PlaneGeometry(planeW, planeH, planeDetailsXY, planeDetailsXY);
     planeGeometry = mergeVertices(planeGeometry);
     planeGeometry.computeTangents();
 
@@ -234,13 +257,20 @@ const Layout = ({ children }) => {
     wavePlane.rotation.x = THREE.MathUtils.degToRad(100);
     wavePlane.position.y = -4;
     wavePlane.position.z = 1;
-    scene.add(wavePlane);
     wobblePlateRef.current = wavePlane;
 
     // Background radial
     const radialPlaneGeometry = new THREE.PlaneGeometry(2, 2);
     const radialPlane = new THREE.Mesh(radialPlaneGeometry, radialMaterial);
-    scene.add(radialPlane);
+
+    // Reduce size of elements if on mobile
+    // if (isMobile) {
+    //   wobble.scale.set(0.5, 0.5, 0.5);
+    //   wavePlane.scale.set(0.5, 0.5, 0.5);
+    //   radialPlane.scale.set(0.5, 0.5, 0.5);
+    // }
+
+    scene.add(wobble, wavePlane, radialPlane);
 
     //--------------------------------------------------+
     //

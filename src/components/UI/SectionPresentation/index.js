@@ -4,7 +4,7 @@ import Sentence from '@/components/UI/Sentence';
 
 const SectionPresentation = (props) => {
   return (
-    <section className={style.section_presentation_cont}>
+    <div className={style.section_presentation_cont}>
       <h1 className={style.presentation_title}>
         {props.presentationTitle}&nbsp;
         <span className={style.presentation_title_colored}>
@@ -27,7 +27,7 @@ const SectionPresentation = (props) => {
         )}
       </p>
       <Sentence white="false" />
-    </section>
+    </div>
   );
 };
 

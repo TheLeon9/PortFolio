@@ -70,7 +70,7 @@ npm run dev
 
 ## 🌐 Site URL
 
-You can visit the live site at [your-portfolio-url.com](https://your-portfolio-url.com). 💻
+You can visit the live site at [https://port-folio-peach-kappa.vercel.app/](https://port-folio-peach-kappa.vercel.app/). 💻
 
 ## 🏯 License
 

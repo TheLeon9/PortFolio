@@ -12,26 +12,33 @@ import { sectionsInformation } from '@/constants/constants';
 
 const IndexPage = ({ activeSection }) => {
   return (
-    <div className={`global_page_container ${style.global_page_container}`}>
+    <>
       {/* Dispaly for each sections */}
       {sectionsInformation.map(
         (oneSection, index) =>
           activeSection === index.toString() && (
-            <div key={index}>
-              <SectionPresentation
-                key={index}
-                presentationTitle={oneSection.title}
-                presentationTitleColored={oneSection.coloredTitle}
-                presentationText={oneSection.text}
-              />
-              {index === 1 && <SectionAbout />}
-              {index === 2 && <SectionContact />}
-              {index === 3 && <SectionProject />}
-              {index === 4 && <SectionSkill />}
+            <div
+              className={`global_page_container ${style.global_page_container}`}
+              key={index}
+            >
+              <section className={style.section_top}>
+                {index === 1 && <SectionAbout />}
+                {index === 2 && <SectionContact />}
+                {index === 3 && <SectionProject />}
+                {index === 4 && <SectionSkill />}
+              </section>
+              <section className={style.section_bot}>
+                <SectionPresentation
+                  key={index}
+                  presentationTitle={oneSection.title}
+                  presentationTitleColored={oneSection.coloredTitle}
+                  presentationText={oneSection.text}
+                />
+              </section>
             </div>
           )
       )}
-    </div>
+    </>
   );
 };
 

@@ -7,19 +7,13 @@
 // ------------------------------+
 
 .section_presentation_cont {
-  position: absolute;
-  left: calc($layout_margin + $big_margin);
-  bottom: calc($big_margin + $small_margin);
-  width: 480px;
-  height: 140px;
+  width: 100%;
+  height: 100%;
+  padding-left: calc($layout_margin + $big_margin);
 
   @media only screen and (max-width: $phone_width) {
-    width: 100%;
-    height: 20%;
-    left: 50%;
-    bottom: 0;
-    transform: translate(-50%, 0);
     text-align: center;
+    padding-left: 0;
   }
 
   .presentation_title {
@@ -44,7 +38,7 @@
     @media only screen and (max-width: $phone_width) {
       font-size: $medium_font_size;
     }
-    
+
     .presentation_title_colored {
       color: $main_color;
     }
@@ -56,7 +50,7 @@
     justify-content: flex-start;
     margin-top: $margin;
     height: 28px;
-    animation: fadeIn calc($text_animation + .4s) ease-in-out;
+    animation: fadeIn calc($text_animation + 0.4s) ease-in-out;
 
     @keyframes fadeIn {
       from {
