@@ -246,7 +246,12 @@ const Layout = ({ children }) => {
       planeH = 8;
       planeDetailsXY = 40;
     }
-    let planeGeometry = new THREE.PlaneGeometry(planeW, planeH, planeDetailsXY, planeDetailsXY);
+    let planeGeometry = new THREE.PlaneGeometry(
+      planeW,
+      planeH,
+      planeDetailsXY,
+      planeDetailsXY
+    );
     planeGeometry = mergeVertices(planeGeometry);
     planeGeometry.computeTangents();
 
@@ -263,8 +268,7 @@ const Layout = ({ children }) => {
     const radialPlaneGeometry = new THREE.PlaneGeometry(2, 2);
     const radialPlane = new THREE.Mesh(radialPlaneGeometry, radialMaterial);
 
-    // scene.add(wobble, wavePlane, radialPlane);
-    scene.add(wobble,radialPlane);
+    scene.add(wobble, wavePlane, radialPlane);
 
     //--------------------------------------------------+
     //
