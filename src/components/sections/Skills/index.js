@@ -2,14 +2,14 @@ import React from 'react';
 import style from './index.module.scss';
 
 import CardSkill from '@/components/UI/CardSkill';
-import { cardItems } from '@/constants/constants';
+import { skillsList } from '@/constants';
 
 const SectionSkill = () => {
   return (
     <div className={style.section_skill_cont}>
       <div className={style.middle_wrapper}>
-        {cardItems.map((item, index) => (
-          <CardSkill key={index} cardTitle={item.cardTitle} />
+        {skillsList.map((item, index) => (
+          <CardSkill key={index} cardTitle={item.value} />
         ))}
       </div>
     </div>

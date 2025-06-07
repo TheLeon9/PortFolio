@@ -4,7 +4,7 @@ import style from './index.module.scss';
 import Image from 'next/image';
 import LogoFM from 'p/img/about/shadow_lion.png';
 
-import { imgWH } from '@/constants/constants';
+import { imgWH } from '@/constants';
 
 const SectionAbout = () => {
   return (

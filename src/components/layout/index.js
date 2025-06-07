@@ -22,7 +22,7 @@ import ScrollBtn from '@/components/partials/ScrollBtn';
 import ShareBtn from '@/components/partials/ShareBtn';
 import Loader from '@/components/partials/Loader';
 
-import { sections } from '@/constants/constants';
+import { sections } from '@/constants';
 
 import Logo from 'p/img/logo/logo_fm_black.svg';
 

@@ -6,7 +6,7 @@ import style from './index.module.scss';
 import ChevronUp from 'p/img/chevron/chevron_up.svg';
 import ChevronDown from 'p/img/chevron/chevron_down.svg';
 
-import { sections, imgWH } from '@/constants/constants';
+import { sections, imgWH } from '@/constants';
 
 const NavBar = ({ activeSection, changeSection }) => {
 

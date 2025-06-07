@@ -8,7 +8,7 @@ import SectionContact from '@/components/sections/Contact';
 import SectionProject from '@/components/sections/Projects';
 import SectionSkill from '@/components/sections/Skills';
 
-import { sectionsInformation } from '@/constants/constants';
+import { sectionsInformation } from '@/constants';
 
 const IndexPage = ({ activeSection }) => {
   return (

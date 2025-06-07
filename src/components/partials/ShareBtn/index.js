@@ -10,7 +10,7 @@ import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
 import LogoMail from 'p/img/share_img/mail_logo.svg';
 import LogoShare from 'p/img/share_img/share_logo.svg';
 
-import { imgWH } from '@/constants/constants';
+import { imgWH } from '@/constants';
 
 const ShareBtn = () => {
   const [shareOpen, setShareOpen] = useState(false);
