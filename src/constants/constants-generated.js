@@ -1,4 +1,4 @@
-// 🚨 File generated automatically on 07/06/2025 14:14:07
+// 🚨 File generated automatically on 07/06/2025 17:52:52
 
 // 📦 Data for user
 export const userList = [
@@ -45,6 +45,26 @@ export const skillsList = [
 {
   id: 30,
   value: 'FIGMA'
+},
+{
+  id: 33,
+  value: 'UX'
+},
+{
+  id: 34,
+  value: 'UI'
+},
+{
+  id: 35,
+  value: 'GSAP'
+},
+{
+  id: 36,
+  value: 'JS'
+},
+{
+  id: 37,
+  value: 'ExpressJS'
 }
 ];
 
@@ -61,6 +81,42 @@ export const projectsList = [
   highlight3: 'Animations',
   highlight4: 'Responsive',
   highlight5: 'GSAP'
+},
+{
+  id: 9,
+  projectNumber: 2,
+  title: '3D Saber',
+  description: 'Presentation of a 3D Saber',
+  url: '',
+  highlight1: 'React',
+  highlight2: 'SCSS',
+  highlight3: 'Animations',
+  highlight4: 'Responsive',
+  highlight5: 'ThreeJS'
+},
+{
+  id: 10,
+  projectNumber: 3,
+  title: 'Test',
+  description: 'I don\'t know',
+  url: '',
+  highlight1: 'SCSS',
+  highlight2: 'Next JS',
+  highlight3: 'FramerMotion',
+  highlight4: '',
+  highlight5: ''
+},
+{
+  id: 11,
+  projectNumber: 4,
+  title: 'Test 2',
+  description: 'I Don\'t Know',
+  url: '',
+  highlight1: '',
+  highlight2: '',
+  highlight3: '',
+  highlight4: '',
+  highlight5: ''
 }
 ];
 
