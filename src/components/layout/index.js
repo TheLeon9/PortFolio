@@ -17,10 +17,12 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
+// Components
 import NavBar from '@/components/partials/NavBar';
 import ScrollBtn from '@/components/partials/ScrollBtn';
 import ShareBtn from '@/components/partials/ShareBtn';
 import Loader from '@/components/partials/Loader';
+import ColorPicker from '@/components/partials/ColorPicker';
 
 import { sections } from '@/constants';
 
@@ -520,6 +522,9 @@ const Layout = ({ children }) => {
               transform: `translateX(${wallPosition}px)`,
             }}
           ></div> */}
+
+          {/* ColorPicker container */}
+          <ColorPicker />
 
           {/* Btn Share container */}
           <ShareBtn />

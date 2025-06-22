@@ -1,0 +1,95 @@
+@import '@/styles/variables.scss';
+
+// ------------------------------+
+//
+//          COLOR PICKER
+//
+// ------------------------------+
+
+.color_picker_cont {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  top: $layout_margin;
+  right: calc($layout_margin * 8);
+  animation: fadeIn $text_animation ease-in-out;
+  z-index: $top_zindex;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX($text_animation_margin);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @media only screen and (max-width: $phone_width) {
+    top: calc($layout_margin / 2);
+    right: $layout_margin;
+  }
+
+  &:hover {
+    .btn_title {
+      span:nth-child(1) {
+        transform: translateY(-120%);
+      }
+      span:nth-child(2) {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+  }
+
+  .btn_title {
+    width: 60px;
+    height: 26px;
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    transform: translate(0%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: $first_font;
+    font-weight: $font_weight_bold;
+    color: $text_color;
+    font-size: $small_font_size;
+    text-transform: lowercase;
+
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+    }
+
+    span {
+      display: inline-block;
+
+      &:nth-child(1) {
+        transform-origin: top;
+        transition: transform $transition_time ease-in-out;
+      }
+      &:nth-child(2) {
+        transform: translate3d(0, $text_animation_margin, 0);
+        position: absolute;
+        opacity: 1;
+        transition: all $transition_time ease-in-out;
+      }
+    }
+  }
+
+  .input_color_picker {
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: $circle_border_radius;
+    cursor: pointer;
+    outline: none;
+    transition: $transition;
+  }
+}
