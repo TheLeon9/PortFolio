@@ -523,8 +523,8 @@ const Layout = ({ children }) => {
             }}
           ></div> */}
 
-          {/* ColorPicker container */}
-          <ColorPicker />
+          {/* Navigation Bar */}
+          <NavBar activeSection={activeSection} changeSection={changeSection} />
 
           {/* Btn Share container */}
           <ShareBtn />
@@ -542,11 +542,11 @@ const Layout = ({ children }) => {
             </button>
           </div>
 
+          {/* ColorPicker container */}
+          <ColorPicker />
+
           {/* Scroll Btn container */}
           <ScrollBtn />
-
-          {/* Navigation Bar */}
-          <NavBar activeSection={activeSection} changeSection={changeSection} />
 
           {/* {children} */}
           {React.cloneElement(children, { activeSection })}

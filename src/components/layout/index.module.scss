@@ -17,8 +17,8 @@
   align-items: center;
 
   .home_btn_cont {
-    height: 40px;
-    width: 40px;
+    height: $bouton_size;
+    width: $bouton_size;
     position: absolute;
     top: $layout_margin;
     left: 50%;
@@ -50,8 +50,8 @@
       outline: none;
 
       .home_logo {
-        width: 40px;
-        height: 40px;
+        height: $bouton_size;
+        width: $bouton_size;
         cursor: pointer;
 
         @media only screen and (max-width: $phone_width) {

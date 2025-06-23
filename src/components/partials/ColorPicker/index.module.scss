@@ -6,14 +6,32 @@
 //
 // ------------------------------+
 
+$min_height: 80px;
+$max_width: 250px;
+
 .color_picker_cont {
-  height: 40px;
-  width: 40px;
+  height: auto;
+  min-height: $min_height;
+  width: $max_width;
   position: absolute;
-  top: $layout_margin;
-  right: calc($layout_margin * 8);
-  animation: fadeIn $text_animation ease-in-out;
+  bottom: $layout_margin;
+  right: $layout_margin;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   z-index: $top_zindex;
+  animation: fadeIn $text_animation ease-in-out;
+  -webkit-clip-path: circle(
+    calc($bouton_size / 2) at 100% calc(100% - $layout_margin)
+      calc(100% - $layout_margin)
+  );
+  clip-path: circle(
+    calc($bouton_size / 2) at calc(100% - $layout_margin)
+      calc(100% - $layout_margin)
+  );
+  transition: $transition;
+  background-color: var(--color-background);
+  border-radius: calc($bouton_size / 2);
 
   @keyframes fadeIn {
     from {
@@ -26,70 +44,77 @@
     }
   }
 
+  &:hover {
+    -webkit-clip-path: circle($max_width);
+    clip-path: circle($max_width);
+  }
+
   @media only screen and (max-width: $phone_width) {
-    top: calc($layout_margin / 2);
+    bottom: calc($layout_margin / 2);
     right: $layout_margin;
   }
 
-  &:hover {
-    .btn_title {
-      span:nth-child(1) {
-        transform: translateY(-120%);
-      }
-      span:nth-child(2) {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-      }
-    }
-  }
-
-  .btn_title {
-    width: 60px;
-    height: 26px;
-    overflow: hidden;
+  .custom_btn {
     position: absolute;
-    top: 50%;
-    right: 100%;
-    transform: translate(0%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: $first_font;
-    font-weight: $font_weight_bold;
-    color: $text_color;
-    font-size: $small_font_size;
-    text-transform: lowercase;
-
-    @media only screen and (max-width: $phone_width) {
-      font-size: $small_small_font_size;
-    }
-
-    span {
-      display: inline-block;
-
-      &:nth-child(1) {
-        transform-origin: top;
-        transition: transform $transition_time ease-in-out;
-      }
-      &:nth-child(2) {
-        transform: translate3d(0, $text_animation_margin, 0);
-        position: absolute;
-        opacity: 1;
-        transition: all $transition_time ease-in-out;
-      }
-    }
-  }
-
-  .input_color_picker {
-    position: absolute;
-    height: 40px;
-    width: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    bottom: 0;
+    right: 0;
+    height: $bouton_size;
+    width: $bouton_size;
     border-radius: $circle_border_radius;
-    cursor: pointer;
-    outline: none;
+    border: solid var(--color-background) $border_width;
+    background: linear-gradient(
+        217deg,
+        rgba(255, 0, 0, 0.8),
+        rgba(255, 0, 0, 0) 70.71%
+      ),
+      linear-gradient(127deg, rgba(0, 255, 0, 0.8), rgba(0, 255, 0, 0) 70.71%),
+      linear-gradient(336deg, rgba(0, 0, 255, 0.8), rgba(0, 0, 255, 0) 70.71%);
     transition: $transition;
+    z-index: $top_zindex;
+  }
+
+  .custom_selected_menu {
+    width: $max_width;
+    height: $min_height;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    border-radius: calc($bouton_size / 2);
+
+    .custom_selected_top {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .custom_selected_bot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      .custom_space,
+      .reset_color {
+        width: 40px;
+        height: auto;
+      }
+
+      .reset_color {
+        background: none;
+        cursor: pointer;
+        outline: none;
+        border: none;
+      }
+
+      .custom_title {
+        font-family: $first_font;
+        font-weight: $font_weight_bold;
+        color: $text_color;
+        font-size: $small_font_size;
+        text-transform: lowercase;
+      }
+    }
   }
 }

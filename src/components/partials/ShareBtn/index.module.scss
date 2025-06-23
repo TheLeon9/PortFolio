@@ -7,8 +7,8 @@
 // ------------------------------+
 
 .share_btn_cont {
-  height: 40px;
-  width: 40px;
+  height: $bouton_size;
+  width: $bouton_size;
   position: absolute;
   top: $layout_margin;
   right: $layout_margin;
@@ -59,7 +59,7 @@
     color: $text_color;
     font-size: $small_font_size;
     text-transform: lowercase;
-    
+
     @media only screen and (max-width: $phone_width) {
       font-size: $small_small_font_size;
     }
@@ -85,8 +85,8 @@
   .btn_link,
   .btn_share {
     position: absolute;
-    height: 40px;
-    width: 40px;
+    height: $bouton_size;
+    width: $bouton_size;
     display: flex;
     justify-content: center;
     align-items: center;
