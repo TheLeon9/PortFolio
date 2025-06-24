@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import style from './index.module.scss';
 
-import LogoReset from 'p/img/share_img/share_logo.svg';
+import LogoReset from 'p/img/custom_img/reset.svg';
 import {
   DEFAULT_BACKGROUND_COLOR,
   DEFAULT_MAIN_COLOR,
@@ -12,6 +12,10 @@ import {
 } from '@/constants';
 
 const ColorPicker = () => {
+  const [mainColorFilter, setMainColorFilter] = useState(false);
+  const [backgroundColorFilter, setBackgroundColorFilter] = useState(false);
+  const [transparencyLevelFilter, setTransparencyLevelFilter] = useState(false);
+
   const [mainColor, setMainColor] = useState(DEFAULT_MAIN_COLOR);
   const [backgroundColor, setBackgroundColor] = useState(
     DEFAULT_BACKGROUND_COLOR
@@ -33,12 +37,74 @@ const ColorPicker = () => {
     setTextColor(DEFAULT_TEXT_COLOR);
   };
 
+  const openMainColorFilter = () => {
+    setMainColorFilter(!mainColorFilter);
+    setBackgroundColorFilter(false);
+    setTransparencyLevelFilter(false);
+  };
+
+  const openBackGroundFilter = () => {
+    setMainColorFilter(false);
+    setBackgroundColorFilter(!backgroundColorFilter);
+    setTransparencyLevelFilter(false);
+  };
+
+  const openTransparencyLevelFilter = () => {
+    setMainColorFilter(false);
+    setBackgroundColorFilter(false);
+    setTransparencyLevelFilter(!transparencyLevelFilter);
+  };
+
   return (
     <div className={style.color_picker_cont}>
       <div className={style.custom_btn}></div>
-      <div className={style.custom_options_menu}></div>
+      <div className={style.custom_options_menu}>
+        {mainColorFilter && (
+          <div className={style.filter_section}>
+            <div className={style.color_buttons}>
+              {[
+                '#ff0000',
+                '#00ff00',
+                '#0000ff',
+                '#ff00ff',
+                '#00ffff',
+                '#ffff00',
+              ].map((color) => (
+                <button
+                  key={color}
+                  className={style.color_dot}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setMainColor(color)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {backgroundColorFilter && <></>}
+
+        {transparencyLevelFilter && <></>}
+      </div>
       <div className={style.custom_selected_menu}>
-        <div className={style.custom_selected_top}></div>
+        <div className={style.custom_selected_top}>
+          <button
+            style={{ backgroundColor: mainColor }}
+            className={style.custom_button}
+            title="Main Color"
+            onClick={openMainColorFilter}
+          ></button>
+          <button
+            style={{ backgroundColor: backgroundColor }}
+            className={style.custom_button}
+            title="Background Color"
+            onClick={openBackGroundFilter}
+          ></button>
+          <button
+            className={`${style.custom_button} ${style.opacity_button}`}
+            title="Transparency Level"
+            onClick={openTransparencyLevelFilter}
+          ></button>
+        </div>
         <div className={style.custom_selected_bot}>
           <button onClick={resetColor} className={style.reset_color}>
             <Image
