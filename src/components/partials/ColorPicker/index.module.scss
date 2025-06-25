@@ -6,32 +6,25 @@
 //
 // ------------------------------+
 
-$min_height: 80px;
+$min_height: 85px;
 $max_width: 250px;
+$update_height: 55px;
 
 .color_picker_cont {
-  height: auto;
-  min-height: $min_height;
   width: $max_width;
+  min-height: $min_height;
   position: absolute;
   bottom: $layout_margin;
   right: $layout_margin;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  background-color: $white_color;
+  border-radius: calc($bouton_size / 2);
   z-index: $top_zindex;
+  transition: $transition;
   animation: fadeIn $text_animation ease-in-out;
-  -webkit-clip-path: circle(
-    calc($bouton_size / 2) at 100% calc(100% - $layout_margin)
-      calc(100% - $layout_margin)
-  );
   clip-path: circle(
     calc($bouton_size / 2) at calc(100% - $layout_margin)
       calc(100% - $layout_margin)
   );
-  transition: $transition;
-  background-color: var(--color-background);
-  border-radius: calc($bouton_size / 2);
 
   @keyframes fadeIn {
     from {
@@ -44,14 +37,44 @@ $max_width: 250px;
     }
   }
 
+  &.open_options_menu {
+    border-radius: 0 0 calc($bouton_size / 2) calc($bouton_size / 2);
+
+    .custom_options_menu {
+      height: $update_height;
+      transform: translateY($update_height * -1 + $margin);
+
+      .filter_section {
+        height: $update_height;
+
+        .color_buttons {
+          .color_dot {
+            animation: fadeInColor $medium_transition_time ease-in-out;
+
+            @keyframes fadeInColor {
+              from {
+                opacity: 0;
+              }
+              to {
+                opacity: 1;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   &:hover {
-    -webkit-clip-path: circle($max_width);
     clip-path: circle($max_width);
+
+    .custom_btn {
+      transform: rotate(360deg) scale(0.6);
+    }
   }
 
   @media only screen and (max-width: $phone_width) {
     bottom: calc($layout_margin / 2);
-    right: $layout_margin;
   }
 
   .custom_btn {
@@ -61,7 +84,7 @@ $max_width: 250px;
     height: $bouton_size;
     width: $bouton_size;
     border-radius: $circle_border_radius;
-    border: solid var(--color-background) $border_width;
+    border: solid $white_color $border_width;
     background: linear-gradient(
         217deg,
         rgba(255, 0, 0, 0.8),
@@ -70,57 +93,48 @@ $max_width: 250px;
       linear-gradient(127deg, rgba(0, 255, 0, 0.8), rgba(0, 255, 0, 0) 70.71%),
       linear-gradient(336deg, rgba(0, 0, 255, 0.8), rgba(0, 0, 255, 0) 70.71%);
     transition: $transition;
-    z-index: $top_zindex;
   }
 
   .custom_options_menu {
     width: $max_width;
-    height: auto;
-    min-height: $min_height;
-    background-color: red;
     position: absolute;
-    top: -$min_height;
+    background-color: $white_color;
+    border-radius: calc($bouton_size / 2) calc($bouton_size / 2) 0 0;
+    padding: $small_margin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     overflow: hidden;
+    height: 0;
+    transition: $transition;
 
     .filter_section {
-      opacity: 1;
+      width: 100%;
       position: absolute;
+      top: 0;
       transition: $transition;
-      animation: fadeIn $text_animation ease-in-out;
-      transform: translateY(calc(-100% + 13px)) translateZ(0);
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(calc(-100% + 13px)) translateZ(0);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) translateZ(0);
-        }
-      }
 
       .color_buttons {
+        width: 100%;
         display: flex;
-        flex-wrap: wrap;
         justify-content: space-between;
+        gap: $small_margin;
+        padding: $small_margin;
+        transition: $transition;
+
+        &.background_color {
+          justify-content: flex-start;
+        }
 
         .color_dot {
-          width: 20px;
-          height: 20px;
+          width: 26px;
+          height: 26px;
           border-radius: 2px;
-          border: solid $border_width var(--color-background);
+          border: solid $border_width var(--color-text);
           cursor: pointer;
-          margin-bottom: 2px;
         }
       }
-    }
-
-    .color_choice {
-      padding: 0.3rem 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      cursor: pointer;
     }
   }
 
@@ -130,29 +144,23 @@ $max_width: 250px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
+    padding: 0 0 $small_margin;
     position: absolute;
-    border-radius: calc($bouton_size / 2);
-
-    .custom_selected_top,
-    .custom_selected_bot {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
 
     .custom_selected_top {
       width: 100%;
-      height: 50%;
-      padding: $margin;
+      padding: 0 $small_margin;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY($margin);
 
       .custom_button {
         width: 60px;
-        height: 24px;
+        height: 20px;
         border-radius: calc($border_radius * 2);
-        outline: none;
         border: solid $border_width var(--color-text);
         cursor: pointer;
+        outline: none;
       }
 
       .opacity_button {
@@ -170,19 +178,21 @@ $max_width: 250px;
 
     .custom_selected_bot {
       width: 100%;
-      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
       .custom_space,
       .reset_color {
         width: 40px;
-        height: auto;
+        height: 20px;
       }
 
       .reset_color {
         background: none;
         cursor: pointer;
-        outline: none;
         border: none;
+        outline: none;
       }
 
       .custom_title {

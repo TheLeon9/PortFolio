@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
@@ -8,113 +9,123 @@ import {
   DEFAULT_BACKGROUND_COLOR,
   DEFAULT_MAIN_COLOR,
   DEFAULT_TEXT_COLOR,
+  DEFAULT_TRANSPARENCY_LEVEL,
   imgWH,
 } from '@/constants';
+import { useTheme } from '@/context/ThemeContext.js';
+
+const COLOR_OPTIONS = {
+  main: [
+    { name: 'Legend Blue', color: '#0132b5' },
+    { name: 'Crimson Red', color: '#b5013a' },
+    { name: 'Forest Green', color: '#007755' },
+    { name: 'Mustard Yellow', color: '#d4a500' },
+    { name: 'Midnight Purple', color: '#5e2fbd' },
+    { name: 'Deep Aqua', color: '#00a3b5' },
+  ],
+  background: [
+    { name: 'Black', color: '#040b12' },
+    { name: 'White', color: '#f8f8ff' },
+  ],
+};
 
 const ColorPicker = () => {
-  const [mainColorFilter, setMainColorFilter] = useState(false);
-  const [backgroundColorFilter, setBackgroundColorFilter] = useState(false);
-  const [transparencyLevelFilter, setTransparencyLevelFilter] = useState(false);
+  const {
+    mainColor,
+    setMainColor,
+    backgroundColor,
+    setBackgroundColor,
+    textColor,
+    setTextColor,
+    TransparencyLevel,
+    SetTransparencyLevel,
+  } = useTheme();
 
-  const [mainColor, setMainColor] = useState(DEFAULT_MAIN_COLOR);
-  const [backgroundColor, setBackgroundColor] = useState(
-    DEFAULT_BACKGROUND_COLOR
-  );
-  const [textColor, setTextColor] = useState(DEFAULT_TEXT_COLOR);
+  const [activeFilter, setActiveFilter] = useState(null); // 'main' | 'background' | 'transparency' | null
 
   useEffect(() => {
-    document.documentElement.style.setProperty('--color-primary', mainColor);
-    document.documentElement.style.setProperty(
-      '--color-background',
-      backgroundColor
-    );
-    document.documentElement.style.setProperty('--color-text', textColor);
+    const root = document.documentElement.style;
+    root.setProperty('--color-primary', mainColor);
+    root.setProperty('--color-background', backgroundColor);
+    root.setProperty('--color-text', textColor);
   }, [mainColor, backgroundColor, textColor]);
 
-  const resetColor = () => {
+  const handleReset = () => {
     setMainColor(DEFAULT_MAIN_COLOR);
     setBackgroundColor(DEFAULT_BACKGROUND_COLOR);
     setTextColor(DEFAULT_TEXT_COLOR);
+    SetTransparencyLevel(DEFAULT_TRANSPARENCY_LEVEL);
+    setActiveFilter(null);
   };
 
-  const openMainColorFilter = () => {
-    setMainColorFilter(!mainColorFilter);
-    setBackgroundColorFilter(false);
-    setTransparencyLevelFilter(false);
+  const toggleFilter = (filter) => {
+    setActiveFilter((prev) => (prev === filter ? null : filter));
   };
 
-  const openBackGroundFilter = () => {
-    setMainColorFilter(false);
-    setBackgroundColorFilter(!backgroundColorFilter);
-    setTransparencyLevelFilter(false);
-  };
-
-  const openTransparencyLevelFilter = () => {
-    setMainColorFilter(false);
-    setBackgroundColorFilter(false);
-    setTransparencyLevelFilter(!transparencyLevelFilter);
-  };
+  const renderColorButtons = (colors, setter) =>
+    colors.map(({ name, color }) => (
+      <button
+        key={name}
+        className={style.color_dot}
+        style={{ backgroundColor: color }}
+        title={name}
+        onClick={() => setter(color)}
+      />
+    ));
 
   return (
-    <div className={style.color_picker_cont}>
+    <div
+      className={`${style.color_picker_cont} ${
+        activeFilter != null ? style.open_options_menu : ''
+      }`}
+    >
       <div className={style.custom_btn}></div>
+
       <div className={style.custom_options_menu}>
-        {mainColorFilter && (
-          <div className={style.filter_section}>
+        <div className={style.filter_section}>
+          {activeFilter === 'main' && (
             <div className={style.color_buttons}>
-              {[
-                '#ff0000',
-                '#00ff00',
-                '#0000ff',
-                '#ff00ff',
-                '#00ffff',
-                '#ffff00',
-              ].map((color) => (
-                <button
-                  key={color}
-                  className={style.color_dot}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setMainColor(color)}
-                />
-              ))}
+              {renderColorButtons(COLOR_OPTIONS.main, setMainColor)}
             </div>
-          </div>
-        )}
-
-        {backgroundColorFilter && <></>}
-
-        {transparencyLevelFilter && <></>}
+          )}
+          {activeFilter === 'background' && (
+            <div className={`${style.color_buttons} ${style.background_color}`}>
+              {renderColorButtons(COLOR_OPTIONS.background, setBackgroundColor)}
+            </div>
+          )}
+          {activeFilter === 'transparency' && (
+            <div>
+              {/* Tu peux implémenter la logique de transparence ici */}
+            </div>
+          )}
+        </div>
       </div>
+
       <div className={style.custom_selected_menu}>
         <div className={style.custom_selected_top}>
           <button
             style={{ backgroundColor: mainColor }}
             className={style.custom_button}
             title="Main Color"
-            onClick={openMainColorFilter}
-          ></button>
+            onClick={() => toggleFilter('main')}
+          />
           <button
             style={{ backgroundColor: backgroundColor }}
             className={style.custom_button}
             title="Background Color"
-            onClick={openBackGroundFilter}
-          ></button>
+            onClick={() => toggleFilter('background')}
+          />
           <button
             className={`${style.custom_button} ${style.opacity_button}`}
             title="Transparency Level"
-            onClick={openTransparencyLevelFilter}
-          ></button>
+            onClick={() => toggleFilter('transparency')}
+          />
         </div>
-        <div className={style.custom_selected_bot}>
-          <button onClick={resetColor} className={style.reset_color}>
-            <Image
-              src={LogoReset}
-              alt="Logo Reset Color"
-              width={imgWH}
-              height={imgWH}
-            />
-          </button>
 
+        <div className={style.custom_selected_bot}>
+          <button onClick={handleReset} className={style.reset_color}>
+            <Image src={LogoReset} alt="Reset" width={imgWH} height={imgWH} />
+          </button>
           <p className={style.custom_title}>CUSTOMIZE ME</p>
           <div className={style.custom_space}></div>
         </div>

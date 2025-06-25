@@ -37,3 +37,4 @@ export const imgWH = 20;
 export const DEFAULT_MAIN_COLOR = '#0132b5';
 export const DEFAULT_BACKGROUND_COLOR = '#f8f8ff';
 export const DEFAULT_TEXT_COLOR = '#1c1c1c';
+export const DEFAULT_TRANSPARENCY_LEVEL = 0;
