@@ -45,7 +45,7 @@
     border-top: solid $border_width transparent;
     border-left: solid $border_width transparent;
     border-right: solid $border_width transparent;
-    border-bottom: solid $border_width $main_color;
+    border-bottom: solid $border_width var(--color-primary);
     border-radius: $circle_border_radius;
   }
 
@@ -101,7 +101,7 @@
     position: absolute;
     width: 4px;
     height: 4px;
-    background-color: $main_color;
+    background-color: var(--color-primary);
     border-radius: $circle_border_radius;
     animation: scrollCircleDot $big_transition_time infinite linear;
 

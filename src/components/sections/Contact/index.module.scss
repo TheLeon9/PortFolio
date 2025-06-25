@@ -81,7 +81,7 @@
           font-family: $second_font;
 
           &:focus {
-            box-shadow: 0 0 20px $main_color;
+            box-shadow: 0 0 20px var(--color-primary);
             background-color: $white_color;
           }
         }
@@ -120,9 +120,9 @@
         font-family: $second_font;
 
         &:focus {
-          box-shadow: 0 0 20px $main_color;
+          box-shadow: 0 0 20px var(--color-primary);
           background-color: $white_color;
-          color: $main_color;
+          color: var(--color-primary);
         }
       }
     }
@@ -146,9 +146,9 @@
       text-transform: uppercase;
 
       &:hover {
-        box-shadow: 0 0 20px $main_color;
+        box-shadow: 0 0 20px var(--color-primary);
         background-color: $white_color;
-        color: $main_color;
+        color: var(--color-primary);
       }
     }
 
@@ -162,10 +162,10 @@
       background-color: $white_color;
       border-radius: $border_radius;
       border: $border_width solid $white_color;
-      box-shadow: 0 0 20px $main_color;
+      box-shadow: 0 0 20px var(--color-primary);
 
       p {
-        color: $main_color;
+        color: var(--color-primary);
       }
     }
   }

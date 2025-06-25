@@ -40,7 +40,7 @@
     }
 
     .presentation_title_colored {
-      color: $main_color;
+      color: var(--color-primary);
     }
   }
 
@@ -82,7 +82,7 @@
       }
 
       .span_hook {
-        color: $main_color;
+        color: var(--color-primary);
         font-weight: $font_weight_bold;
       }
 

@@ -23,10 +23,10 @@
 
   &:hover {
     background-color: $white_color;
-    box-shadow: 0 0 20px $main_color;
+    box-shadow: 0 0 20px var(--color-primary);
 
     .card_title {
-      color: $main_color;
+      color: var(--color-primary);
     }
   }
 

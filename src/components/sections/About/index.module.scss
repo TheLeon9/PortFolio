@@ -95,7 +95,7 @@
           justify-content: space-between;
 
           .info_value {
-            color: $main_color;
+            color: var(--color-primary);
           }
         }
       }

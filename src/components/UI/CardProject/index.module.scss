@@ -30,7 +30,7 @@
 
   &:hover {
     background-color: $white_color;
-    box-shadow: 0 0 20px $main_color;
+    box-shadow: 0 0 20px var(--color-primary);
     width: 220px;
     transform: translateY(calc($small_margin) * -1);
 
@@ -48,7 +48,7 @@
 
     .card_project_title,
     .card_project_number {
-      color: $main_color;
+      color: var(--color-primary);
     }
 
     .card_project_number {
