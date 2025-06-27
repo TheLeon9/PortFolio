@@ -160,7 +160,16 @@ $transparent_percentage: 2%;
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      animation: rotate_circle $text_animation infinite alternate;
+      
+      @keyframes rotate_circle {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(45deg);
+        }
+      }
 
       @media only screen and (max-width: $phone_width) {
         width: calc($corner_width_phone - $small_margin);

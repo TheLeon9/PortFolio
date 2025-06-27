@@ -17,6 +17,7 @@ export const ThemeProvider = ({ children }) => {
   const [TransparencyLevel, SetTransparencyLevel] = useState(
     DEFAULT_TRANSPARENCY_LEVEL
   );
+  const [musicActive, setMusicActive] = useState(false);
 
   return (
     <ThemeContext.Provider
@@ -29,6 +30,8 @@ export const ThemeProvider = ({ children }) => {
         setTextColor,
         TransparencyLevel,
         SetTransparencyLevel,
+        musicActive,
+        setMusicActive,
       }}
     >
       {children}

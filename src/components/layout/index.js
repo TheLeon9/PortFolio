@@ -1,21 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import style from './index.module.scss';
-
-import * as THREE from 'three';
 import gsap from 'gsap';
-import GUI from 'lil-gui';
-import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
-
-// Shaders
-import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
-import wobbleVertexShader from './shaders/wobble/vertex.glsl';
-import wobbleFragmentShader from './shaders/wobble/fragment.glsl';
-
-// Render
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
 // Components
 import NavBar from '@/components/partials/NavBar';
@@ -23,6 +9,7 @@ import ScrollBtn from '@/components/partials/ScrollBtn';
 import ShareBtn from '@/components/partials/ShareBtn';
 import Loader from '@/components/partials/Loader';
 import ColorPicker from '@/components/partials/ColorPicker';
+import MusicSelector from '@/components/partials/MusicSelector';
 
 import { sections } from '@/constants';
 import { useTheme } from '@/context/ThemeContext.js';
@@ -177,9 +164,6 @@ const Layout = ({ children }) => {
           {/* Navigation Bar */}
           <NavBar activeSection={activeSection} changeSection={changeSection} />
 
-          {/* Btn Share container */}
-          <ShareBtn />
-
           {/* Button Home */}
           <div className={style.home_btn_cont}>
             <button onClick={() => changeSection(0)} className={style.home_btn}>
@@ -193,11 +177,17 @@ const Layout = ({ children }) => {
             </button>
           </div>
 
-          {/* ColorPicker container */}
-          <ColorPicker />
+          {/* Btn Share container */}
+          <ShareBtn />
+
+          {/* Music Selector container */}
+          <MusicSelector />
 
           {/* Scroll Btn container */}
           <ScrollBtn />
+
+          {/* ColorPicker container */}
+          <ColorPicker />
 
           {/* {children} */}
           {React.cloneElement(children, { activeSection })}

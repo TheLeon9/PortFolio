@@ -1,0 +1,93 @@
+@import '@/styles/variables.scss';
+
+// ------------------------------+
+//
+//         MUSIC SELECTOR
+//
+// ------------------------------+
+
+.music_selector_cont {
+  width: 80px;
+  height: 30px;
+  position: absolute;
+  bottom: $layout_margin;
+  left: $layout_margin;
+  background-color: $white_color;
+  border-radius: calc($bouton_size / 2);
+  z-index: $top_zindex;
+  transition: $transition;
+  animation: fadeIn $text_animation ease-in-out;
+  // clip-path: circle(
+  //   calc($bouton_size / 2) at calc(100% - $layout_margin)
+  //     calc(100% - $layout_margin)
+  // );
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX($text_animation_negative_margin);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &:hover {
+    // clip-path: circle($max_width);
+  }
+
+  .music_btn {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+
+    .music_line {
+      width: 60%;
+      height: 100%;
+      position: relative;
+
+      .hide_left {
+        background-color: red;
+        // background: linear-gradient(90deg, $black_color 15%, transparent 95%);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        // border-radius: calc($bouton_size / 2);
+
+      }
+
+      .hide_right {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+      }
+    }
+
+    .music_text_cont {
+      width: 40%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .music_text {
+        font-family: $first_font;
+        font-weight: $font_weight_bold;
+        color: $text_color;
+        font-size: $small_font_size;
+        text-transform: lowercase;
+      }
+    }
+  }
+}
