@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import style from './index.module.scss';
-import Sentence from '@/components/UI/Sentence';
 
 import * as THREE from 'three';
 import Image from 'next/image';
@@ -9,75 +8,86 @@ import { gsap } from 'gsap';
 import LogoWhiteAnimated from 'p/img/loading/logo_fm_white_animated.svg';
 import BlueCircle from 'p/img/loading/blue_ornament_circle.svg';
 
-const SectionPresentation = (props) => {
+import Sentence from '@/components/UI/Sentence';
+import MusicButton from '@/components/UI/MusicButton';
+
+const SectionPresentation = ({ wobbleRef, wobblePlateRef, setLoader }) => {
   const [percentage, setPercentage] = useState(0);
   const [endAnimation, setEndAnimation] = useState(false);
+
   const loaderContCenterRef = useRef(null);
+  const loaderContMusicRef = useRef(null);
   const cornerLeftRef = useRef(null);
   const cornerRightRef = useRef(null);
 
+  // Loading percentage
   useEffect(() => {
     const interval = setInterval(() => {
-      if (percentage < 97) {
-        setPercentage(
-          (prevPercentage) => prevPercentage + Math.floor(Math.random() * 3) + 1
-        );
-      }
-      if (percentage >= 97) {
-        setPercentage(100);
-      }
+      setPercentage((prev) =>
+        prev < 97 ? prev + Math.floor(Math.random() * 3) + 1 : prev
+      );
     }, 40);
+
     return () => clearInterval(interval);
+  }, []);
+
+  // Forcing 100%
+  useEffect(() => {
+    if (percentage >= 97 && percentage < 100) {
+      setPercentage(100);
+    }
   }, [percentage]);
 
+  // End of loading => trigger fade out
   useEffect(() => {
     if (percentage === 100) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         setEndAnimation(true);
       }, 400);
+      return () => clearTimeout(timeout);
     }
   }, [percentage]);
 
-  useEffect(() => {
-    if (endAnimation) {
-      gsap.to(loaderContCenterRef.current, {
-        duration: 0.5,
-        autoAlpha: 0,
-        onComplete: animateCorners,
-      });
-    }
-  }, [endAnimation]);
-
-  const animateCorners = () => {
+  // Animation corners (memoized)
+  const animateCorners = useCallback(() => {
     setTimeout(() => {
-      // We open the "wall"
       gsap.to(cornerLeftRef.current, { duration: 2, left: '-60%' });
       gsap.to(cornerRightRef.current, { duration: 2, right: '-60%' });
 
-      // We change the position of the wobble sphere to animate it during the opening
-      gsap.to(props.wobbleRef.current.position, {
+      gsap.to(wobbleRef.current.position, {
         z: 0,
         duration: 2,
         ease: 'power1.inOut',
       });
-      
-      // We change the rotation of the wobble Plane to animate it during the opening
-      gsap.to(props.wobblePlateRef.current.rotation, {
+
+      gsap.to(wobblePlateRef.current.rotation, {
         x: THREE.MathUtils.degToRad(90),
         duration: 2,
         ease: 'power1.inOut',
       });
 
       setTimeout(() => {
-        props.setLoader(false);
+        setLoader(false);
       }, 1200);
     }, 400);
-  };
+  }, [wobbleRef, wobblePlateRef, setLoader]);
+
+  // Fade out loader elements
+  useEffect(() => {
+    if (endAnimation) {
+      gsap.to([loaderContCenterRef.current, loaderContMusicRef.current], {
+        duration: 0.5,
+        autoAlpha: 0,
+        onComplete: animateCorners,
+      });
+    }
+  }, [endAnimation, animateCorners]);
 
   return (
     <div className={style.loader_cont}>
       <div ref={cornerLeftRef} className={style.loader_corner_left}></div>
       <div ref={cornerRightRef} className={style.loader_corner_right}></div>
+
       <div ref={loaderContCenterRef} className={style.loader_cont_center}>
         <Image
           src={BlueCircle.src}
@@ -97,6 +107,15 @@ const SectionPresentation = (props) => {
           <p className={style.loader_percentage}>{percentage}</p>
           <Sentence white="true" />
         </div>
+      </div>
+
+      <div ref={loaderContMusicRef} className={style.music_wrapper}>
+        <div className={style.music_selector_cont}>
+          <MusicButton />
+        </div>
+        <p className={style.text_music}>
+          We use ambient sound to make your experience more immersive.
+        </p>
       </div>
     </div>
   );

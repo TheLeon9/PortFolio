@@ -160,14 +160,17 @@ $transparent_percentage: 2%;
       position: absolute;
       top: 50%;
       left: 50%;
-      animation: rotate_circle $text_animation infinite alternate;
-      
+      transform: translate(-50%, -50%);
+      animation: rotate_circle 40s linear infinite;
+      will-change: transform;
+      mix-blend-mode: screen;
+
       @keyframes rotate_circle {
-        from {
+        0% {
           transform: translate(-50%, -50%) rotate(0deg);
         }
-        to {
-          transform: translate(-50%, -50%) rotate(45deg);
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
         }
       }
 
@@ -213,14 +216,6 @@ $transparent_percentage: 2%;
         font-size: $medium_font_size;
         font-weight: $font_weight_regular;
         color: $white_color;
-
-        @media only screen and (max-width: $phone_width) {
-          font-size: $small_small_font_size;
-          text-align: center;
-        }
-      }
-
-      .loader_percentage {
         margin-bottom: $small_margin;
         position: relative;
         width: 60px;
@@ -233,10 +228,57 @@ $transparent_percentage: 2%;
           position: absolute;
           right: -10px;
         }
+
+        @media only screen and (max-width: $phone_width) {
+          font-size: $small_small_font_size;
+          text-align: center;
+        }
       }
     }
   }
 
-  @media only screen and (max-width: $phone_width) {
+  .music_wrapper {
+    width: 400px;
+    height: auto;
+    position: absolute;
+    left: 50%;
+    bottom: $layout_margin;
+    transform: translate(-50%, 0%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeInMusic $text_animation ease-in-out;
+
+    @keyframes fadeInMusic {
+      from {
+        opacity: 0;
+        transform: translate(-50%, $text_animation_margin);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0%);
+      }
+    }
+
+    .music_selector_cont {
+      width: 80px;
+      height: 30px;
+      background-color: $white_color;
+      border-radius: calc($bouton_size / 2);
+      overflow: hidden;
+      z-index: $top_zindex;
+      transition: $transition;
+    }
+
+    .text_music {
+      margin-top: $margin;
+      text-align: center;
+      font-family: $first_font;
+      font-weight: $font_weight_regular;
+      color: $white_color;
+      font-size: $small_font_size;
+      text-transform: lowercase;
+    }
   }
 }

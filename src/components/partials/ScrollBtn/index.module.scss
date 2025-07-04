@@ -17,7 +17,7 @@
   justify-content: center;
   align-items: center;
   animation: fadeIn $text_animation ease-in-out;
-  
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -28,7 +28,7 @@
       transform: translate(-50%, 0);
     }
   }
-  
+
   @media only screen and (max-width: $phone_width) {
     width: 100px;
     bottom: calc($layout_margin / 2);
@@ -50,7 +50,9 @@
   }
 
   .scroll_circle_left {
+    will-change: transform;
     animation: scrollCircleLeft $big_transition_time infinite ease-in-out;
+
     @keyframes scrollCircleLeft {
       0%,
       100% {
@@ -75,6 +77,8 @@
 
   .scroll_circle_right {
     animation: scrollCircleRight $big_transition_time infinite linear;
+    will-change: transform;
+
     @keyframes scrollCircleRight {
       0%,
       100% {
@@ -104,6 +108,7 @@
     background-color: var(--color-primary);
     border-radius: $circle_border_radius;
     animation: scrollCircleDot $big_transition_time infinite linear;
+    will-change: transform;
 
     $translate_circle_do: 10px;
 
@@ -142,7 +147,7 @@
     color: $text_color;
     font-size: $small_font_size;
     text-transform: lowercase;
-    
+
     @media only screen and (max-width: $phone_width) {
       font-size: $small_small_font_size;
     }
@@ -164,6 +169,8 @@
         left: 0%;
         transform: translate(0%, -50%);
         animation: scrollAnimation $big_transition_time infinite linear;
+        will-change: transform;
+
         transform-origin: right;
 
         @keyframes scrollAnimation {
@@ -190,6 +197,7 @@
         right: 0%;
         transform: translate(0%, -50%);
         animation: downAnimation $big_transition_time infinite linear;
+        will-change: transform;
         transform-origin: left;
 
         @keyframes downAnimation {
