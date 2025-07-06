@@ -17,6 +17,7 @@
   justify-content: center;
   align-items: center;
   animation: fadeIn $text_animation ease-in-out;
+  transition: $transition;
 
   @keyframes fadeIn {
     from {
@@ -169,8 +170,6 @@
         left: 0%;
         transform: translate(0%, -50%);
         animation: scrollAnimation $big_transition_time infinite linear;
-        will-change: transform;
-
         transform-origin: right;
 
         @keyframes scrollAnimation {
@@ -197,7 +196,6 @@
         right: 0%;
         transform: translate(0%, -50%);
         animation: downAnimation $big_transition_time infinite linear;
-        will-change: transform;
         transform-origin: left;
 
         @keyframes downAnimation {

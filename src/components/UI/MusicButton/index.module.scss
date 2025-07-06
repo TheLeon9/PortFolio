@@ -39,7 +39,6 @@
 
       &.active {
         animation: bounce $big_transition_time infinite ease-in-out;
-        will-change: transform;
         height: 50%;
       }
 

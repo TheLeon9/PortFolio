@@ -28,6 +28,7 @@
     align-items: center;
     animation: fadeIn $text_animation ease-in-out;
     z-index: $top_zindex;
+    transition: $transition;
 
     @media only screen and (max-width: $phone_width) {
       top: calc($layout_margin / 2);
@@ -52,6 +53,7 @@
       .home_logo {
         height: $bouton_size;
         width: $bouton_size;
+        transition: $transition;
         cursor: pointer;
 
         @media only screen and (max-width: $phone_width) {

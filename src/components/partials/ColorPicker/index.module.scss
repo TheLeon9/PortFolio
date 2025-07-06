@@ -37,6 +37,11 @@ $update_height: 55px;
     }
   }
 
+  @media only screen and (max-width: $phone_width) {
+    bottom: calc($layout_margin / 2);
+    right: calc($layout_margin / 2);
+  }
+
   &.open_options_menu {
     border-radius: 0 0 calc($bouton_size / 2) calc($bouton_size / 2);
 
@@ -71,10 +76,6 @@ $update_height: 55px;
     .custom_btn {
       transform: rotate(360deg) scale(0.6);
     }
-  }
-
-  @media only screen and (max-width: $phone_width) {
-    bottom: calc($layout_margin / 2);
   }
 
   .custom_btn {

@@ -60,6 +60,20 @@ p {
   &_bold {
     font-weight: $font_weight_bold;
   }
+
+  &_white {
+    color: $white_color;
+  }
+}
+
+// ------------------------------+
+//
+//              SVG
+//
+// ------------------------------+
+
+.svg_color{
+  fill: var(--color-primary);
 }
 
 // ------------------------------+

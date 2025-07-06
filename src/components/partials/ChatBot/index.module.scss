@@ -1,0 +1,249 @@
+@import '@/styles/variables.scss';
+
+// ------------------------------+
+//
+//          CHAT BOT
+//
+// ------------------------------+
+
+$header_footer_height: 60px;
+
+.chatbot_cont {
+  height: $bouton_size;
+  width: $bouton_size;
+  position: absolute;
+  bottom: $layout_margin;
+  bottom: calc($layout_margin * 4);
+  right: $layout_margin;
+  z-index: $top_zindex;
+  animation: fadeIn $text_animation ease-in-out;
+  transition: $transition;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX($text_animation_margin);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @media only screen and (max-width: $phone_width) {
+    bottom: calc($layout_margin * 3);
+    right: calc($layout_margin / 2);
+  }
+
+  .chat_btn {
+    height: $bouton_size;
+    width: $bouton_size;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: $circle_border_radius;
+    cursor: pointer;
+    outline: none;
+    transition: $transition;
+    border: none;
+    background: $white_color;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .chat_window {
+    position: absolute;
+    bottom: $bouton_size + $small_margin;
+    right: 0;
+    width: 300px;
+    height: 400px;
+    border-radius: $border_radius;
+    box-shadow: $shadow_box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: $transition;
+    animation: fadeInChat $text_animation ease-in-out;
+    z-index: calc($top_zindex + 1);
+
+    @media only screen and (max-width: $phone_width) {
+      width: 80vw;
+      height: 60vh;
+    }
+
+    .header_area {
+      width: 100%;
+      height: $header_footer_height;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 $margin;
+      background: $white_color;
+      border-radius: 0 0 $border_radius $border_radius;
+      border-bottom: solid $border_width var(--color-primary);
+
+      .header_avatar {
+        width: auto;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .header_text {
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .chatbot_online {
+          width: 100%;
+          position: absolute;
+          bottom: calc($small_margin * -1 - 6px);
+          left: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+
+          .chat_dot {
+            width: $small_margin;
+            height: $small_margin;
+            border-radius: $circle_border_radius;
+            border: solid $black_color $border_width;
+          }
+        }
+
+        .online {
+          .chat_dot {
+            background-color: green;
+          }
+          p {
+            color: green;
+          }
+        }
+        .offline {
+          .chat_dot {
+            background-color: red;
+          }
+          p {
+            color: red;
+          }
+        }
+
+        .custom_title {
+          font-family: $first_font;
+          font-weight: $font_weight_bold;
+          color: var(--color-primary);
+          font-size: $small_font_size;
+          text-transform: uppercase;
+        }
+      }
+
+      .reset_btn {
+        background: none;
+        cursor: pointer;
+        border: none;
+        outline: none;
+      }
+    }
+
+    .messages {
+      width: 100%;
+      height: calc(100% - ($header_footer_height * 2));
+      display: flex;
+      flex-direction: column;
+      background-color: transparent;
+      gap: $small_margin;
+      padding: $small_margin;
+      overflow-y: auto;
+      background-color: $white_color_rgba;
+
+      .message {
+        padding: $small_margin;
+        border-radius: $border_radius;
+        max-width: 80%;
+        word-wrap: break-word;
+
+        &.user {
+          background: var(--color-primary);
+          align-self: flex-end;
+          border-bottom-right-radius: 0;
+
+          p {
+            color: $white_color;
+          }
+        }
+
+        &.assistant {
+          background: $white_color;
+          align-self: flex-start;
+          border-bottom-left-radius: 0;
+        }
+      }
+    }
+  }
+
+  @keyframes fadeInChat {
+    from {
+      opacity: 0;
+      transform: translateY($text_animation_margin);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .input_area {
+    width: 100%;
+    height: $header_footer_height;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 $margin;
+    background: $white_color;
+    border-radius: $border_radius $border_radius 0 0;
+    border-top: solid $border_width var(--color-primary);
+
+    input {
+      width: 80%;
+      outline: none;
+      background: none;
+      border: none;
+      font-family: $second_font;
+      font-weight: $font_weight_regular;
+      color: var(--color-primary);
+      font-size: $small_font_size;
+    }
+
+    button {
+      height: $bouton_size;
+      width: $bouton_size;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: $circle_border_radius;
+      cursor: pointer;
+      outline: none;
+      transition: $transition;
+      border: none;
+      background: none;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+
+      &:disabled {
+        filter: contrast(0.8);
+        cursor: not-allowed;
+      }
+    }
+  }
+}

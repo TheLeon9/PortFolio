@@ -14,6 +14,7 @@
   right: $layout_margin;
   animation: fadeIn $text_animation ease-in-out;
   z-index: $top_zindex;
+  transition: $transition;
 
   @keyframes fadeIn {
     from {
@@ -146,12 +147,15 @@
     &.btn_open {
       transform: translateY($text_animation_negative_margin);
       opacity: 0;
+      pointer-events: none;
+      z-index: -1;
     }
 
     &.btn_close {
       transform: translateY(0);
       opacity: $less_opacity;
       z-index: $top_zindex;
+      pointer-events: auto;
 
       &:hover {
         opacity: 1;
