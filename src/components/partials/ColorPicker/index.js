@@ -125,7 +125,7 @@ const ColorPicker = () => {
           <button onClick={handleReset} className={style.reset_color}>
             <Image src={LogoReset} alt="Reset" width={imgWH} height={imgWH} />
           </button>
-          <p className={style.custom_title}>CUSTOMIZE ME</p>
+          <p className={style.custom_title}>customize me</p>
           <div className={style.custom_space}></div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -9,25 +9,25 @@
 .section_presentation_cont {
   width: 100%;
   height: 100%;
-  padding-left: calc($layout_margin + $big_margin);
+  padding-left: calc(variables.$layout_margin + variables.$big_margin);
 
-  @media only screen and (max-width: $phone_width) {
+  @media only screen and (max-width: variables.$phone_width) {
     text-align: center;
     padding-left: 0;
   }
 
   .presentation_title {
-    font-family: $first_font;
-    color: $text_color;
-    font-size: $big_font_size;
-    font-weight: $font_weight_bold;
+    font-family: variables.$first_font;
+    color: variables.$text_color;
+    font-size: variables.$big_font_size;
+    font-weight: variables.$font_weight_bold;
     text-transform: uppercase;
-    animation: fadeIn $text_animation ease-in-out;
+    animation: fadeIn variables.$text_animation ease-in-out;
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateX($text_animation_margin);
+        transform: translateX(variables.$text_animation_margin);
       }
       to {
         opacity: 1;
@@ -35,8 +35,8 @@
       }
     }
 
-    @media only screen and (max-width: $phone_width) {
-      font-size: $medium_font_size;
+    @media only screen and (max-width: variables.$phone_width) {
+      font-size: variables.$medium_font_size;
     }
 
     .presentation_title_colored {
@@ -48,14 +48,14 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    margin-top: $margin;
+    margin-top: variables.$margin;
     height: 28px;
-    animation: fadeIn calc($text_animation + 0.4s) ease-in-out;
+    animation: fadeIn calc(variables.$text_animation + 0.4s) ease-in-out;
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateX($text_animation_margin);
+        transform: translateX(variables.$text_animation_margin);
       }
       to {
         opacity: 1;
@@ -63,8 +63,8 @@
       }
     }
 
-    @media only screen and (max-width: $phone_width) {
-      font-size: $font_size;
+    @media only screen and (max-width: variables.$phone_width) {
+      font-size: variables.$font_size;
       height: 28px;
     }
 
@@ -77,13 +77,13 @@
       width: 100px;
       overflow: hidden;
 
-      @media only screen and (max-width: $phone_width) {
+      @media only screen and (max-width: variables.$phone_width) {
         width: 100px;
       }
 
       .span_hook {
         color: var(--color-primary);
-        font-weight: $font_weight_bold;
+        font-weight: variables.$font_weight_bold;
       }
 
       .span_developer {
@@ -96,7 +96,7 @@
           }
           60%,
           100% {
-            transform: translateY($text_animation_negative_margin);
+            transform: translateY(variables.$text_animation_negative_margin);
           }
         }
       }
@@ -119,7 +119,7 @@
       }
     }
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       align-items: center;
       justify-content: center;
     }

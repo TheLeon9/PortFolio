@@ -15,6 +15,10 @@ import {
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
+
+  // Admin logged
+  const [logged, isLogged] = useState(false);
+
   // Main Color
   const [mainColor, setMainColor] = useState(DEFAULT_MAIN_COLOR);
 
@@ -71,6 +75,8 @@ export const ThemeProvider = ({ children }) => {
         musicActive,
         setMusicActive,
         toggleMusic,
+        logged,
+        isLogged
       }}
     >
       {children}

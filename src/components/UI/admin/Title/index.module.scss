@@ -1,0 +1,15 @@
+@use '@/styles/variables';
+
+// ------------------------------+
+//
+//          TITLE
+//
+// ------------------------------+
+
+.section_title {
+  width: 100%;
+  height: variables.$image_height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

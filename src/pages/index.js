@@ -1,5 +1,5 @@
 import React from 'react';
-import style from '@/styles/index/index.module.scss';
+import style from '@/styles/public/index/index.module.scss';
 
 import SectionPresentation from '@/components/UI/SectionPresentation';
 

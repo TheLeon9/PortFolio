@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -7,7 +7,7 @@
 // ------------------------------+
 
 .global_page_container {
-  width: calc(100% - $big_margin);
+  width: calc(100% - variables.$big_margin);
   height: 90%;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@
     justify-content: center;
     align-items: center;
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       height: 75%;
     }
   }
@@ -31,7 +31,7 @@
     height: 30%;
     position: relative;
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       height: 25%;
     }
   }

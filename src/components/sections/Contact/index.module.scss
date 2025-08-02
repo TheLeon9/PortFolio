@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -10,7 +10,7 @@
   width: 90%;
   height: 90%;
   z-index: 50;
-  animation: fadeIn $text_animation ease-in;
+  animation: fadeIn variables.$text_animation ease-in;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -19,7 +19,7 @@
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY($text_animation_negative_margin);
+      transform: translateY(variables.$text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -36,12 +36,12 @@
     justify-content: flex-end;
 
     h6 {
-      font-family: $second_font;
-      font-size: $medium_font_size;
-      margin-bottom: $big_margin;
+      font-family: variables.$second_font;
+      font-size: variables.$medium_font_size;
+      margin-bottom: variables.$big_margin;
     }
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       width: 100%;
     }
 
@@ -49,10 +49,10 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
-      margin-bottom: $big_margin;
+      margin-bottom: variables.$big_margin;
 
-      @media only screen and (max-width: $phone_width) {
-        margin-bottom: calc($margin + $small_margin);
+      @media only screen and (max-width: variables.$phone_width) {
+        margin-bottom: calc(variables.$margin + variables.$small_margin);
       }
 
       .form_input_wrapper {
@@ -62,27 +62,27 @@
 
         .form_label {
           position: absolute;
-          top: calc($margin * -1);
-          left: $small_margin;
-          font-size: $small_small_font_size;
-          font-family: $second_font;
+          top: calc(variables.$margin * -1);
+          left: variables.$small_margin;
+          font-size: variables.$small_small_font_size;
+          font-family: variables.$second_font;
         }
 
         .form_input {
           width: 100%;
           height: 100%;
-          padding: $small_margin;
-          background-color: $white_color_rgba;
-          border: $border_width solid $white_color;
-          border-radius: $border_radius;
-          box-shadow: 0 0 10px $white_color;
+          padding: variables.$small_margin;
+          background-color: variables.$white_color_rgba;
+          border: variables.$border_width solid variables.$white_color;
+          border-radius: variables.$border_radius;
+          box-shadow: 0 0 10px variables.$white_color;
           outline: none;
-          transition: $transition;
-          font-family: $second_font;
+          transition: variables.$transition;
+          font-family: variables.$second_font;
 
           &:focus {
             box-shadow: 0 0 20px var(--color-primary);
-            background-color: $white_color;
+            background-color: variables.$white_color;
           }
         }
       }
@@ -92,36 +92,36 @@
       position: relative;
       width: 100%;
       height: 100px;
-      margin-bottom: $margin;
+      margin-bottom: variables.$margin;
 
-      @media only screen and (max-width: $phone_width) {
-        margin-bottom: $small_margin;
+      @media only screen and (max-width: variables.$phone_width) {
+        margin-bottom: variables.$small_margin;
       }
 
       .form_label {
         position: absolute;
-        top: calc($margin * -1);
-        left: $small_margin;
-        font-size: $small_small_font_size;
-        font-family: $second_font;
+        top: calc(variables.$margin * -1);
+        left: variables.$small_margin;
+        font-size: variables.$small_small_font_size;
+        font-family: variables.$second_font;
       }
 
       .textarea {
         width: 100%;
         height: 100%;
-        padding: $small_margin;
-        background-color: $white_color_rgba;
-        border: $border_width solid $white_color;
-        border-radius: $border_radius;
-        box-shadow: 0 0 10px $white_color;
+        padding: variables.$small_margin;
+        background-color: variables.$white_color_rgba;
+        border: variables.$border_width solid variables.$white_color;
+        border-radius: variables.$border_radius;
+        box-shadow: 0 0 10px variables.$white_color;
         resize: none;
         outline: none;
-        transition: $transition;
-        font-family: $second_font;
+        transition: variables.$transition;
+        font-family: variables.$second_font;
 
         &:focus {
           box-shadow: 0 0 20px var(--color-primary);
-          background-color: $white_color;
+          background-color: variables.$white_color;
           color: var(--color-primary);
         }
       }
@@ -133,21 +133,21 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-weight: $font_weight_bold;
-      font-family: $first_font;
-      padding: $small_margin;
-      background-color: $white_color_rgba;
-      border: $border_width solid $white_color;
-      border-radius: $border_radius;
-      box-shadow: 0 0 10px $white_color;
+      font-weight: variables.$font_weight_bold;
+      font-family: variables.$first_font;
+      padding: variables.$small_margin;
+      background-color: variables.$white_color_rgba;
+      border: variables.$border_width solid variables.$white_color;
+      border-radius: variables.$border_radius;
+      box-shadow: 0 0 10px variables.$white_color;
       outline: none;
       cursor: pointer;
-      transition: $transition;
+      transition: variables.$transition;
       text-transform: uppercase;
 
       &:hover {
         box-shadow: 0 0 20px var(--color-primary);
-        background-color: $white_color;
+        background-color: variables.$white_color;
         color: var(--color-primary);
       }
     }
@@ -155,13 +155,13 @@
     .banner {
       width: 100%;
       height: 40px;
-      padding: $small_margin;
+      padding: variables.$small_margin;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: $white_color;
-      border-radius: $border_radius;
-      border: $border_width solid $white_color;
+      background-color: variables.$white_color;
+      border-radius: variables.$border_radius;
+      border: variables.$border_width solid variables.$white_color;
       box-shadow: 0 0 20px var(--color-primary);
 
       p {
@@ -177,21 +177,21 @@
     justify-content: space-between;
     align-items: center;
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       width: 140px;
     }
 
     .btn_share_contact {
-      height: $bouton_size;
-      width: $bouton_size;
+      height: variables.$bouton_size;
+      width: variables.$bouton_size;
       display: flex;
       justify-content: center;
       align-items: center;
       border: none;
       background: none;
-      opacity: $less_opacity;
+      opacity: variables.$less_opacity;
       outline: none;
-      transition: $transition;
+      transition: variables.$transition;
       cursor: pointer;
 
       img {

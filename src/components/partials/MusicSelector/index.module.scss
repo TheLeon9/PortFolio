@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -10,19 +10,19 @@
   width: 80px;
   height: 30px;
   position: absolute;
-  bottom: $layout_margin;
-  left: $layout_margin;
-  background-color: $white_color;
-  border-radius: calc($bouton_size / 2);
+  bottom: variables.$layout_margin;
+  left: variables.$layout_margin;
+  background-color: variables.$white_color;
+  border-radius: calc(variables.$bouton_size / 2);
   overflow: hidden;
-  z-index: $top_zindex;
-  transition: $transition;
-  animation: fadeIn $text_animation ease-in-out;
+  z-index: variables.$top_zindex;
+  transition: variables.$transition;
+  animation: fadeIn variables.$text_animation ease-in-out;
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX($text_animation_negative_margin);
+      transform: translateX(variables.$text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -30,8 +30,8 @@
     }
   }
 
-  @media only screen and (max-width: $phone_width) {
-    bottom: calc($layout_margin / 2);
-    left: calc($layout_margin / 2);
+  @media only screen and (max-width: variables.$phone_width) {
+    bottom: calc(variables.$layout_margin / 2);
+    left: calc(variables.$layout_margin / 2);
   }
 }

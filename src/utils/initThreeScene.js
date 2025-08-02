@@ -4,8 +4,8 @@ import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 // Shaders
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
-import wobbleVertexShader from '@/components/layout/shaders/wobble/vertex.glsl';
-import wobbleFragmentShader from '@/components/layout/shaders/wobble/fragment.glsl';
+import wobbleVertexShader from './shaders/wobble/vertex.glsl';
+import wobbleFragmentShader from './shaders/wobble/fragment.glsl';
 
 // Render
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';

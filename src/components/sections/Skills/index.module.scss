@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -10,7 +10,7 @@
   width: 90%;
   height: 90%;
   z-index: 50;
-  animation: fadeIn $text_animation ease-in;
+  animation: fadeIn variables.$text_animation ease-in;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,7 +18,7 @@
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY($text_animation_negative_margin);
+      transform: translateY(variables.$text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -34,7 +34,7 @@
     justify-content: center;
     align-items: center;
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       width: 100%;
       height: 100%;
     }

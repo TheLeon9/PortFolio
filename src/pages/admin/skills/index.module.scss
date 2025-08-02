@@ -1,0 +1,85 @@
+@use '@/styles/variables';
+
+// ------------------------------+
+//
+//          Skills
+//
+// ------------------------------+
+
+.section_container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: variables.$big_margin;
+
+  .skills {
+    width: 800px;
+    height: auto;
+    display: flex;
+
+    @media only screen and (max-width: variables.$phone_width) {
+      width: 90%;
+      height: 90%;
+    }
+
+    .container {
+      width: calc(100% - variables.$double_image_height);
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding-bottom: variables.$margin;
+
+      .skills_form {
+        width: 90%;
+        margin-top: variables.$big_margin;
+        display: flex;
+        flex-direction: column;
+
+        button,
+        input {
+          width: 100%;
+          margin-bottom: variables.$margin;
+        }
+      }
+
+      .skills_list {
+        width: 90%;
+        margin-top: variables.$big_margin;
+        display: flex;
+        flex-direction: column;
+
+        li {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          list-style: none;
+          
+          margin-bottom: variables.$small_margin;
+          background: variables.$main_color_rgba;
+          padding: variables.$small_margin;
+          border: variables.$border_width solid variables.$white_color_rgba;
+          border-radius: variables.$border_radius;
+
+          font-family: variables.$second_font;
+          color: variables.$white_color;
+          font-weight: variables.$font_weight_regular;
+          font-size: variables.$medium_font_size;
+
+          @media only screen and (max-width: variables.$phone_width) {
+            font-size: variables.$small_font_size;
+          }
+
+          button {
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+}

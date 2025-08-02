@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -9,32 +9,32 @@
 .card_project {
   width: 140px;
   height: 100%;
-  padding: $small_margin;
-  margin: $small_margin;
+  padding: variables.$small_margin;
+  margin: variables.$small_margin;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $white_color_rgba;
-  border: solid $border_width $white_color;
-  border-radius: $border_radius;
-  box-shadow: 0 0 10px $white_color;
-  transition: $transition;
+  background-color: variables.$white_color_rgba;
+  border: solid variables.$border_width variables.$white_color;
+  border-radius: variables.$border_radius;
+  box-shadow: 0 0 10px variables.$white_color;
+  transition: variables.$transition;
   position: relative;
   cursor: pointer;
   overflow: hidden;
 
-  @media only screen and (max-width: $phone_width) {
+  @media only screen and (max-width: variables.$phone_width) {
     width: 80%;
     height: 40px;
   }
 
   &:hover {
-    background-color: $white_color;
+    background-color: variables.$white_color;
     box-shadow: 0 0 20px var(--color-primary);
     width: 220px;
-    transform: translateY(calc($small_margin) * -1);
+    transform: translateY(calc(variables.$small_margin) * -1);
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       width: 90%;
       height: 160px;
       transform: translateY(0);
@@ -66,30 +66,30 @@
   .card_content {
     height: 100%;
     width: 100%;
-    padding: $small_margin;
+    padding: variables.$small_margin;
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
     text-align: center;
-    transform: translatey($text_animation_negative_margin);
-    transition: transform $transition_time ease-in-out, opacity $transition_time 0.2s;
+    transform: translatey(variables.$text_animation_negative_margin);
+    transition: transform variables.$transition_time ease-in-out, opacity variables.$transition_time 0.2s;
     visibility: hidden;
   }
 
   .card_project_number {
-    font-size: $title_font_size;
-    font-family: $first_font;
-    color: $text_color;
+    font-size: variables.$title_font_size;
+    font-family: variables.$first_font;
+    color: variables.$text_color;
     font-weight: bold;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    transition: $transition;
+    transition: variables.$transition;
 
-    @media only screen and (max-width: $phone_width) {
-      font-size: $medium_font_size;
+    @media only screen and (max-width: variables.$phone_width) {
+      font-size: variables.$medium_font_size;
       top: 50%;
       left: 10%;
       transform: translate(-10%, -50%);
@@ -108,10 +108,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin-top: $big_margin;
-    transition: $transition;
+    margin-top: variables.$big_margin;
+    transition: variables.$transition;
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       height: auto;
       margin-top: 0;
     }

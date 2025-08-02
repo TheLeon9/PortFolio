@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -14,16 +14,16 @@
   justify-content: space-between;
   align-items: center;
   position: absolute;
-  top: $layout_margin;
-  left: $layout_margin;
-  animation: fadeIn $text_animation ease-in-out;
-  z-index: $top_zindex;
-  transition: $transition;
+  top: variables.$layout_margin;
+  left: variables.$layout_margin;
+  animation: fadeIn variables.$text_animation ease-in-out;
+  z-index: variables.$top_zindex;
+  transition: variables.$transition;
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX($text_animation_negative_margin);
+      transform: translateX(variables.$text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -31,9 +31,9 @@
     }
   }
 
-  @media only screen and (max-width: $phone_width) {
-    top: calc($layout_margin / 2);
-    left: calc($layout_margin / 2);
+  @media only screen and (max-width: variables.$phone_width) {
+    top: calc(variables.$layout_margin / 2);
+    left: calc(variables.$layout_margin / 2);
   }
 
   .change_active_section {
@@ -46,8 +46,8 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: $transition;
-    opacity: $less_opacity;
+    transition: variables.$transition;
+    opacity: variables.$less_opacity;
 
     &:hover {
       opacity: 1;
@@ -59,17 +59,14 @@
     }
   }
 
-  $activeWH: 40px;
-  $notActiveWH: 10px;
-
   .nav_bar_link_active,
   .nav_bar_link_not_active {
-    background-color: $white_color;
-    border-radius: $circle_border_radius;
+    background-color: variables.$white_color;
+    border-radius: variables.$circle_border_radius;
     border: none;
     outline: none;
     cursor: pointer;
-    transition: $transition;
+    transition: variables.$transition;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -77,8 +74,8 @@
   }
 
   .nav_bar_link_not_active {
-    width: $notActiveWH;
-    height: $notActiveWH;
+    width: variables.$notActiveWH;
+    height: variables.$notActiveWH;
 
     .nav_title_section,
     .nav_title_btn {
@@ -87,8 +84,8 @@
   }
 
   .nav_bar_link_active {
-    width: $activeWH;
-    height: $activeWH;
+    width: variables.$activeWH;
+    height: variables.$activeWH;
 
     @keyframes appearNext {
       from {
@@ -100,12 +97,12 @@
     }
 
     .nav_title_btn {
-      font-family: $first_font;
-      font-weight: $font_weight_bold;
-      color: $text_color;
-      font-size: $small_small_font_size;
-      transition: $transition;
-      animation: appearNext $transition_time ease-in-out;
+      font-family: variables.$first_font;
+      font-weight: variables.$font_weight_bold;
+      color: variables.$text_color;
+      font-size: variables.$small_small_font_size;
+      transition: variables.$transition;
+      animation: appearNext variables.$transition_time ease-in-out;
     }
 
     .nav_title_section {
@@ -119,15 +116,15 @@
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      font-family: $first_font;
-      font-weight: $font_weight_bold;
-      color: $text_color;
-      font-size: $small_font_size;
+      font-family: variables.$first_font;
+      font-weight: variables.$font_weight_bold;
+      color: variables.$text_color;
+      font-size: variables.$small_font_size;
       text-transform: capitalize;
-      animation: appearNext $transition_time ease-in-out;
+      animation: appearNext variables.$transition_time ease-in-out;
 
-      @media only screen and (max-width: $phone_width) {
-        font-size: $small_small_font_size;
+      @media only screen and (max-width: variables.$phone_width) {
+        font-size: variables.$small_small_font_size;
       }
     }
   }

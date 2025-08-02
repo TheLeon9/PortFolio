@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -6,30 +6,27 @@
 //
 // ------------------------------+
 
-$min_height: 85px;
-$max_width: 250px;
-$update_height: 55px;
-
 .color_picker_cont {
-  width: $max_width;
-  min-height: $min_height;
+
+  width: variables.$max_width;
+  min-height: variables.$min_height;
   position: absolute;
-  bottom: $layout_margin;
-  right: $layout_margin;
-  background-color: $white_color;
-  border-radius: calc($bouton_size / 2);
-  z-index: $top_zindex;
-  transition: $transition;
-  animation: fadeIn $text_animation ease-in-out;
+  bottom: variables.$layout_margin;
+  right: variables.$layout_margin;
+  background-color: variables.$white_color;
+  border-radius: calc(variables.$bouton_size / 2);
+  z-index: variables.$top_zindex;
+  transition: variables.$transition;
+  animation: fadeIn variables.$text_animation ease-in-out;
   clip-path: circle(
-    calc($bouton_size / 2) at calc(100% - $layout_margin)
-      calc(100% - $layout_margin)
+    calc(variables.$bouton_size / 2) at calc(100% - variables.$layout_margin)
+      calc(100% - variables.$layout_margin)
   );
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX($text_animation_margin);
+      transform: translateX(variables.$text_animation_margin);
     }
     to {
       opacity: 1;
@@ -37,24 +34,24 @@ $update_height: 55px;
     }
   }
 
-  @media only screen and (max-width: $phone_width) {
-    bottom: calc($layout_margin / 2);
-    right: calc($layout_margin / 2);
+  @media only screen and (max-width: variables.$phone_width) {
+    bottom: calc(variables.$layout_margin / 2);
+    right: calc(variables.$layout_margin / 2);
   }
 
   &.open_options_menu {
-    border-radius: 0 0 calc($bouton_size / 2) calc($bouton_size / 2);
+    border-radius: 0 0 calc(variables.$bouton_size / 2) calc(variables.$bouton_size / 2);
 
     .custom_options_menu {
-      height: $update_height;
-      transform: translateY($update_height * -1 + $margin);
+      height: variables.$update_height;
+      transform: translateY(variables.$update_height * -1 + variables.$margin);
 
       .filter_section {
-        height: $update_height;
+        height: variables.$update_height;
 
         .color_buttons {
           .color_dot {
-            animation: fadeInColor $medium_transition_time ease-in-out;
+            animation: fadeInColor variables.$medium_transition_time ease-in-out;
 
             @keyframes fadeInColor {
               from {
@@ -71,7 +68,7 @@ $update_height: 55px;
   }
 
   &:hover {
-    clip-path: circle($max_width);
+    clip-path: circle(variables.$max_width);
 
     .custom_btn {
       transform: rotate(360deg) scale(0.6);
@@ -82,10 +79,10 @@ $update_height: 55px;
     position: absolute;
     bottom: 0;
     right: 0;
-    height: $bouton_size;
-    width: $bouton_size;
-    border-radius: $circle_border_radius;
-    border: solid $white_color $border_width;
+    height: variables.$bouton_size;
+    width: variables.$bouton_size;
+    border-radius: variables.$circle_border_radius;
+    border: solid variables.$white_color variables.$border_width;
     background: linear-gradient(
         217deg,
         rgba(255, 0, 0, 0.8),
@@ -93,36 +90,36 @@ $update_height: 55px;
       ),
       linear-gradient(127deg, rgba(0, 255, 0, 0.8), rgba(0, 255, 0, 0) 70.71%),
       linear-gradient(336deg, rgba(0, 0, 255, 0.8), rgba(0, 0, 255, 0) 70.71%);
-    transition: $transition;
+    transition: variables.$transition;
   }
 
   .custom_options_menu {
-    width: $max_width;
+    width: variables.$max_width;
     position: absolute;
-    background-color: $white_color;
-    border-radius: calc($bouton_size / 2) calc($bouton_size / 2) 0 0;
-    padding: $small_margin;
+    background-color: variables.$white_color;
+    border-radius: calc(variables.$bouton_size / 2) calc(variables.$bouton_size / 2) 0 0;
+    padding: variables.$small_margin;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     overflow: hidden;
     height: 0;
-    transition: $transition;
+    transition: variables.$transition;
 
     .filter_section {
       width: 100%;
       position: absolute;
       top: 0;
-      transition: $transition;
+      transition: variables.$transition;
 
       .color_buttons {
         width: 100%;
         display: flex;
         justify-content: space-between;
-        gap: $small_margin;
-        padding: $small_margin;
-        transition: $transition;
+        gap: variables.$small_margin;
+        padding: variables.$small_margin;
+        transition: variables.$transition;
 
         &.background_color {
           justify-content: flex-start;
@@ -132,7 +129,7 @@ $update_height: 55px;
           width: 26px;
           height: 26px;
           border-radius: 2px;
-          border: solid $border_width var(--color-text);
+          border: solid variables.$border_width var(--color-text);
           cursor: pointer;
         }
       }
@@ -140,33 +137,33 @@ $update_height: 55px;
   }
 
   .custom_selected_menu {
-    width: $max_width;
-    height: $min_height;
+    width: variables.$max_width;
+    height: variables.$min_height;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0 0 $small_margin;
+    padding: 0 0 variables.$small_margin;
     position: absolute;
 
     .custom_selected_top {
       width: 100%;
-      padding: 0 $small_margin;
+      padding: 0 variables.$small_margin;
       display: flex;
       justify-content: space-between;
-      transform: translateY($margin);
+      transform: translateY(variables.$margin);
 
       .custom_button {
         width: 60px;
         height: 20px;
-        border-radius: calc($border_radius * 2);
-        border: solid $border_width var(--color-text);
+        border-radius: calc(variables.$border_radius * 2);
+        border: solid variables.$border_width var(--color-text);
         cursor: pointer;
         outline: none;
       }
 
       .opacity_button {
-        background: linear-gradient($white_color_rgba, $white_color_rgba),
-          repeating-conic-gradient($black_color 0% 25%, transparent 0% 50%) 0% /
+        background: linear-gradient(variables.$white_color_rgba, variables.$white_color_rgba),
+          repeating-conic-gradient(variables.$black_color 0% 25%, transparent 0% 50%) 0% /
             10px 10px,
           linear-gradient(
             to right,
@@ -197,10 +194,10 @@ $update_height: 55px;
       }
 
       .custom_title {
-        font-family: $first_font;
-        font-weight: $font_weight_bold;
-        color: $text_color;
-        font-size: $small_font_size;
+        font-family: variables.$first_font;
+        font-weight: variables.$font_weight_bold;
+        color: variables.$text_color;
+        font-size: variables.$small_font_size;
         text-transform: lowercase;
       }
     }

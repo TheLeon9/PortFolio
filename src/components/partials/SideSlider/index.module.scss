@@ -1,0 +1,91 @@
+@use '@/styles/variables';
+
+// ------------------------------+
+//
+//          SIDE SLIDER
+//
+// ------------------------------+
+
+.slider_cont {
+  width: variables.$slide_width;
+  height: 180px;
+  top: 50%;
+  left: calc(variables.$slide_width * -1);
+  transform: translate(0, -50%);
+  position: absolute;
+  z-index: variables.$top_zindex;
+  transition: variables.$transition;
+  animation: fadeIn variables.$text_animation ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: variables.$shadow_box;
+  border-radius: 0 variables.$border_radius variables.$border_radius 0;
+  background-color: variables.$white_color_rgba;
+
+  &:hover {
+    left: 0;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(variables.$text_animation_negative_margin, -50%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, -50%);
+    }
+  }
+
+  .slider_content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: auto;
+      height: 80%;
+    }
+  }
+
+  .slider_tab_in {
+    width: calc(variables.$slide_tab_width / 2);
+    height: 40%;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(0, -50%);
+    background-color: variables.$white_color;
+    border-radius: variables.$border_radius 0 0 variables.$border_radius;
+    border-left: solid variables.$border_width var(--color-primary);
+    cursor: pointer;
+  }
+
+  .slider_tab_out {
+    width: variables.$slide_tab_width;
+    height: 40%;
+    position: absolute;
+    top: 50%;
+    right: calc(variables.$slide_tab_width * -1);
+    transform: translate(0, -50%);
+    background-color: variables.$white_color;
+    border-radius: 0 variables.$border_radius variables.$border_radius 0;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .custom_title {
+      font-family: variables.$first_font;
+      font-weight: variables.$font_weight_bold;
+      color: variables.$text_color;
+      font-size: variables.$small_font_size;
+      text-transform: lowercase;
+    }
+  }
+}

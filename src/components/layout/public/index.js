@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import style from './index.module.scss';
 import gsap from 'gsap';
 
@@ -11,12 +10,11 @@ import Loader from '@/components/partials/Loader';
 import ColorPicker from '@/components/partials/ColorPicker';
 import MusicSelector from '@/components/partials/MusicSelector';
 import ChatBot from '@/components/partials/ChatBot';
+import SideSlider from '@/components/partials/SideSlider';
 
 import { sections } from '@/constants';
 import { useTheme } from '@/context/ThemeContext.js';
 import { initThreeScene } from '@/utils/initThreeScene';
-
-import Logo from 'p/img/logo/logo_fm_black.svg';
 
 const Layout = ({ children }) => {
   //  Customisation Features
@@ -51,40 +49,11 @@ const Layout = ({ children }) => {
     }
   }, [mainColor, backgroundColor]);
 
-  // //--------------------------------------------------+
-  // //
-  // //  Set the localstorage for the active Section
-  // //
-  // //--------------------------------------------------+
-
-  // useEffect(() => {
-  //   // Get the active section from localStorage
-  //   const storedActiveSection = localStorage.getItem('activeSection');
-  //   setActiveSection(storedActiveSection || '0');
-
-  //   // If we change the active section we update it
-  //   const handleStorageChange = () => {
-  //     const updatedActiveSection = localStorage.getItem('activeSection');
-  //     setActiveSection(updatedActiveSection || '0');
-  //   };
-
-  //   window.addEventListener('storageChange', handleStorageChange);
-
-  //   return () => {
-  //     window.removeEventListener('storageChange', handleStorageChange);
-  //   };
-  // }, []);
-
   useEffect(() => {
     // Update localStorage and notify other components when activeSection changes
     localStorage.setItem('activeSection', activeSection);
     window.dispatchEvent(new Event('storageChange'));
   }, [activeSection]);
-
-  // useEffect(() => {
-  //   console.log(activeSection);
-  //   console.log(typeof(activeSection));
-  // }, [activeSection]);
 
   //--------------------------------------------------+
   //
@@ -153,15 +122,6 @@ const Layout = ({ children }) => {
         />
       ) : (
         <>
-          {/* Wall */}
-          {/* <div
-            className={style.wall}
-            style={{
-              opacity: wallOpacity,
-              transform: `translateX(${wallPosition}px)`,
-            }}
-          ></div> */}
-
           {/* Navigation Bar */}
           <NavBar activeSection={activeSection} changeSection={changeSection} />
 
@@ -203,9 +163,6 @@ const Layout = ({ children }) => {
           {/* Btn Share container */}
           <ShareBtn />
 
-          {/* Music Selector container */}
-          <MusicSelector />
-
           {/* Scroll Btn container */}
           <ScrollBtn />
 
@@ -214,6 +171,12 @@ const Layout = ({ children }) => {
 
           {/* ColorPicker container */}
           <ColorPicker />
+
+          {/* Music Selector container */}
+          <MusicSelector />
+
+          {/* Side Slider container */}
+          <SideSlider />
 
           {/* {children} */}
           {React.cloneElement(children, { activeSection })}

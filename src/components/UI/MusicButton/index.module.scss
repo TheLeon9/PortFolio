@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -26,24 +26,24 @@
     align-items: center;
 
     .bar {
-      width: $border_width_big;
+      width: variables.$border_width_big;
       margin: 0 1px;
       background-color: var(--color-primary);
       display: inline-block;
       transform-origin: center center;
-      transition: $transition;
+      transition: variables.$transition;
 
       &.not_active {
-        height: $border_width_big;
+        height: variables.$border_width_big;
       }
 
       &.active {
-        animation: bounce $big_transition_time infinite ease-in-out;
+        animation: bounce variables.$big_transition_time infinite ease-in-out;
         height: 50%;
       }
 
       &:nth-child(even) {
-        background-color: $black_color;
+        background-color: variables.$black_color;
       }
     }
 
@@ -66,7 +66,7 @@
     }
 
     .hide_left {
-      background: linear-gradient(to right, $white_color 20%, transparent 100%);
+      background: linear-gradient(to right, variables.$white_color 20%, transparent 100%);
       position: absolute;
       top: 0;
       left: 0;
@@ -75,7 +75,7 @@
     }
 
     .hide_right {
-      background: linear-gradient(to left, $white_color 20%, transparent 100%);
+      background: linear-gradient(to left, variables.$white_color 20%, transparent 100%);
       position: absolute;
       top: 0;
       right: 0;
@@ -92,10 +92,10 @@
     align-items: center;
 
     .music_text {
-      font-family: $first_font;
-      font-weight: $font_weight_bold;
-      color: $text_color;
-      font-size: $small_font_size;
+      font-family: variables.$first_font;
+      font-weight: variables.$font_weight_bold;
+      color: variables.$text_color;
+      font-size: variables.$small_font_size;
       text-transform: lowercase;
     }
   }

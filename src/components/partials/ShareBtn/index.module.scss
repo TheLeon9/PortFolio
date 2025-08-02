@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -7,19 +7,19 @@
 // ------------------------------+
 
 .share_btn_cont {
-  height: $bouton_size;
-  width: $bouton_size;
+  height: variables.$bouton_size;
+  width: variables.$bouton_size;
   position: absolute;
-  top: $layout_margin;
-  right: $layout_margin;
-  animation: fadeIn $text_animation ease-in-out;
-  z-index: $top_zindex;
-  transition: $transition;
+  top: variables.$layout_margin;
+  right: variables.$layout_margin;
+  animation: fadeIn variables.$text_animation ease-in-out;
+  z-index: variables.$top_zindex;
+  transition: variables.$transition;
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX($text_animation_margin);
+      transform: translateX(variables.$text_animation_margin);
     }
     to {
       opacity: 1;
@@ -27,9 +27,9 @@
     }
   }
 
-  @media only screen and (max-width: $phone_width) {
-    top: calc($layout_margin / 2);
-    right: calc($layout_margin / 2);
+  @media only screen and (max-width: variables.$phone_width) {
+    top: calc(variables.$layout_margin / 2);
+    right: calc(variables.$layout_margin / 2);
   }
 
   &:hover {
@@ -55,14 +55,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: $first_font;
-    font-weight: $font_weight_bold;
-    color: $text_color;
-    font-size: $small_font_size;
+    font-family: variables.$first_font;
+    font-weight: variables.$font_weight_bold;
+    color: variables.$text_color;
+    font-size: variables.$small_font_size;
     text-transform: lowercase;
 
-    @media only screen and (max-width: $phone_width) {
-      font-size: $small_small_font_size;
+    @media only screen and (max-width: variables.$phone_width) {
+      font-size: variables.$small_small_font_size;
     }
 
     span {
@@ -70,13 +70,13 @@
 
       &:nth-child(1) {
         transform-origin: top;
-        transition: transform $transition_time ease-in-out;
+        transition: transform variables.$transition_time ease-in-out;
       }
       &:nth-child(2) {
-        transform: translate3d(0, $text_animation_margin, 0);
+        transform: translate3d(0, variables.$text_animation_margin, 0);
         position: absolute;
         opacity: 1;
-        transition: all $transition_time ease-in-out;
+        transition: all variables.$transition_time ease-in-out;
       }
     }
   }
@@ -86,15 +86,15 @@
   .btn_link,
   .btn_share {
     position: absolute;
-    height: $bouton_size;
-    width: $bouton_size;
+    height: variables.$bouton_size;
+    width: variables.$bouton_size;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: $circle_border_radius;
+    border-radius: variables.$circle_border_radius;
     cursor: pointer;
     outline: none;
-    transition: $transition;
+    transition: variables.$transition;
 
     img {
       width: 20px;
@@ -106,7 +106,7 @@
     &.btn_share_close,
     &.btn_share_open {
       border: none;
-      background: $white_color;
+      background: variables.$white_color;
     }
 
     &.btn_share_close {
@@ -114,7 +114,7 @@
         width: 14px;
         height: 14px;
 
-        @media only screen and (max-width: $phone_width) {
+        @media only screen and (max-width: variables.$phone_width) {
           width: 10px;
           height: 10px;
         }
@@ -124,17 +124,17 @@
 
   .btn_github {
     opacity: 0;
-    top: calc($big_margin + $small_margin);
+    top: calc(variables.$big_margin + variables.$small_margin);
   }
 
   .btn_link {
     opacity: 0;
-    top: calc(($big_margin + $small_margin) * 2);
+    top: calc((variables.$big_margin + variables.$small_margin) * 2);
   }
 
   .btn_mail {
     opacity: 0;
-    top: calc(($big_margin + $small_margin) * 3);
+    top: calc((variables.$big_margin + variables.$small_margin) * 3);
   }
 
   .btn_github,
@@ -145,7 +145,7 @@
     z-index: -1;
 
     &.btn_open {
-      transform: translateY($text_animation_negative_margin);
+      transform: translateY(variables.$text_animation_negative_margin);
       opacity: 0;
       pointer-events: none;
       z-index: -1;
@@ -153,8 +153,8 @@
 
     &.btn_close {
       transform: translateY(0);
-      opacity: $less_opacity;
-      z-index: $top_zindex;
+      opacity: variables.$less_opacity;
+      z-index: variables.$top_zindex;
       pointer-events: auto;
 
       &:hover {

@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -8,15 +8,15 @@
 
 .loader_title {
   width: 100%;
-  font-weight: $font_weight_regular;
+  font-weight: variables.$font_weight_regular;
   display: flex;
   align-items: center;
-  animation: fadeIn $text_animation ease-in;
+  animation: fadeIn variables.$text_animation ease-in;
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY($text_animation_margin);
+      transform: translateY(variables.$text_animation_margin);
     }
     to {
       opacity: 1;
@@ -25,24 +25,24 @@
   }
 
   &_white {
-    font-family: $first_font;
-    font-size: $medium_font_size;
-    color: $white_color;
+    font-family: variables.$first_font;
+    font-size: variables.$medium_font_size;
+    color: variables.$white_color;
     justify-content: center;
 
-    @media only screen and (max-width: $phone_width) {
-      font-size: $small_small_font_size;
+    @media only screen and (max-width: variables.$phone_width) {
+      font-size: variables.$small_small_font_size;
     }
   }
 
   &_black {
-    font-family: $second_font;
-    font-size: $font_size;
-    color: $text_color;
-    margin-top: $margin;
+    font-family: variables.$second_font;
+    font-size: variables.$font_size;
+    color: variables.$text_color;
+    margin-top: variables.$margin;
     justify-content: flex-start;
 
-    @media only screen and (max-width: $phone_width) {
+    @media only screen and (max-width: variables.$phone_width) {
       justify-content: center;
     }
   }
@@ -51,7 +51,7 @@
     width: 4px;
     height: 4px;
     background-color: var(--color-primary);
-    border-radius: $circle_border_radius;
-    margin: 0 $small_margin;
+    border-radius: variables.$circle_border_radius;
+    margin: 0 variables.$small_margin;
   }
 }

@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -9,20 +9,20 @@
 .card_skill {
   width: 100px;
   height: 40px;
-  padding: $small_margin;
+  padding: variables.$small_margin;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $white_color_rgba;
-  border: solid $border_width $white_color;
-  border-radius: $border_radius;
-  margin: $small_margin;
-  box-shadow: 0 0 10px $white_color;
-  transition: $transition;
+  background-color: variables.$white_color_rgba;
+  border: solid variables.$border_width variables.$white_color;
+  border-radius: variables.$border_radius;
+  margin: variables.$small_margin;
+  box-shadow: 0 0 10px variables.$white_color;
+  transition: variables.$transition;
   cursor: pointer;
 
   &:hover {
-    background-color: $white_color;
+    background-color: variables.$white_color;
     box-shadow: 0 0 20px var(--color-primary);
 
     .card_title {
@@ -32,6 +32,6 @@
 
   .card_title {
     font-weight: bold;
-    transition: $transition;
+    transition: variables.$transition;
   }
 }

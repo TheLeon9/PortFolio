@@ -1,4 +1,4 @@
-@import '@/styles/variables.scss';
+@use '@/styles/variables';
 
 // ------------------------------+
 //
@@ -17,27 +17,27 @@
   align-items: center;
 
   .home_btn_cont {
-    height: $bouton_size;
-    width: $bouton_size;
+    height: variables.$bouton_size;
+    width: variables.$bouton_size;
     position: absolute;
-    top: $layout_margin;
+    top: variables.$layout_margin;
     left: 50%;
     transform: translate(-50%, 0);
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: fadeIn $text_animation ease-in-out;
-    z-index: $top_zindex;
-    transition: $transition;
+    animation: fadeIn variables.$text_animation ease-in-out;
+    z-index: variables.$top_zindex;
+    transition: variables.$transition;
 
-    @media only screen and (max-width: $phone_width) {
-      top: calc($layout_margin / 2);
+    @media only screen and (max-width: variables.$phone_width) {
+      top: calc(variables.$layout_margin / 2);
     }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translate(-50%, $text_animation_negative_margin);
+        transform: translate(-50%, variables.$text_animation_negative_margin);
       }
       to {
         opacity: 1;
@@ -51,12 +51,12 @@
       outline: none;
 
       .home_logo {
-        height: $bouton_size;
-        width: $bouton_size;
-        transition: $transition;
+        height: variables.$bouton_size;
+        width: variables.$bouton_size;
+        transition: variables.$transition;
         cursor: pointer;
 
-        @media only screen and (max-width: $phone_width) {
+        @media only screen and (max-width: variables.$phone_width) {
           width: 28px;
           height: 28px;
         }

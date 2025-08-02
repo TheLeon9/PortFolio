@@ -1,0 +1,71 @@
+@use '@/styles/variables';
+
+// ------------------------------+
+//
+//          User
+//
+// ------------------------------+
+
+.section_container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: variables.$big_margin;
+
+  .user {
+    width: 800px;
+    height: auto;
+    display: flex;
+
+    @media only screen and (max-width: variables.$phone_width) {
+      width: 90%;
+      height: 90%;
+    }
+
+    .container {
+      width: calc(100% - variables.$double_image_height);
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding-bottom: variables.$margin;
+
+      .user_form {
+        width: 90%;
+        margin-top: variables.$big_margin;
+        display: flex;
+        flex-direction: column;
+
+        .multiple_input_cont {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          gap: variables.$margin;
+
+          @media only screen and (max-width: variables.$phone_width) {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 0;
+          }
+        }
+
+        textarea {
+          resize: none;
+          height: 100px;
+        }
+
+        textarea,
+        button,
+        input {
+          width: 100%;
+          margin-bottom: variables.$margin;
+        }
+      }
+    }
+  }
+}
