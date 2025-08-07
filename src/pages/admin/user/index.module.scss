@@ -65,6 +65,60 @@
           width: 100%;
           margin-bottom: variables.$margin;
         }
+
+        .checkbox_group {
+          display: flex;
+          flex-direction: column;
+          gap: variables.$small_margin;
+          margin-bottom: variables.$margin;
+
+          .checkbox_wrapper {
+            display: flex;
+            align-items: center;
+            gap: variables.$small_margin;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+
+            input {
+              position: absolute;
+              opacity: 0;
+              cursor: pointer;
+
+              &:checked ~ .custom_checkbox {
+                background-color: variables.$main_color;
+                border-color: variables.$main_color;
+
+                &::after {
+                  display: block;
+                }
+              }
+            }
+
+            .custom_checkbox {
+              width: 20px;
+              height: 20px;
+              background: variables.$main_color_rgba;
+              border: variables.$border_width solid variables.$white_color_rgba;
+              border-radius: variables.$small_border_radius;
+              transition: variables.$transition;
+
+              &::after {
+                content: '';
+                display: none;
+                position: absolute;
+                left: 6px;
+                top: 2px;
+                width: 6px;
+                height: 12px;
+                border: solid variables.$white_color;
+                border-width: 0 variables.$border_width variables.$border_width
+                  0;
+                transform: rotate(45deg);
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -130,7 +130,6 @@ h1 {
 
   &:hover {
     background: variables.$white_color_rgba;
-    color: variables.$white_color;
   }
 }
 
@@ -165,42 +164,38 @@ h1 {
 
 // ------------------------------+
 //
-//          Succes Banner
+//     Succes & Error Banner
 //
 // ------------------------------+
 
+.error_banner,
 .success_banner {
-  width: 100%;
-  margin-bottom: variables.$margin;
+  position: fixed;
+  top: variables.$small_margin;
+  left: variables.$small_margin;
+  z-index: variables.$top_zindex;
+  width: auto;
   background: variables.$white_color_rgba;
   padding: variables.$small_margin;
   border: none;
   border-radius: variables.$border_radius;
   text-align: center;
+}
+
+.error_banner {
+  background: variables.$white_color_rgba;
 
   p {
-    color: variables.$succes_color;
+    color: variables.$error_color;
     font-weight: variables.$font_weight_bold;
   }
 }
 
-// ------------------------------+
-//
-//          Error Banner
-//
-// ------------------------------+
-
-.error_banner {
-  width: 100%;
-  margin-bottom: variables.$margin;
+.success_banner {
   background: variables.$white_color_rgba;
-  padding: variables.$small_margin;
-  border: none;
-  border-radius: variables.$border_radius;
-  text-align: center;
 
   p {
-    color: variables.$error_color;
+    color: variables.$succes_color;
     font-weight: variables.$font_weight_bold;
   }
 }

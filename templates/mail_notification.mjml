@@ -1,0 +1,60 @@
+<mjml>
+  <mj-head>
+    <mj-title>Discount Light</mj-title>
+    <mj-preview>Pre-header Text</mj-preview>
+
+    <!-- Intégration des polices Google Fonts -->
+    <mj-font name="Nunito" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600;800&display=swap" />
+    <mj-font name="Orbitron" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" />
+
+    <!-- Attributs par défaut -->
+    <mj-attributes>
+      <mj-all font-family="'Nunito', sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#1c1c1c" line-height="24px" font-family="'Nunito', sans-serif"></mj-text>
+    </mj-attributes>
+
+    <mj-style inline="inline">
+      .body-section {
+        -webkit-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+        -moz-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+        box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+      }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="#f8f8ff" width="600px">
+    <mj-wrapper padding-top="0" padding-bottom="0" css-class="body-section">
+      <mj-section background-color="#f8f8ff" padding-left="15px" padding-right="15px" padding-top="30px" padding-bottom="30px">
+        <mj-column width="100%">
+          <!-- Header Title -->
+          <mj-text color="#0132b5" align="center" font-family="'Orbitron', sans-serif" font-size="28px" font-weight="bold" text-transform="uppercase" letter-spacing="3px" line-height="32px">
+            MY PORTFOLIO
+          </mj-text>
+
+          <!-- Intro Text -->
+          <mj-text color="#1c1c1c" font-size="16px" line-height="24px" align="center" padding-top="20px" font-family="'Nunito', sans-serif">
+            You received the following message from your Portfolio:
+          </mj-text>
+
+          <!-- Information List -->
+          <mj-text color="#1c1c1c" font-size="16px" line-height="24px" padding-top="15px" font-family="'Nunito', sans-serif">
+            <strong>Date: </strong>{{Date}}
+          </mj-text>
+          <mj-text color="#1c1c1c" font-size="16px" line-height="24px" font-family="'Nunito', sans-serif">
+            <strong>Last Name: </strong>{{LastName}}
+          </mj-text>
+          <mj-text color="#1c1c1c" font-size="16px" line-height="24px" font-family="'Nunito', sans-serif">
+            <strong>Email: </strong>{{Email}}
+          </mj-text>
+          <mj-text color="#1c1c1c" font-size="16px" line-height="24px" font-family="'Nunito', sans-serif">
+            <strong>Phone: </strong>{{Phone}}
+          </mj-text>
+          <mj-text color="#1c1c1c" font-size="16px" line-height="24px" padding-bottom="20px" font-family="'Nunito', sans-serif">
+            <strong>Message: </strong>{{Message}}
+          </mj-text>
+
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

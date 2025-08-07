@@ -13,7 +13,7 @@ import Pillar from '@/components/UI/admin/Pillar';
 export const getServerSideProps = withAdminAuth();
 
 export default function Projects() {
-  const { logged } = useTheme();
+  const { logged, setStatus } = useTheme();
   const router = useRouter();
 
   const [project, setProject] = useState({
@@ -23,11 +23,6 @@ export default function Projects() {
     highlights: ['', '', '', '', ''],
   });
   const [projectsList, setProjectsList] = useState([]);
-
-  const [status, setStatus] = useState({
-    error: '',
-    success: '',
-  });
 
   useEffect(() => {
     if (!logged) {
@@ -49,7 +44,7 @@ export default function Projects() {
         setStatus({ error: '❌ Error loading Projects', success: '' });
       }
     })();
-  }, [logged, router]);
+  }, [logged, router, setStatus]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -232,16 +227,6 @@ export default function Projects() {
               />
             ))}
 
-            {status.error && (
-              <div className="error_banner">
-                <p>{status.error}</p>
-              </div>
-            )}
-            {status.success && (
-              <div className="success_banner">
-                <p>{status.success}</p>
-              </div>
-            )}
             <button type="submit" className="input_button">
               ADD
             </button>
@@ -271,9 +256,7 @@ export default function Projects() {
                             {...provided.dragHandleProps}
                             className={styles.project_item}
                           >
-                            <span>
-                              {project.projectNumber} - {project.title}
-                            </span>
+                            <span>{project.title}</span>
                             <button
                               onClick={() => handleRemoveProject(project.id)}
                               className="delete_button"

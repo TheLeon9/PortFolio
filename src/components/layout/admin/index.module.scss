@@ -7,11 +7,8 @@
 //
 // ------------------------------+
 
-$top_height: 100px;
-$nav_height: 60px;
-$blur: 2px;
-$scale: 1;
-$scale_minus: -1;
+$top-height: 100px;
+$nav-height: 60px;
 
 .layout_wrapper {
   position: relative;
@@ -25,46 +22,41 @@ $scale_minus: -1;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('/img/background/BO_Background.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    background: url('/img/background/BO_Background.jpg') center / cover
+      no-repeat;
     z-index: -1;
     pointer-events: none;
+    transition: variables.$transition;
 
     &::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: variables.$black_color_rgba;
       z-index: 1;
     }
   }
 
   .global_container {
-    width: 100vw;
-    min-height: 100vh;
+    padding-top: calc($top-height + $nav-height);
+    padding-bottom: variables.$margin;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: flex-start;
-    padding-bottom: variables.$margin;
-    padding-top: calc($top_height + $nav_height);
+    width: 100vw;
+    min-height: 100vh;
 
     .section_top {
-      width: 100%;
-      height: 100px;
       position: fixed;
       top: 0;
       left: 0;
+      width: 100%;
+      height: $top-height;
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: variables.$top_zindex;
-      backdrop-filter: blur($blur);
+      backdrop-filter: blur(2px);
 
       .logo {
         width: 80px;
@@ -73,19 +65,19 @@ $scale_minus: -1;
     }
 
     .section_nav {
-      width: 100%;
-      height: 60px;
       position: fixed;
-      top: $top_height;
+      top: $top-height;
       left: 0;
-      z-index: variables.$top_zindex;
+      width: 100%;
+      height: $nav-height;
       background: variables.$main_color_rgba;
-      backdrop-filter: blur($blur);
+      backdrop-filter: blur(2px);
+      z-index: variables.$top_zindex;
       display: flex;
       justify-content: center;
       align-items: center;
-      border-top: solid variables.$border_width_big variables.$white_color_rgba;
-      border-bottom: solid variables.$border_width_big
+      border-top: variables.$border_width_big solid variables.$white_color_rgba;
+      border-bottom: variables.$border_width_big solid
         variables.$white_color_rgba;
 
       .nav_list {
@@ -95,29 +87,25 @@ $scale_minus: -1;
         padding: 0;
         margin: 0;
 
-        @media only screen and (max-width: variables.$phone_width) {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+        @media (max-width: variables.$phone_width) {
           flex-wrap: wrap;
+          justify-content: center;
         }
 
         .nav_item {
-          font-size: variables.$font_size;
           font-family: variables.$first_font;
+          font-size: variables.$font_size;
           font-weight: variables.$font_weight_regular;
           color: variables.$white_color;
           text-decoration: none;
           transition: variables.$transition;
 
-          @media only screen and (max-width: variables.$phone_width) {
-            font-size: variables.$small_small_font_size;
+          &:hover {
+            text-shadow: 0 0 10px variables.$white_color;
           }
 
-          &:hover {
-            text-shadow: 0px 0px 10px variables.$white_color;
+          @media (max-width: variables.$phone_width) {
+            font-size: variables.$small_small_font_size;
           }
         }
       }
@@ -127,58 +115,32 @@ $scale_minus: -1;
       position: fixed;
       bottom: variables.$margin;
       right: variables.$margin;
-      width: auto;
-      height: 60px;
-      padding: variables.$small_margin;
-      border-top: variables.$border_width_big solid variables.$white_color;
       display: flex;
-      text-decoration: none;
-      z-index: variables.$top_zindex;
       gap: variables.$small_margin;
+      padding: variables.$small_margin;
+      height: 60px;
+      text-decoration: none;
+      border-top: variables.$border_width_big solid variables.$white_color;
+      z-index: variables.$top_zindex;
       transition: variables.$transition;
 
       &:hover {
         border-top-color: variables.$main_color;
       }
 
-      @media only screen and (max-width: variables.$phone_width) {
+      @media (max-width: variables.$phone_width) {
         top: variables.$margin;
         bottom: 0;
       }
 
       .to_top_image_left,
       .to_top_image_right {
-        width: auto;
         height: 60px;
+        width: auto;
         transition: variables.$transition;
 
-        @media only screen and (max-width: variables.$phone_width) {
+        @media (max-width: variables.$phone_width) {
           height: 40px;
-        }
-      }
-
-      @keyframes floatUpDownLeft {
-        0% {
-          transform: translateY(0) scaleX($scale);
-        }
-        50% {
-          transform: translateY(-10px) scaleX($scale);
-        }
-        100% {
-          transform: translateY(0) scaleX($scale);
-        }
-      }
-
-      @keyframes floatUpDownRight {
-        0% {
-          transform: translateY(0) scaleX($scale_minus);
-        }
-        50% {
-          transform: translateY(calc(variables.$small_margin * -1))
-            scaleX($scale_minus);
-        }
-        100% {
-          transform: translateY(0) scaleX($scale_minus);
         }
       }
 
@@ -193,30 +155,77 @@ $scale_minus: -1;
       }
     }
 
-    .logout_button {
+    .action_btn_cont {
       position: fixed;
       bottom: variables.$margin;
       left: variables.$margin;
-      width: 40px;
-      height: 40px;
-      background: variables.$white_color_rgba;
-      border-radius: variables.$circle_border_radius;
-      border: none;
-      cursor: pointer;
-      z-index: variables.$top_zindex;
-      transition: variables.$transition;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
+      gap: variables.$margin;
+      z-index: variables.$top_zindex;
 
-      &:hover {
-        background: color.adjust(variables.$white_color, $lightness: -10%);
+      @media (max-width: variables.$phone_width) {
+        flex-direction: row;
+        top: variables.$margin;
+        bottom: 0;
+        gap: variables.$small_margin;
+        height: 40px;
       }
 
-      @media only screen and (max-width: variables.$phone_width) {
-        bottom: none;
-        top: variables.$margin;
+      .theme_toggle_button {
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .theme_toggle_button,
+      .logout_button {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: variables.$white_color_rgba;
+        border: none;
+        border-radius: variables.$circle_border_radius;
+        cursor: pointer;
+        transition: variables.$transition;
+
+        &:hover {
+          background: color.adjust(variables.$white_color, $lightness: -10%);
+        }
       }
     }
+  }
+}
+
+/* Animations */
+@keyframes floatUpDownLeft {
+  0%,
+  100% {
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    transform: translateY(-10px) scaleX(1);
+  }
+}
+
+@keyframes floatUpDownRight {
+  0%,
+  100% {
+    transform: translateY(0) scaleX(-1);
+  }
+  50% {
+    transform: translateY(-10px) scaleX(-1);
+  }
+}
+
+[data-theme='light'] .background_global_container {
+  filter: invert(1);
+
+  &::after {
+    filter: invert(1);
+    background-color: variables.$black_color_rgba_light;
   }
 }

@@ -40,7 +40,6 @@ async function handlePUT(req, res) {
   }
 }
 
-// Entrée API protégée par middleware JWT
 export default withAuth(async (req, res) => {
   if (req.method === 'GET') return handleGET(req, res);
   if (req.method === 'PUT') return handlePUT(req, res);

@@ -9,16 +9,18 @@ datasource db {
 }
 
 model User {
-    id          Int    @id @default(autoincrement())
-    lastName    String
-    firstName   String
-    year        Int
-    country     String
-    city        String
-    linkedin    String
-    github      String
-    description String
-    email       String @unique
+    id           Int     @id @default(autoincrement())
+    lastName     String
+    firstName    String
+    year         Int
+    country      String
+    city         String
+    linkedin     String
+    github       String
+    description  String
+    email        String  @unique
+    user_contact Boolean @default(true)
+    user_chatbot Boolean @default(true)
 }
 
 model Skill {

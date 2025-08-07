@@ -1,38 +1,34 @@
 import React from 'react';
-import styles from './index.module.scss';
 import Link from 'next/link';
-
-import { useTheme } from '@/context/ThemeContext.js';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import Image from 'next/image';
+import styles from './index.module.scss';
+
+import { useTheme } from '@/context/ThemeContext';
 import Logo from 'p/img/logo/logo_fm_white.svg';
 import Katana from 'p/img/deco/katana.svg';
-import Deco_Image from 'p/img/deco/title_image.svg';
+import DecoImage from 'p/img/deco/title_image.svg';
+import LightImage from 'p/img/custom_img/moon.svg';
+import DarkImage from 'p/img/custom_img/sun.svg';
 
 export default function Layout({ children }) {
   const router = useRouter();
-  const { logged, isLogged } = useTheme();
+  const { logged, isLogged, status, darkMode, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
-    try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-      });
-    } catch (err) {
-      console.error('❌ Logout failed:', err);
-    }
-
+    await fetch('/api/auth/logout', { method: 'POST' });
     isLogged(false);
     router.replace('/');
   };
 
   return (
     <div className={styles.layout_wrapper}>
-      <div className={styles.background_global_container}></div>
+      <div className={styles.background_global_container} />
+
       <div id="top" className={styles.global_container}>
         {/* Header */}
-        <div className={styles.section_top}>
+        <header className={styles.section_top}>
           <Image
             src={Logo}
             width={80}
@@ -40,12 +36,11 @@ export default function Layout({ children }) {
             alt="Logo FM"
             className={styles.logo}
           />
-        </div>
+        </header>
 
-        {/* Nav Bar */}
+        {/* Navigation */}
         {logged && (
           <nav className={styles.section_nav}>
-            {/* Navigation Bar */}
             <ul className={styles.nav_list}>
               <li>
                 <Link href="/admin/user" className={styles.nav_item}>
@@ -62,51 +57,87 @@ export default function Layout({ children }) {
                   Skills
                 </Link>
               </li>
-              {/* <li>
-                <Link href="/admin/dashboard" className={styles.nav_item}>
-                  Dashboard
-                </Link>
-              </li> */}
             </ul>
           </nav>
         )}
 
-        {/* Top Helper */}
+        {/* Scroll to Top */}
         {logged && (
-          <a href="#top" className={styles.scroll_to_top}>
+          <a
+            href="#top"
+            className={styles.scroll_to_top}
+            aria-label="Scroll to Top"
+          >
             <Image
               src={Katana}
-              width={0}
-              height={0}
-              alt="Left Katana"
+              alt="Katana Left"
               className={styles.to_top_image_left}
             />
             <Image
               src={Katana}
-              width={0}
-              height={0}
-              alt="Right Katana"
+              alt="Katana Right"
               className={styles.to_top_image_right}
             />
           </a>
         )}
 
-        {/* Log Out */}
+        {/* Theme Toggle & Logout */}
         {logged && (
-          <button onClick={handleLogout} className={styles.logout_button}>
-            <Image
-              src={Deco_Image}
-              width={40}
-              height={40}
-              alt="Decoration Image"
-              className={styles.deco_image}
-            />
-          </button>
+          <div className={styles.action_btn_cont}>
+            <button
+              onClick={toggleTheme}
+              className={styles.theme_toggle_button}
+              aria-label="Toggle Theme"
+            >
+              {darkMode ? (
+                <Image
+                  src={DarkImage}
+                  width={40}
+                  height={40}
+                  alt="Logo FM"
+                  className={styles.logo}
+                />
+              ) : (
+                <Image
+                  src={LightImage}
+                  width={40}
+                  height={40}
+                  alt="Logo FM"
+                  className={styles.logo}
+                />
+              )}
+            </button>
+            <button
+              onClick={handleLogout}
+              className={styles.logout_button}
+              aria-label="Logout"
+            >
+              <Image
+                src={DecoImage}
+                width={40}
+                height={40}
+                alt="Logout"
+                className={styles.deco_image}
+              />
+            </button>
+          </div>
         )}
 
-        {/* Main / Children */}
+        {/* Content */}
         {React.cloneElement(children)}
       </div>
+
+      {/* Alerts */}
+      {status?.error && (
+        <div className="error_banner">
+          <p>{status.error}</p>
+        </div>
+      )}
+      {status?.success && (
+        <div className="success_banner">
+          <p>{status.success}</p>
+        </div>
+      )}
     </div>
   );
 }

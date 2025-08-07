@@ -12,7 +12,7 @@ import Pillar from '@/components/UI/admin/Pillar';
 export const getServerSideProps = withAdminAuth();
 
 export default function User() {
-  const { logged } = useTheme();
+  const { logged, setStatus } = useTheme();
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -25,12 +25,8 @@ export default function User() {
     description: '',
     linkedin: '',
     github: '',
-  });
-
-  const [status, setStatus] = useState({
-    loading: false,
-    error: '',
-    success: '',
+    user_contact: true,
+    user_chatbot: true,
   });
 
   // --- Fetch user on mount ---
@@ -56,7 +52,7 @@ export default function User() {
         }));
       }
     })();
-  }, [logged, router]);
+  }, [logged, router, setStatus]);
 
   const handleChange = ({ target: { name, value } }) =>
     setFormData((prev) => ({
@@ -160,26 +156,40 @@ export default function User() {
               value={formData.description}
               onChange={handleChange}
             />
-            {status.error && (
-              <div className="error_banner">
-                <p>{status.error}</p>
-              </div>
-            )}
-            {status.success && (
-              <div className="success_banner">
-                <p>{status.success}</p>
-              </div>
-            )}
-            <button
-              type="submit"
-              className="input_button"
-              disabled={status.loading}
-              style={{
-                opacity: status.loading ? 0.6 : 1,
-                cursor: status.loading ? 'not-allowed' : 'pointer',
-              }}
-            >
-              {status.loading ? 'Loading...' : 'UPDATE'}
+            <div className={styles.checkbox_group}>
+              <label className={styles.checkbox_wrapper}>
+                <input
+                  type="checkbox"
+                  checked={formData.user_chatbot}
+                  onChange={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      user_chatbot: !prev.user_chatbot,
+                    }))
+                  }
+                />
+                <span className={styles.custom_checkbox}></span>
+                <p className="p_white">Activate ChatBot</p>
+              </label>
+
+              <label className={styles.checkbox_wrapper}>
+                <input
+                  type="checkbox"
+                  checked={formData.user_contact}
+                  onChange={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      user_contact: !prev.user_contact,
+                    }))
+                  }
+                />
+                <span className={styles.custom_checkbox}></span>
+                <p className="p_white">Activate Contact</p>
+              </label>
+            </div>
+
+            <button type="submit" className="input_button">
+              UPDATE
             </button>
           </form>
         </div>

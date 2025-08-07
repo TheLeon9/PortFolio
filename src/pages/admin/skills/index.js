@@ -13,16 +13,11 @@ import Pillar from '@/components/UI/admin/Pillar';
 export const getServerSideProps = withAdminAuth();
 
 export default function Skills() {
-  const { logged } = useTheme();
+  const { logged, setStatus } = useTheme();
   const router = useRouter();
 
   const [skill, setSkill] = useState('');
   const [skillsList, setSkillsList] = useState([]);
-
-  const [status, setStatus] = useState({
-    error: '',
-    success: '',
-  });
 
   useEffect(() => {
     if (!logged) {
@@ -44,7 +39,7 @@ export default function Skills() {
         setStatus({ error: '❌ Error loading Skills', success: '' });
       }
     })();
-  }, [logged, router]);
+  }, [logged, router, setStatus]);
 
   const handleAddSkill = async (e) => {
     e.preventDefault();
@@ -167,17 +162,6 @@ export default function Skills() {
               onChange={(e) => setSkill(e.target.value)}
               required
             />
-
-            {status.error && (
-              <div className="error_banner">
-                <p>{status.error}</p>
-              </div>
-            )}
-            {status.success && (
-              <div className="success_banner">
-                <p>{status.success}</p>
-              </div>
-            )}
 
             <button type="submit" className="input_button">
               ADD
