@@ -26,7 +26,7 @@ export const initDefaultUser = async () => {
       // console.log('✅ User already exists, no need to create one.');
     }
   } catch (error) {
-    console.error('❌ Error during user initialization:', error);
+    // console.error('❌ Error during user initialization:', error);
   } finally {
     await prisma.$disconnect();
   }

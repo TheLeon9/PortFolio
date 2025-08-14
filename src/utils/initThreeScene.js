@@ -21,6 +21,7 @@ export function initThreeScene({
   wobbleRef,
   wobblePlateRef,
   customColor,
+  TransmissionLevel,
 }) {
   //--------------------------------------------------+
   //
@@ -87,7 +88,7 @@ export function initThreeScene({
     metalness: 0,
     roughness: 0.5,
     color: '#ffffff',
-    transmission: 0.1,
+    transmission: TransmissionLevel,
     ior: 1.5,
     thickness: 1.5,
     transparent: true,

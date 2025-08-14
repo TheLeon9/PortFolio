@@ -6,6 +6,9 @@
 //
 // ------------------------------+
 
+$activeWH: 40px;
+$notActiveWH: 10px;
+
 .header_cont {
   height: 180px;
   width: 40px;
@@ -74,8 +77,8 @@
   }
 
   .nav_bar_link_not_active {
-    width: variables.$notActiveWH;
-    height: variables.$notActiveWH;
+    width: $notActiveWH;
+    height: $notActiveWH;
 
     .nav_title_section,
     .nav_title_btn {
@@ -84,8 +87,8 @@
   }
 
   .nav_bar_link_active {
-    width: variables.$activeWH;
-    height: variables.$activeWH;
+    width: $activeWH;
+    height: $activeWH;
 
     @keyframes appearNext {
       from {

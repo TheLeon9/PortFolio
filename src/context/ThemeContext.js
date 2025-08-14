@@ -9,7 +9,7 @@ import {
   DEFAULT_BACKGROUND_COLOR,
   DEFAULT_MAIN_COLOR,
   DEFAULT_TEXT_COLOR,
-  DEFAULT_TRANSPARENCY_LEVEL,
+  DEFAULT_TRANSMISSION_LEVEL,
 } from '@/constants';
 
 const ThemeContext = createContext();
@@ -61,8 +61,8 @@ export const ThemeProvider = ({ children }) => {
   const [textColor, setTextColor] = useState(DEFAULT_TEXT_COLOR);
 
   // Transparency Level
-  const [TransparencyLevel, SetTransparencyLevel] = useState(
-    DEFAULT_TRANSPARENCY_LEVEL
+  const [TransmissionLevel, SetTransmissionLevel] = useState(
+    DEFAULT_TRANSMISSION_LEVEL
   );
 
   // Music
@@ -91,6 +91,9 @@ export const ThemeProvider = ({ children }) => {
 
   const toggleMusic = () => setMusicActive((prev) => !prev);
 
+  // Message Sent
+  const [messageSent, setMessageSent] = useState(false);
+
   return (
     <ThemeContext.Provider
       value={{
@@ -100,8 +103,8 @@ export const ThemeProvider = ({ children }) => {
         setBackgroundColor,
         textColor,
         setTextColor,
-        TransparencyLevel,
-        SetTransparencyLevel,
+        TransmissionLevel,
+        SetTransmissionLevel,
         musicActive,
         setMusicActive,
         toggleMusic,
@@ -111,6 +114,8 @@ export const ThemeProvider = ({ children }) => {
         setStatus,
         darkMode,
         toggleTheme,
+        messageSent,
+        setMessageSent
       }}
     >
       {children}

@@ -21,7 +21,6 @@ export function withAdminAuth(gssp = () => ({ props: {} })) {
 
       return await gssp(context);
     } catch (err) {
-      console.error('❌ Auth error in withAdminAuth:', err.message || err);
       return {
         redirect: {
           destination: '/admin',

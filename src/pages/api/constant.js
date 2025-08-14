@@ -12,23 +12,17 @@ async function handleGET(req, res) {
     ]);
 
     if (projects.length === 0 && users.length === 0 && skills.length === 0) {
-      return res
-        .status(200)
-        .json({
-          message: '✅ No Constants available',
-          data: { projects: [], users: [], skills: [] },
-        });
+      return res.status(200).json({
+        message: '✅ No Constants available',
+        data: { projects: [], users: [], skills: [] },
+      });
     }
 
-    return res
-      .status(200)
-      .json({
-        message: '✅ Constants Data fetched',
-        data: { projects, users, skills },
-      });
+    return res.status(200).json({
+      message: '✅ Constants Data fetched',
+      data: { projects, users, skills },
+    });
   } catch (err) {
-    console.log(err);
-    
     return res
       .status(500)
       .json({ message: '❌ Failed to fetch Constants Data' });

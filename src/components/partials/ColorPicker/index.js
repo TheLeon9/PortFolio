@@ -8,7 +8,7 @@ import {
   DEFAULT_BACKGROUND_COLOR,
   DEFAULT_MAIN_COLOR,
   DEFAULT_TEXT_COLOR,
-  DEFAULT_TRANSPARENCY_LEVEL,
+  DEFAULT_TRANSMISSION_LEVEL,
   imgWH,
 } from '@/constants';
 import { useTheme } from '@/context/ThemeContext.js';
@@ -36,8 +36,8 @@ const ColorPicker = () => {
     setBackgroundColor,
     textColor,
     setTextColor,
-    TransparencyLevel,
-    SetTransparencyLevel,
+    TransmissionLevel,
+    SetTransmissionLevel,
   } = useTheme();
 
   const [activeFilter, setActiveFilter] = useState(null); // 'main' | 'background' | 'transparency' | null
@@ -53,7 +53,7 @@ const ColorPicker = () => {
     setMainColor(DEFAULT_MAIN_COLOR);
     setBackgroundColor(DEFAULT_BACKGROUND_COLOR);
     setTextColor(DEFAULT_TEXT_COLOR);
-    SetTransparencyLevel(DEFAULT_TRANSPARENCY_LEVEL);
+    SetTransmissionLevel(DEFAULT_TRANSMISSION_LEVEL);
     setActiveFilter(null);
   };
 
@@ -93,8 +93,18 @@ const ColorPicker = () => {
             </div>
           )}
           {activeFilter === 'transparency' && (
-            <div>
-              {/* Tu peux implémenter la logique de transparence ici */}
+            <div className={style.transparency_slider}>
+              <input
+                type="range"
+                min="0.1"
+                max="1"
+                step="0.01"
+                value={TransmissionLevel}
+                onChange={(e) =>
+                  SetTransmissionLevel(parseFloat(e.target.value))
+                }
+              />
+              <p>{Math.round(TransmissionLevel * 100)}%</p>
             </div>
           )}
         </div>

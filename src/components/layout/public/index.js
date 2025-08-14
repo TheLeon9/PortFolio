@@ -10,7 +10,7 @@ import Loader from '@/components/partials/Loader';
 import ColorPicker from '@/components/partials/ColorPicker';
 import MusicSelector from '@/components/partials/MusicSelector';
 import ChatBot from '@/components/partials/ChatBot';
-import SideSlider from '@/components/partials/SideSlider';
+// import SideSlider from '@/components/partials/SideSlider';
 
 import { sections } from '@/constants';
 import { useTheme } from '@/context/ThemeContext.js';
@@ -18,7 +18,7 @@ import { initThreeScene } from '@/utils/initThreeScene';
 
 const Layout = ({ children }) => {
   //  Customisation Features
-  const { mainColor, backgroundColor, TransparencyLevel } = useTheme();
+  const { mainColor, backgroundColor, TransmissionLevel } = useTheme();
 
   // Loader
   const [isLoading, setLoader] = useState(true);
@@ -39,6 +39,7 @@ const Layout = ({ children }) => {
       wobbleRef,
       wobblePlateRef,
       customColor,
+      TransmissionLevel,
     });
   }, []);
 
@@ -47,7 +48,10 @@ const Layout = ({ children }) => {
       customColor.current.uMainColor.value.set(mainColor);
       customColor.current.uSecondColor.value.set(backgroundColor);
     }
-  }, [mainColor, backgroundColor]);
+    if (wobbleRef.current) {
+      wobbleRef.current.material.transmission = TransmissionLevel;
+    }
+  }, [mainColor, backgroundColor, TransmissionLevel]);
 
   useEffect(() => {
     // Update localStorage and notify other components when activeSection changes
@@ -84,6 +88,10 @@ const Layout = ({ children }) => {
 
   // Simulated scroll event
   const handleScroll = (event) => {
+    if (event.target.closest?.(`.${style.messages}`)) {
+      return; // On bloque le scroll global
+    }
+
     const { deltaY } = event;
     const currentIndex = parseInt(activeSection, 10);
 
@@ -176,7 +184,7 @@ const Layout = ({ children }) => {
           <MusicSelector />
 
           {/* Side Slider container */}
-          <SideSlider />
+          {/* <SideSlider /> */}
 
           {/* {children} */}
           {React.cloneElement(children, { activeSection })}

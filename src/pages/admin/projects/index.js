@@ -140,8 +140,6 @@ export default function Projects() {
         );
       }
     } catch (err) {
-      console.log(err);
-
       setStatus({
         error: '❌ Server error when deleting Project',
         success: '',

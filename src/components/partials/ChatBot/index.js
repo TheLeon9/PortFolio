@@ -1,19 +1,47 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-
 import style from './index.module.scss';
 
 import LogoReset from 'p/img/custom_img/reset.svg';
 import LogoChatBot from 'p/img/custom_img/chatbot.svg';
 import LogoSend from 'p/img/custom_img/send.svg';
-import { imgWH } from '@/constants';
+import { imgWH, userList } from '@/constants';
+
+const predefinedQuestions = [
+  {
+    id: 1,
+    question: 'Tell me about the portfolio owner',
+    answer:
+      'The owner is a passionate developer specialized in Next.js, Three.js, and SCSS. He loves creating immersive and interactive web experiences.',
+  },
+  {
+    id: 2,
+    question: 'What are his skills?',
+    answer:
+      'He is skilled in JavaScript, React, Next.js, Three.js, SCSS, and modern front-end development.',
+  },
+  {
+    id: 3,
+    question: 'Does he have work experience?',
+    answer:
+      'Yes, he has worked on several projects ranging from personal portfolios to client websites, focusing on performance and design.',
+  },
+  {
+    id: 4,
+    question: 'How can I contact him ?',
+    answer: 'You can contact him via the Contact section of this portfolio',
+  },
+];
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isConnected, setIsConnected] = useState(true);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [availableQuestions, setAvailableQuestions] =
+    useState(predefinedQuestions);
+
+  const isOnline = userList[0]?.user_chatbot === true;
   const messagesEndRef = useRef(null);
 
   const toggleChat = () => setIsOpen(!isOpen);
@@ -22,18 +50,24 @@ const ChatBot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  const handleQuestionClick = (q) => {
+    if (!isOnline) return; // block if offline
+    sendMessage(q.question, q.answer);
+    setAvailableQuestions((prev) => prev.filter((item) => item.id !== q.id));
+  };
 
-    const newMessages = [...messages, { role: 'user', content: input }];
+  const sendMessage = async (text, predefinedAnswer = null) => {
+    if (!isOnline || !text.trim()) return;
+
+    const newMessages = [...messages, { role: 'user', content: text }];
     setMessages(newMessages);
     setInput('');
     setLoading(true);
 
-    // Fake AI response
     setTimeout(() => {
-      const fakeReply = `Sure! "${input}" sounds interesting. (AI reply)`;
-      setMessages([...newMessages, { role: 'assistant', content: fakeReply }]);
+      const reply =
+        predefinedAnswer || `Sure! "${text}" sounds interesting. (AI reply)`;
+      setMessages([...newMessages, { role: 'assistant', content: reply }]);
       setLoading(false);
     }, 700);
   };
@@ -41,18 +75,19 @@ const ChatBot = () => {
   const resetChat = () => {
     setMessages([]);
     setInput('');
+    setAvailableQuestions(predefinedQuestions);
   };
 
   return (
     <div className={style.chatbot_cont}>
-      {/* Open and Close ChatBot Button */}
+      {/* Opening Button */}
       <button className={style.chat_btn} onClick={toggleChat}>
         <Image src={LogoChatBot} alt="ChatBot" width={imgWH} height={imgWH} />
       </button>
 
-      {/* Chat Window */}
       {isOpen && (
         <div className={style.chat_window}>
+          {/* Header */}
           <div className={style.header_area}>
             <div className={style.header_avatar}>
               <Image
@@ -65,15 +100,14 @@ const ChatBot = () => {
             <div className={style.header_text}>
               <div
                 className={`${style.chatbot_online} ${
-                  isConnected ? style.online : style.offline
+                  isOnline ? style.online : style.offline
                 }`}
               >
                 <div className={style.chat_dot}></div>
                 <p className="p_small_small">
-                  {isConnected ? 'Online' : 'Offline'}
+                  {isOnline ? 'Online' : 'Offline'}
                 </p>
               </div>
-
               <p className={style.custom_title}>Ghost</p>
             </div>
             <button className={style.reset_btn} onClick={resetChat}>
@@ -81,32 +115,72 @@ const ChatBot = () => {
             </button>
           </div>
 
+          {/*  Messages Area */}
           <div className={style.messages}>
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`${style.message} ${
-                  msg.role === 'user' ? style.user : style.assistant
-                }`}
-              >
-                <p className="p_small">{msg.content}</p>
-              </div>
-            ))}
-            {loading && <p className="p_small">Processing...</p>}
+            {isOnline ? (
+              <>
+                {messages.map((msg, idx) => (
+                  <div
+                    key={idx}
+                    className={`${style.message} ${
+                      msg.role === 'user' ? style.user : style.assistant
+                    }`}
+                  >
+                    <p className="p_small">{msg.content}</p>
+                  </div>
+                ))}
+                {loading && <p className="p_small">Processing...</p>}
 
+                <div className={style.suggested_questions}>
+                  {availableQuestions.slice(0, 2).map((q) => (
+                    <button
+                      key={q.id}
+                      className={style.question_btn}
+                      onClick={() => handleQuestionClick(q)}
+                    >
+                      {q.question}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className={style.offline_banner}>
+                <Image
+                  src={LogoChatBot}
+                  alt="Offline"
+                  width={100}
+                  height={100}
+                  className={style.ghost_offline}
+                />
+                <p className={style.offline_text}>
+                  <span className={style.custom_span}>GHOST</span> not
+                  available at the moment
+                </p>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Input */}
           <div className={style.input_area}>
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Type a message..."
-            />
-            <button onClick={sendMessage} disabled={loading}>
-              <Image src={LogoSend} alt="Send" width={imgWH} height={imgWH} />
-            </button>
+            {isOnline && (
+              <>
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
+                  placeholder="Type a message..."
+                />
+                <button onClick={() => sendMessage(input)} disabled={loading}>
+                  <Image
+                    src={LogoSend}
+                    alt="Send"
+                    width={imgWH}
+                    height={imgWH}
+                  />
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

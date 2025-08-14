@@ -9,6 +9,7 @@ $main_color: #0132b5;
 $main_color_rgba: rgba(1, 50, 181, 0.2);
 $error_color: crimson;
 $succes_color: aqua;
+$succes_color_two: green;
 
 // border
 $small_border_radius: 4px;
@@ -47,6 +48,7 @@ $text_animation_margin: 26px;
 $text_animation_negative_margin: -26px;
 
 // margin
+$small_small_margin: 5px;
 $small_margin: 10px;
 $margin: 20px;
 $big_margin: 40px;
@@ -71,20 +73,3 @@ $shadow_box: 0 8px 40px rgba(0, 0, 0, 0.2);
 // Image width and height
 $image_height: 40px;
 $double_image_height: 80px;
-
-// others
-$header_footer_height: 60px;
-$min_height: 85px;
-$max_width: 250px;
-$update_height: 55px;
-$corner_width: 560px;
-$corner_width_phone: 280px;
-$transparent_percentage: 2%;
-$activeWH: 40px;
-$notActiveWH: 10px;
-$rotation_up: 10deg;
-$rotation_down: -10deg;
-$translate: 4px;
-$translate_circle_do: 10px;
-$slide_width: 200px;
-$slide_tab_width: 20px;

@@ -6,11 +6,14 @@
 //
 // ------------------------------+
 
+$slide_width: 200px;
+$slide_tab_width: 20px;
+
 .slider_cont {
-  width: variables.$slide_width;
+  width: $slide_width;
   height: 180px;
   top: 50%;
-  left: calc(variables.$slide_width * -1);
+  left: calc($slide_width * -1);
   transform: translate(0, -50%);
   position: absolute;
   z-index: variables.$top_zindex;
@@ -52,7 +55,7 @@
   }
 
   .slider_tab_in {
-    width: calc(variables.$slide_tab_width / 2);
+    width: calc($slide_tab_width / 2);
     height: 40%;
     position: absolute;
     top: 50%;
@@ -65,11 +68,11 @@
   }
 
   .slider_tab_out {
-    width: variables.$slide_tab_width;
+    width: $slide_tab_width;
     height: 40%;
     position: absolute;
     top: 50%;
-    right: calc(variables.$slide_tab_width * -1);
+    right: calc($slide_tab_width * -1);
     transform: translate(0, -50%);
     background-color: variables.$white_color;
     border-radius: 0 variables.$border_radius variables.$border_radius 0;

@@ -6,6 +6,8 @@
 //
 // ------------------------------+
 
+$header_footer_height: 50px;
+
 .chatbot_cont {
   height: variables.$bouton_size;
   width: variables.$bouton_size;
@@ -57,7 +59,7 @@
     bottom: variables.$bouton_size + variables.$small_margin;
     right: 0;
     width: 300px;
-    height: 400px;
+    height: 420px;
     border-radius: variables.$border_radius;
     box-shadow: variables.$shadow_box;
     display: flex;
@@ -74,7 +76,7 @@
 
     .header_area {
       width: 100%;
-      height: variables.$header_footer_height;
+      height: $header_footer_height;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -103,7 +105,9 @@
         .chatbot_online {
           width: 100%;
           position: absolute;
-          bottom: calc(variables.$small_margin * -1 - 6px);
+          bottom: calc(
+            variables.$small_margin * -1 - variables.$small_small_margin
+          );
           left: 0;
           display: flex;
           align-items: center;
@@ -119,18 +123,18 @@
 
         .online {
           .chat_dot {
-            background-color: green;
+            background-color: variables.$succes_color_two;
           }
           p {
-            color: green;
+            color: variables.$succes_color_two;
           }
         }
         .offline {
           .chat_dot {
-            background-color: red;
+            background-color: variables.$error_color;
           }
           p {
-            color: red;
+            color: variables.$error_color;
           }
         }
 
@@ -153,7 +157,7 @@
 
     .messages {
       width: 100%;
-      height: calc(100% - (variables.$header_footer_height * 2));
+      height: calc(100% - ($header_footer_height * 2));
       display: flex;
       flex-direction: column;
       background-color: transparent;
@@ -161,17 +165,18 @@
       padding: variables.$small_margin;
       overflow-y: auto;
       background-color: variables.$white_color_rgba;
+      overscroll-behavior: contain;
 
       .message {
-        padding: variables.$small_margin;
+        padding: variables.$small_margin variables.$small_small_margin;
         border-radius: variables.$border_radius;
         max-width: 80%;
         word-wrap: break-word;
+        border-bottom-right-radius: 0;
 
         &.user {
           background: var(--color-primary);
           align-self: flex-end;
-          border-bottom-right-radius: 0;
 
           p {
             color: variables.$white_color;
@@ -184,23 +189,60 @@
           border-bottom-left-radius: 0;
         }
       }
-    }
-  }
 
-  @keyframes fadeInChat {
-    from {
-      opacity: 0;
-      transform: translateY(variables.$text_animation_margin);
+      .suggested_questions {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-end;
+        gap: variables.$small_small_margin;
+        background-color: transparent;
+
+        .question_btn {
+          padding: variables.$small_small_margin;
+          border-radius: variables.$border_radius;
+          max-width: 80%;
+          word-wrap: break-word;
+          background: transparent;
+          border: variables.$border_width solid var(--color-primary);
+          border-bottom-right-radius: 0;
+          color: var(--color-primary);
+        }
+      }
+
+      .offline_banner {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .offline_text {
+          margin-top: variables.$margin;
+          .custom_span {
+            color: var(--color-primary);
+          }
+        }
+      }
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+    @keyframes fadeInChat {
+      from {
+        opacity: 0;
+        transform: translateY(variables.$text_animation_margin);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   }
 
   .input_area {
     width: 100%;
-    height: variables.$header_footer_height;
+    height: $header_footer_height;
     display: flex;
     justify-content: space-between;
     align-items: center;

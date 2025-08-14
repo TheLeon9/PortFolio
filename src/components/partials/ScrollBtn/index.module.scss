@@ -6,6 +6,11 @@
 //
 // ------------------------------+
 
+$rotation_up: 10deg;
+$rotation_down: -10deg;
+$translate: 4px;
+$translate_circle_dot: 10px;
+
 .scroll_btn_cont {
   position: absolute;
   left: 50%;
@@ -52,7 +57,8 @@
 
   .scroll_circle_left {
     will-change: transform;
-    animation: scrollCircleLeft variables.$big_transition_time infinite ease-in-out;
+    animation: scrollCircleLeft variables.$big_transition_time infinite
+      ease-in-out;
 
     @keyframes scrollCircleLeft {
       0%,
@@ -112,7 +118,7 @@
     will-change: transform;
 
     @media only screen and (max-width: variables.$phone_width) {
-      $translate_circle_do: 4px;
+      $translate_circle_dot: 4px;
     }
 
     @keyframes scrollCircleDot {
@@ -122,7 +128,7 @@
       }
       25%,
       26% {
-        transform: translateY(variables.$translate_circle_do);
+        transform: translateY($translate_circle_dot);
         opacity: 1;
       }
       50% {
@@ -163,7 +169,8 @@
         top: 50%;
         left: 0%;
         transform: translate(0%, -50%);
-        animation: scrollAnimation variables.$big_transition_time infinite linear;
+        animation: scrollAnimation variables.$big_transition_time infinite
+          linear;
         transform-origin: right;
 
         @keyframes scrollAnimation {
@@ -171,8 +178,8 @@
             transform: translate(0, -50%) rotate(0deg);
           }
           25% {
-            transform: translate(0, calc(-50% + variables.$translate))
-              rotate(variables.$rotation_up);
+            transform: translate(0, calc(-50% + $translate))
+              rotate($rotation_up);
           }
           50% {
             transform: translate(0, -50%);
@@ -197,8 +204,8 @@
             transform: translate(0, -50%) rotate(0deg);
           }
           25% {
-            transform: translate(0, calc(-50% + variables.$translate))
-              rotate(variables.$rotation_down);
+            transform: translate(0, calc(-50% + $translate))
+              rotate($rotation_down);
           }
           50% {
             transform: translate(0, -50%);

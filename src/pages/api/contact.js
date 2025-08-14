@@ -1,12 +1,12 @@
 import nodemailer from 'nodemailer';
-import mjml2html from 'mjml';
 import handlebars from 'handlebars';
 import fs from 'fs';
 import path from 'path';
 
+// --- Rate Limiting Config ---
 let requestCount = {};
-const RATE_LIMIT = 1;
-const WINDOW_MS = 60 * 60 * 1000;
+const RATE_LIMIT = 1; // 1 max
+const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 function rateLimiter(req, res) {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -16,26 +16,27 @@ function rateLimiter(req, res) {
   requestCount[ip] = requestCount[ip].filter((ts) => now - ts < WINDOW_MS);
 
   if (requestCount[ip].length >= RATE_LIMIT) {
-    return res
+    res
       .status(429)
       .json({ message: '❌ Too many requests, please try again later.' });
+    return true;
   }
 
   requestCount[ip].push(now);
-  return null;
+  return false;
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST')
+  if (req.method !== 'POST') {
     return res.status(405).json({ message: '❌ Method not allowed' });
+  }
 
-  // --- Rate limiting ---
-  const rateError = rateLimiter(req, res);
-  if (rateError) return;
+  if (rateLimiter(req, res)) return;
 
   try {
     const { firstName, lastName, email, phone, message } = req.body;
 
+    // --- Validation ---
     if (!firstName || !lastName || !email || !phone || !message) {
       return res.status(400).json({
         message:
@@ -43,15 +44,17 @@ export default async function handler(req, res) {
       });
     }
 
-    // --- Load and compile MJML template ---
+    // --- Load HTML template ---
     const templatePath = path.join(
       process.cwd(),
       'templates',
-      'mail_notification.mjml'
+      'mail_notification.html'
     );
-    const mjmlTemplate = fs.readFileSync(templatePath, 'utf-8');
-    const compiledTemplate = handlebars.compile(mjmlTemplate);
-    const filledTemplate = compiledTemplate({
+    const htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
+
+    // --- Compile Handlebars template ---
+    const compiledTemplate = handlebars.compile(htmlTemplate);
+    const filledHtml = compiledTemplate({
       Date: new Date().toLocaleString('fr-FR', {
         dateStyle: 'medium',
         timeStyle: 'short',
@@ -62,9 +65,7 @@ export default async function handler(req, res) {
       Message: message,
     });
 
-    const { html } = mjml2html(filledTemplate);
-
-    // --- Send email ---
+    // --- Configure Nodemailer ---
     const transporter = nodemailer.createTransport({
       service: process.env.SMTP_SERVICE,
       auth: {
@@ -73,11 +74,12 @@ export default async function handler(req, res) {
       },
     });
 
+    // --- Send Email ---
     await transporter.sendMail({
       from: `"Contact Form" <${process.env.SMTP_USER}>`,
       to: process.env.NOTIFY_TO,
       subject: `📩 New contact message from ${firstName} ${lastName}`,
-      html,
+      html: filledHtml,
     });
 
     res.status(200).json({ message: '✅ Email sent successfully.' });

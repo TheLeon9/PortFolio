@@ -8,20 +8,76 @@ import LogoGitHub from 'p/img/share_img/github_logo.svg';
 import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
 import LogoMail from 'p/img/share_img/mail_logo.svg';
 
-import { imgWH } from '@/constants';
+import { imgWH, userList } from '@/constants';
+import { useTheme } from '@/context/ThemeContext';
 
 const SectionContact = () => {
-  const [messageSent, setMessageSent] = useState(false);
+  const { messageSent, setMessageSent } = useTheme();
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+    // Clear messages on new input
+    setErrorMsg('');
+    setSuccessMsg('');
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessageSent(true);
+    setLoading(true);
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccessMsg('✅ Your message has been sent successfully!');
+        setMessageSent(true);
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          message: '',
+        });
+      } else {
+        setErrorMsg(
+          data.message || '❌ Something went wrong, please try again.'
+        );
+      }
+    } catch {
+      setErrorMsg('❌ Failed to send the message. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className={style.section_contact_cont}>
-      <form onSubmit={handleSubmit} className={style.contact_form}>
-        <h6>Lets have a Chat 👋🏻</h6>
+      <form onSubmit={handleSubmit} className={style.contact_form} noValidate>
+        <h6>Let&apos;s have a Chat 👋🏻</h6>
+
         <div className={style.form_group}>
           <div className={style.form_input_wrapper}>
             <label className={style.form_label} htmlFor="firstName">
@@ -33,8 +89,12 @@ const SectionContact = () => {
               placeholder="First Name"
               className={style.form_input}
               required
+              value={formData.firstName}
+              onChange={handleChange}
+              disabled={loading}
             />
           </div>
+
           <div className={style.form_input_wrapper}>
             <label className={style.form_label} htmlFor="lastName">
               Last Name
@@ -45,9 +105,13 @@ const SectionContact = () => {
               placeholder="Last Name"
               className={style.form_input}
               required
+              value={formData.lastName}
+              onChange={handleChange}
+              disabled={loading}
             />
           </div>
         </div>
+
         <div className={style.form_group}>
           <div className={style.form_input_wrapper}>
             <label className={style.form_label} htmlFor="email">
@@ -59,8 +123,12 @@ const SectionContact = () => {
               placeholder="Email"
               className={style.form_input}
               required
+              value={formData.email}
+              onChange={handleChange}
+              disabled={loading}
             />
           </div>
+
           <div className={style.form_input_wrapper}>
             <label className={style.form_label} htmlFor="phone">
               Phone
@@ -71,9 +139,13 @@ const SectionContact = () => {
               placeholder="Phone"
               className={style.form_input}
               required
+              value={formData.phone}
+              onChange={handleChange}
+              disabled={loading}
             />
           </div>
         </div>
+
         <div className={style.form_input_wrapper_text_area}>
           <label className={style.form_label} htmlFor="message">
             Message
@@ -83,24 +155,46 @@ const SectionContact = () => {
             placeholder="Message"
             className={style.textarea}
             required
-          ></textarea>
+            value={formData.message}
+            onChange={handleChange}
+            disabled={loading}
+          />
         </div>
-        {!messageSent ? (
-          <button type="submit" className={style.btn_send}>
-            Send message
-          </button>
+
+        {userList[0]?.user_contact ? (
+          !messageSent ? (
+            <>
+              <button
+                type="submit"
+                className={style.btn_send}
+                disabled={loading}
+                aria-busy={loading}
+              >
+                {loading ? 'Sending...' : 'Send message'}
+              </button>
+
+              {/* Affiche erreurs/succès sous le bouton quand pas encore envoyé */}
+              {errorMsg && <p className={style.error_message}>{errorMsg}</p>}
+              {successMsg && (
+                <p className={style.success_message}>{successMsg}</p>
+              )}
+            </>
+          ) : (
+            <div className={style.banner}>
+              <p>Thank you for submitting a Message</p>
+            </div>
+          )
         ) : (
-          <div className={style.banner}>
-            <p>The recipient is not reachable</p>
-          </div>
+          <div>You can&apos;t send a message at the moment.</div>
         )}
       </form>
+
       <div className={style.images_container}>
-        {/* GitHub Button */}
         <Link
           href="https://github.com/TheLeon9"
           target="_blank"
           className={style.btn_share_contact}
+          aria-label="GitHub"
         >
           <Image
             src={LogoGitHub.src}
@@ -109,11 +203,11 @@ const SectionContact = () => {
             height={imgWH}
           />
         </Link>
-        {/* LinkedIn Button */}
         <Link
           href="https://www.linkedin.com/in/florian-moracchini/"
           target="_blank"
           className={style.btn_share_contact}
+          aria-label="LinkedIn"
         >
           <Image
             src={LogoLinkedin.src}
@@ -122,8 +216,11 @@ const SectionContact = () => {
             height={imgWH}
           />
         </Link>
-        {/* Mail Button */}
-        <Link href="" className={style.btn_share_contact}>
+        <Link
+          href="mailto:your-email@example.com"
+          className={style.btn_share_contact}
+          aria-label="Email"
+        >
           <Image
             src={LogoMail.src}
             alt="Logo Mail"

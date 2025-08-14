@@ -12,7 +12,9 @@ export const userList = [
   linkedin: 'https://www.linkedin.com/in/florian-moracchini/',
   github: 'https://github.com/TheLeon9',
   description: 'Fullstack Dev passionné 🚀',
-  email: 'florian.moracchini09@gmail.com'
+  email: 'florian.moracchini09@gmail.com',
+  user_contact: true,
+  user_chatbot: true,
 }
 ];
 

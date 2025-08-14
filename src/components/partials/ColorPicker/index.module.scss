@@ -6,10 +6,13 @@
 //
 // ------------------------------+
 
-.color_picker_cont {
+$min_height: 85px;
+$max_width: 250px;
+$update_height: 55px;
 
-  width: variables.$max_width;
-  min-height: variables.$min_height;
+.color_picker_cont {
+  width: $max_width;
+  min-height: $min_height;
   position: absolute;
   bottom: variables.$layout_margin;
   right: variables.$layout_margin;
@@ -40,14 +43,15 @@
   }
 
   &.open_options_menu {
-    border-radius: 0 0 calc(variables.$bouton_size / 2) calc(variables.$bouton_size / 2);
+    border-radius: 0 0 calc(variables.$bouton_size / 2)
+      calc(variables.$bouton_size / 2);
 
     .custom_options_menu {
-      height: variables.$update_height;
-      transform: translateY(variables.$update_height * -1 + variables.$margin);
+      height: $update_height;
+      transform: translateY($update_height * -1 + variables.$margin);
 
       .filter_section {
-        height: variables.$update_height;
+        height: $update_height;
 
         .color_buttons {
           .color_dot {
@@ -68,7 +72,7 @@
   }
 
   &:hover {
-    clip-path: circle(variables.$max_width);
+    clip-path: circle($max_width);
 
     .custom_btn {
       transform: rotate(360deg) scale(0.6);
@@ -94,10 +98,11 @@
   }
 
   .custom_options_menu {
-    width: variables.$max_width;
+    width: $max_width;
     position: absolute;
     background-color: variables.$white_color;
-    border-radius: calc(variables.$bouton_size / 2) calc(variables.$bouton_size / 2) 0 0;
+    border-radius: calc(variables.$bouton_size / 2)
+      calc(variables.$bouton_size / 2) 0 0;
     padding: variables.$small_margin;
     display: flex;
     justify-content: center;
@@ -133,12 +138,75 @@
           cursor: pointer;
         }
       }
+
+      .transparency_slider {
+        display: flex;
+        align-items: center;
+        gap: variables.$small_margin;
+        padding: variables.$small_margin;
+
+        input[type='range'] {
+          flex: 1;
+          cursor: pointer;
+          -webkit-appearance: none;
+          background: transparent;
+          height: variables.$small_small_margin;
+
+          &::-webkit-slider-runnable-track {
+            height: variables.$small_small_margin;
+            background: var(--color-primary);
+            border-radius: variables.$border_radius;
+          }
+
+          &::-moz-range-track {
+            height: variables.$small_small_margin;
+            background: var(--color-primary);
+            border-radius: variables.$border_radius;
+          }
+
+          &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: variables.$margin;
+            height: variables.$margin;
+            background: var(--color-primary);
+            border: none;
+            border-radius: variables.$circle_border_radius;
+            margin-top: calc(
+              (variables.$small_small_margin - variables.$margin) / 2
+            );
+            box-shadow: variables.$shadow_box;
+            transition: variables.$transition;
+          }
+          &::-moz-range-thumb {
+            width: variables.$margin;
+            height: variables.$margin;
+            background: var(--color-primary);
+            border: none;
+            border-radius: variables.$circle_border_radius;
+            box-shadow: variables.$shadow_box;
+            transition: variables.$transition;
+          }
+
+          &:hover::-webkit-slider-thumb {
+            transform: scale(1.1);
+          }
+          &:hover::-moz-range-thumb {
+            transform: scale(1.1);
+          }
+        }
+
+        p {
+          min-width: 40px;
+          text-align: right;
+          font-size: variables.$font_size;
+        }
+      }
     }
   }
 
   .custom_selected_menu {
-    width: variables.$max_width;
-    height: variables.$min_height;
+    width: $max_width;
+    height: $min_height;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -162,9 +230,15 @@
       }
 
       .opacity_button {
-        background: linear-gradient(variables.$white_color_rgba, variables.$white_color_rgba),
-          repeating-conic-gradient(variables.$black_color 0% 25%, transparent 0% 50%) 0% /
-            10px 10px,
+        background: linear-gradient(
+            variables.$white_color_rgba,
+            variables.$white_color_rgba
+          ),
+          repeating-conic-gradient(
+              variables.$black_color 0% 25%,
+              transparent 0% 50%
+            )
+            0% / 10px 10px,
           linear-gradient(
             to right,
             rgba(255, 255, 255, 0) 0%,
