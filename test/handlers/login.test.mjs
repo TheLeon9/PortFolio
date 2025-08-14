@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import handler from '../src/pages/api/auth/login.js';
+import handler from '../../src/pages/api/auth/login.js';
 
 function mockReqRes(method, body = {}) {
   const req = {
@@ -45,7 +45,7 @@ describe('POST /api/login', () => {
     process.env.NODE_ENV = 'test';
   });
 
-  it('✅ devrait réussir avec des identifiants valides', async () => {
+  it('✅ should succeed with valid credentials', async () => {
     const { req, res } = mockReqRes('POST', {
       email: 'test@example.com',
       password: 'pass123',
@@ -58,7 +58,7 @@ describe('POST /api/login', () => {
     expect(res.headersSet['Set-Cookie']).to.match(/token=/);
   });
 
-  it('❌ devrait renvoyer 400 si email ou mot de passe manquant', async () => {
+  it('❌ should return 400 if email or password is missing', async () => {
     const { req, res } = mockReqRes('POST', { email: '' });
 
     await handler(req, res);
@@ -67,7 +67,7 @@ describe('POST /api/login', () => {
     expect(res.jsonData.message).to.include('Email and Password are required');
   });
 
-  it('🚫 devrait renvoyer 401 si mauvais identifiants', async () => {
+  it('🚫 should return 401 if credentials are invalid', async () => {
     const { req, res } = mockReqRes('POST', {
       email: 'wrong@example.com',
       password: 'wrong',
@@ -79,13 +79,13 @@ describe('POST /api/login', () => {
     expect(res.jsonData.message).to.include('Invalid Email or Password');
   });
 
-  it('💥 devrait renvoyer 500 si erreur interne', async () => {
+  it('💥 should return 500 on internal error', async () => {
     const { req, res } = mockReqRes('POST', {
       email: 'test@example.com',
       password: 'pass123',
     });
 
-    // Simuler une erreur
+    // Simulate an error
     const originalSign = (await import('jsonwebtoken')).default.sign;
     (await import('jsonwebtoken')).default.sign = () => {
       throw new Error('Simulated error');
@@ -96,7 +96,7 @@ describe('POST /api/login', () => {
     expect(res.statusCode).to.equal(500);
     expect(res.jsonData.message).to.include('Internal server error');
 
-    // Restaurer la fonction originale
+    // Restore the original function
     (await import('jsonwebtoken')).default.sign = originalSign;
   });
 });

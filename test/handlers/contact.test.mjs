@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import handler from '../src/pages/api/contact.js';
+import handler from '../../src/pages/api/contact.js';
 import nodemailer from 'nodemailer';
 
 // --- MOCK NODEMAILER ---
@@ -7,7 +7,7 @@ nodemailer.createTransport = () => ({
   sendMail: async () => Promise.resolve(),
 });
 
-// --- UTILITAIRE MOCK REQ/RES ---
+// --- MOCK REQ/RES UTILITY ---
 function mockReqRes(body, method = 'POST', ip = '127.0.0.1') {
   let resData = {};
   const req = {
@@ -30,7 +30,7 @@ function mockReqRes(body, method = 'POST', ip = '127.0.0.1') {
 }
 
 describe('POST /api/contact', () => {
-  it('✅ devrait envoyer un email avec des données valides', async () => {
+  it('✅ should send an email with valid data', async () => {
     const { req, res, resData } = mockReqRes(
       {
         firstName: 'John',
@@ -40,7 +40,7 @@ describe('POST /api/contact', () => {
         message: 'Hello from the contact form!',
       },
       'POST',
-      '1.1.1.1' // IP unique
+      '1.1.1.1' // Unique IP
     );
 
     await handler(req, res);
@@ -48,11 +48,11 @@ describe('POST /api/contact', () => {
     expect(resData.body.message).to.equal('✅ Email sent successfully.');
   });
 
-  it('❌ devrait renvoyer une erreur si un champ est manquant', async () => {
+  it('❌ should return an error if a field is missing', async () => {
     const { req, res, resData } = mockReqRes(
-      {}, // Champs vides
+      {}, // Empty fields
       'POST',
-      '2.2.2.2' // IP différente pour éviter rate limit
+      '2.2.2.2' // Different IP to avoid rate limiting
     );
 
     await handler(req, res);
@@ -60,7 +60,7 @@ describe('POST /api/contact', () => {
     expect(resData.body.message).to.include('❌ First name');
   });
 
-  it('🚫 devrait bloquer après trop de requêtes (rate limit)', async () => {
+  it('🚫 should block after too many requests (rate limit)', async () => {
     const validBody = {
       firstName: 'John',
       lastName: 'Doe',
@@ -69,12 +69,12 @@ describe('POST /api/contact', () => {
       message: 'Test',
     };
 
-    // Première requête OK
+    // First request OK
     let { req, res, resData } = mockReqRes(validBody, 'POST', '3.3.3.3');
     await handler(req, res);
     expect(resData.status).to.equal(200);
 
-    // Deuxième requête même IP => bloquée
+    // Second request from same IP => blocked
     ({ req, res, resData } = mockReqRes(validBody, 'POST', '3.3.3.3'));
     await handler(req, res);
     expect(resData.status).to.equal(429);
