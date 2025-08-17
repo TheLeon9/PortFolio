@@ -1,4 +1,4 @@
-// 🚨 File generated automatically on 07/06/2025 17:52:52
+// 🚨 File generated automatically on 17/08/2025 17:03:06
 
 // 📦 Data for user
 export const userList = [
@@ -14,59 +14,71 @@ export const userList = [
   description: 'Fullstack Dev passionné 🚀',
   email: 'florian.moracchini09@gmail.com',
   user_contact: true,
-  user_chatbot: true,
+  user_chatbot: true
 }
 ];
 
 // 📦 Data for skills
 export const skillsList = [
 {
-  id: 1,
-  value: 'HTML'
+  id: 21,
+  value: 'CSS',
+  order: 2
 },
 {
-  id: 2,
-  value: 'CSS'
+  id: 22,
+  value: 'JS',
+  order: 3
 },
 {
-  id: 3,
-  value: 'SCSS'
+  id: 23,
+  value: 'FIGMA',
+  order: 4
 },
 {
-  id: 4,
-  value: 'NextJS'
+  id: 24,
+  value: 'ThreeJS',
+  order: 5
 },
 {
-  id: 5,
-  value: 'ReactJS'
+  id: 25,
+  value: 'NextJS',
+  order: 6
 },
 {
-  id: 7,
-  value: 'ThreeJS'
+  id: 26,
+  value: 'React',
+  order: 7
+},
+{
+  id: 27,
+  value: 'UX',
+  order: 8
+},
+{
+  id: 28,
+  value: 'UI',
+  order: 9
+},
+{
+  id: 29,
+  value: 'SCSS',
+  order: 10
 },
 {
   id: 30,
-  value: 'FIGMA'
+  value: 'GSAP',
+  order: 11
 },
 {
-  id: 33,
-  value: 'UX'
-},
-{
-  id: 34,
-  value: 'UI'
-},
-{
-  id: 35,
-  value: 'GSAP'
+  id: 31,
+  value: 'ExpressJS',
+  order: 12
 },
 {
   id: 36,
-  value: 'JS'
-},
-{
-  id: 37,
-  value: 'ExpressJS'
+  value: 'HTML',
+  order: 1
 }
 ];
 
@@ -75,7 +87,7 @@ export const projectsList = [
 {
   id: 1,
   projectNumber: 1,
-  title: 'Elementary Lions',
+  title: 'Elementary Lion',
   description: 'Presentation of Lions fused with Elements',
   url: '',
   highlight1: 'VueJS',
@@ -85,7 +97,7 @@ export const projectsList = [
   highlight5: 'GSAP'
 },
 {
-  id: 9,
+  id: 2,
   projectNumber: 2,
   title: '3D Saber',
   description: 'Presentation of a 3D Saber',
@@ -97,37 +109,27 @@ export const projectsList = [
   highlight5: 'ThreeJS'
 },
 {
-  id: 10,
+  id: 16,
   projectNumber: 3,
-  title: 'Test',
-  description: 'I don\'t know',
-  url: '',
-  highlight1: 'SCSS',
-  highlight2: 'Next JS',
-  highlight3: 'FramerMotion',
-  highlight4: '',
-  highlight5: ''
-},
-{
-  id: 11,
-  projectNumber: 4,
-  title: 'Test 2',
-  description: 'I Don\'t Know',
+  title: 'Another Test',
+  description: '',
   url: '',
   highlight1: '',
   highlight2: '',
   highlight3: '',
   highlight4: '',
   highlight5: ''
-}
-];
-
-// 📦 Data for services
-export const servicesList = [
+},
 {
-  id: 16,
-  title: 'Meeting',
-  description: 'One-hour meeting session to discuss your needs and provide tailored support 😊',
-  price: 10
+  id: 19,
+  projectNumber: 4,
+  title: 'Test',
+  description: '',
+  url: '',
+  highlight1: '',
+  highlight2: '',
+  highlight3: '',
+  highlight4: '',
+  highlight5: ''
 }
 ];
