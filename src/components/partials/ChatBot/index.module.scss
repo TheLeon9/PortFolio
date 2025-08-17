@@ -209,6 +209,7 @@ $header_footer_height: 50px;
           border: variables.$border_width solid var(--color-primary);
           border-bottom-right-radius: 0;
           color: var(--color-primary);
+          cursor: pointer;
         }
       }
 

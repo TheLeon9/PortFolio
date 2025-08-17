@@ -5,33 +5,8 @@ import style from './index.module.scss';
 import LogoReset from 'p/img/custom_img/reset.svg';
 import LogoChatBot from 'p/img/custom_img/chatbot.svg';
 import LogoSend from 'p/img/custom_img/send.svg';
-import { imgWH, userList } from '@/constants';
 
-const predefinedQuestions = [
-  {
-    id: 1,
-    question: 'Tell me about the portfolio owner',
-    answer:
-      'The owner is a passionate developer specialized in Next.js, Three.js, and SCSS. He loves creating immersive and interactive web experiences.',
-  },
-  {
-    id: 2,
-    question: 'What are his skills?',
-    answer:
-      'He is skilled in JavaScript, React, Next.js, Three.js, SCSS, and modern front-end development.',
-  },
-  {
-    id: 3,
-    question: 'Does he have work experience?',
-    answer:
-      'Yes, he has worked on several projects ranging from personal portfolios to client websites, focusing on performance and design.',
-  },
-  {
-    id: 4,
-    question: 'How can I contact him ?',
-    answer: 'You can contact him via the Contact section of this portfolio',
-  },
-];
+import { imgWH, userList, predefinedQuestions } from '@/constants';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +26,7 @@ const ChatBot = () => {
   }, [messages, loading]);
 
   const handleQuestionClick = (q) => {
-    if (!isOnline) return; // block if offline
+    if (!isOnline) return;
     sendMessage(q.question, q.answer);
     setAvailableQuestions((prev) => prev.filter((item) => item.id !== q.id));
   };
@@ -153,8 +128,8 @@ const ChatBot = () => {
                   className={style.ghost_offline}
                 />
                 <p className={style.offline_text}>
-                  <span className={style.custom_span}>GHOST</span> not
-                  available at the moment
+                  <span className={style.custom_span}>GHOST</span> not available
+                  at the moment
                 </p>
               </div>
             )}

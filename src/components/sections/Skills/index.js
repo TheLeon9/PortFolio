@@ -8,9 +8,11 @@ const SectionSkill = () => {
   return (
     <div className={style.section_skill_cont}>
       <div className={style.middle_wrapper}>
-        {skillsList.map((item, index) => (
-          <CardSkill key={index} cardTitle={item.value} />
-        ))}
+        {skillsList
+          .sort((a, b) => a.order - b.order)
+          .map((item, index) => (
+            <CardSkill key={index} cardTitle={item.value} />
+          ))}
       </div>
     </div>
   );

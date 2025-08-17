@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-
 import style from './index.module.scss';
 
 import ChevronUp from 'p/img/chevron/chevron_up.svg';

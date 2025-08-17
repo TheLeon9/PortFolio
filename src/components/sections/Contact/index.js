@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import style from './index.module.scss';
-
 import Image from 'next/image';
 import Link from 'next/link';
+import style from './index.module.scss';
 
 import LogoGitHub from 'p/img/share_img/github_logo.svg';
 import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
@@ -12,6 +11,8 @@ import { imgWH, userList } from '@/constants';
 import { useTheme } from '@/context/ThemeContext';
 
 const SectionContact = () => {
+  const user = userList[0] || {};
+
   const { messageSent, setMessageSent } = useTheme();
 
   const [formData, setFormData] = useState({
@@ -161,7 +162,7 @@ const SectionContact = () => {
           />
         </div>
 
-        {userList[0]?.user_contact ? (
+        {user.user_contact ? (
           !messageSent ? (
             <>
               <button
@@ -173,7 +174,6 @@ const SectionContact = () => {
                 {loading ? 'Sending...' : 'Send message'}
               </button>
 
-              {/* Affiche erreurs/succès sous le bouton quand pas encore envoyé */}
               {errorMsg && <p className={style.error_message}>{errorMsg}</p>}
               {successMsg && (
                 <p className={style.success_message}>{successMsg}</p>
@@ -190,8 +190,9 @@ const SectionContact = () => {
       </form>
 
       <div className={style.images_container}>
+        {/* GitHub Button */}
         <Link
-          href="https://github.com/TheLeon9"
+          href={user.github}
           target="_blank"
           className={style.btn_share_contact}
           aria-label="GitHub"
@@ -203,8 +204,9 @@ const SectionContact = () => {
             height={imgWH}
           />
         </Link>
+        {/* LinkedIn Button */}
         <Link
-          href="https://www.linkedin.com/in/florian-moracchini/"
+          href={user.linkedin}
           target="_blank"
           className={style.btn_share_contact}
           aria-label="LinkedIn"
@@ -216,8 +218,10 @@ const SectionContact = () => {
             height={imgWH}
           />
         </Link>
+        {/* Mail Button */}
         <Link
-          href="mailto:your-email@example.com"
+          href={`mailto:${user.email}`}
+          target="_blank"
           className={style.btn_share_contact}
           aria-label="Email"
         >

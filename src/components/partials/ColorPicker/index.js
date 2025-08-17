@@ -1,32 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-
 import style from './index.module.scss';
 
 import LogoReset from 'p/img/custom_img/reset.svg';
+
 import {
   DEFAULT_BACKGROUND_COLOR,
   DEFAULT_MAIN_COLOR,
   DEFAULT_TEXT_COLOR,
   DEFAULT_TRANSMISSION_LEVEL,
   imgWH,
+  COLOR_OPTIONS,
 } from '@/constants';
 import { useTheme } from '@/context/ThemeContext.js';
-
-const COLOR_OPTIONS = {
-  main: [
-    { name: 'Legend Blue', color: '#0132b5' },
-    { name: 'Crimson Red', color: '#b5013a' },
-    { name: 'Forest Green', color: '#007755' },
-    { name: 'Mustard Yellow', color: '#d4a500' },
-    { name: 'Midnight Purple', color: '#5e2fbd' },
-    { name: 'Deep Aqua', color: '#00a3b5' },
-  ],
-  background: [
-    { name: 'Black', color: '#040b12' },
-    { name: 'White', color: '#f8f8ff' },
-  ],
-};
 
 const ColorPicker = () => {
   const {

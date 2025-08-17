@@ -1,7 +1,7 @@
 import React from 'react';
+import Image from 'next/image';
 import styles from './index.module.scss';
 
-import Image from 'next/image';
 import Deco_Image from 'p/img/deco/title_image.svg';
 
 const Pillar = () => {

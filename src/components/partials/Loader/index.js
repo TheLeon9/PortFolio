@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import style from './index.module.scss';
 
 import * as THREE from 'three';
-import Image from 'next/image';
 import { gsap } from 'gsap';
 
 import LogoWhiteAnimated from 'p/img/loading/logo_fm_white_animated.svg';

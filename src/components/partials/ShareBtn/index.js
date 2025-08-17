@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
 import style from './index.module.scss';
 
 import CloseShare from 'p/img/share_img/close_share.svg';
@@ -10,9 +9,11 @@ import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
 import LogoMail from 'p/img/share_img/mail_logo.svg';
 import LogoShare from 'p/img/share_img/share_logo.svg';
 
-import { imgWH } from '@/constants';
+import { imgWH, userList } from '@/constants';
 
 const ShareBtn = () => {
+  const user = userList[0] || {};
+
   const [shareOpen, setShareOpen] = useState(false);
 
   const handleShareClicked = () => {
@@ -40,7 +41,7 @@ const ShareBtn = () => {
         />
       </button>
       {/* GitHub Button */}
-      <Link href="https://github.com/TheLeon9" target="_blank">
+      <Link href={user.github} target="_blank">
         <button
           className={`${style.btn_github} ${
             shareOpen ? style.btn_close : style.btn_open
@@ -55,10 +56,7 @@ const ShareBtn = () => {
         </button>
       </Link>
       {/* LinkedIn Button */}
-      <Link
-        href="https://www.linkedin.com/in/florian-moracchini/"
-        target="_blank"
-      >
+      <Link href={user.linkedin} target="_blank">
         <button
           className={`${style.btn_link} ${
             shareOpen ? style.btn_close : style.btn_open
@@ -73,7 +71,7 @@ const ShareBtn = () => {
         </button>
       </Link>
       {/* Mail Button */}
-      <Link href="" target="_blank">
+      <Link href={`mailto:${user.email}`} target="_blank">
         <button
           className={`${style.btn_mail} ${
             shareOpen ? style.btn_close : style.btn_open

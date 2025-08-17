@@ -1,5 +1,4 @@
 import React from 'react';
-
 import style from './index.module.scss';
 
 import { useTheme } from '@/context/ThemeContext.js';

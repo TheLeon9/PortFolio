@@ -8,14 +8,16 @@ const SectionProject = () => {
   return (
     <div className={style.section_project_cont}>
       <div className={style.middle_project_wrapper}>
-        {projectsList.map((item, index) => (
-          <CardProject
-            key={index}
-            cardTitle={item.title}
-            cardNumber={item.projectNumber}
-            cardDescription={item.description}
-          />
-        ))}
+        {projectsList
+          .sort((a, b) => a.projectNumber - b.projectNumber)
+          .map((item, index) => (
+            <CardProject
+              key={index}
+              cardTitle={item.title}
+              cardNumber={item.projectNumber}
+              cardDescription={item.description}
+            />
+          ))}
       </div>
     </div>
   );
