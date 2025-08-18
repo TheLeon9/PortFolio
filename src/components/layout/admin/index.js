@@ -9,8 +9,8 @@ import { useTheme } from '@/context/ThemeContext';
 import Logo from 'p/img/logo/logo_fm_white.svg';
 import Katana from 'p/img/deco/katana.svg';
 import DecoImage from 'p/img/deco/title_image.svg';
-import LightImage from 'p/img/custom_img/moon.svg';
-import DarkImage from 'p/img/custom_img/sun.svg';
+import LightImage from 'p/img/custom_img/sun.svg';
+import DarkImage from 'p/img/custom_img/moon.svg';
 
 export default function Layout({ children }) {
   const router = useRouter();

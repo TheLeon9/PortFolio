@@ -6,6 +6,7 @@ import '@/styles/variables.scss';
 import Layout from '@/components/layout/public';
 import AdminLayout from '@/components/layout/admin';
 import { ThemeProvider } from '@/context/ThemeContext.js';
+import { ConstantsProvider } from '@/context/ConstantsContext';
 
 import Logo from 'p/img/logo/logo_fm_white.svg';
 
@@ -49,7 +50,11 @@ function MyApp({ Component, pageProps }) {
         <meta name="theme-color" content="#ffffff" />
       </Head>
 
-      <ThemeProvider>{getLayout(<Component {...pageProps} />)}</ThemeProvider>
+      <ThemeProvider>
+        <ConstantsProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </ConstantsProvider>
+      </ThemeProvider>
     </>
   );
 }

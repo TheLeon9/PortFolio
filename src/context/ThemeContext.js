@@ -34,7 +34,7 @@ export const ThemeProvider = ({ children }) => {
   }, [status.success, status.error]);
 
   // Admin Dark Mode
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   useEffect(() => {
     const storedTheme = localStorage.getItem('darkMode');
     if (storedTheme) setDarkMode(storedTheme === 'true');

@@ -9,11 +9,12 @@ import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
 import LogoMail from 'p/img/share_img/mail_logo.svg';
 import LogoShare from 'p/img/share_img/share_logo.svg';
 
-import { imgWH, userList } from '@/constants';
+import { imgWH } from '@/constants';
+import { useConstants } from '@/context/ConstantsContext';
 
 const ShareBtn = () => {
-  const user = userList[0] || {};
-
+  
+  const { user } = useConstants();
   const [shareOpen, setShareOpen] = useState(false);
 
   const handleShareClicked = () => {

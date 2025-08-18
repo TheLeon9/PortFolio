@@ -65,6 +65,43 @@ export const predefinedQuestions = [
     question: 'How can I contact him ?',
     answer: 'You can contact him via the Contact section of this portfolio',
   },
+  {
+    id: 5,
+    question: 'Which technologies does he prefer?',
+    answer:
+      'He primarily works with React, Next.js, Three.js, SCSS, and modern web tools to build interactive and performant web apps.',
+  },
+  {
+    id: 6,
+    question: 'Can I see his projects?',
+    answer:
+      'Absolutely! You can check out all his projects in the Projects section of this portfolio, with detailed descriptions and technologies used.',
+  },
+  {
+    id: 7,
+    question: 'Does he do UI/UX design?',
+    answer:
+      'Yes, he has experience in designing user-friendly and visually appealing interfaces, focusing on usability and accessibility.',
+  },
+  {
+    id: 8,
+    question: 'Is he available for freelance work?',
+    answer:
+      'He may be available for freelance projects. Please contact him via the Contact section to discuss any potential collaboration.',
+  },
+  {
+    id: 9,
+    question: 'Where can I find his GitHub or LinkedIn?',
+    answer:
+      'His GitHub and LinkedIn profiles are linked in the About section, where you can explore his repositories and professional background.',
+  },
+  {
+    id: 10,
+    question:
+      'Congrats, you made it to the last question! 🎉 What should I know?',
+    answer:
+      "Thanks for sticking around! The owner loves exploring new tech, experimenting with creative ideas, and having fun while coding. You're awesome for reaching here! 🚀",
+  },
 ];
 
 // 📦 Data for the Color Picker options

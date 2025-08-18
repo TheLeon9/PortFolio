@@ -4,10 +4,11 @@ import style from './index.module.scss';
 
 import LogoFM from 'p/img/about/shadow_lion.png';
 
-import { userList } from '@/constants';
+import { useConstants } from '@/context/ConstantsContext';
 
 const SectionAbout = () => {
-  const user = userList[0] || {};
+  
+  const { user } = useConstants();
 
   return (
     <div className={style.section_about_cont}>

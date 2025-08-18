@@ -9,10 +9,11 @@ import LogoMail from 'p/img/share_img/mail_logo.svg';
 
 import { imgWH, userList } from '@/constants';
 import { useTheme } from '@/context/ThemeContext';
+import { useConstants } from '@/context/ConstantsContext';
 
 const SectionContact = () => {
-  const user = userList[0] || {};
-
+  
+  const { user } = useConstants();
   const { messageSent, setMessageSent } = useTheme();
 
   const [formData, setFormData] = useState({
