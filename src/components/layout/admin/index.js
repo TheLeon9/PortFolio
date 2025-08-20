@@ -19,7 +19,7 @@ export default function Layout({ children }) {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     isLogged(false);
-    router.replace('/');
+    router.replace('/admin');
   };
 
   return (

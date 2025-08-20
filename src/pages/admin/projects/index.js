@@ -27,23 +27,23 @@ export default function Projects() {
   useEffect(() => {
     if (!logged) {
       router.replace('/admin');
-    }
-
-    (async () => {
-      try {
-        const res = await fetch('/api/project');
-        const data = await res.json();
-        if (res.ok && data.data) setProjectsList(data.data);
-        else {
-          setStatus({
-            error: data.message || '❌ Failed to load Projects',
-            success: '',
-          });
+    } else {
+      (async () => {
+        try {
+          const res = await fetch('/api/project');
+          const data = await res.json();
+          if (res.ok && data.data) setProjectsList(data.data);
+          else {
+            setStatus({
+              error: data.message || '❌ Failed to load Projects',
+              success: '',
+            });
+          }
+        } catch {
+          setStatus({ error: '❌ Error loading Projects', success: '' });
         }
-      } catch {
-        setStatus({ error: '❌ Error loading Projects', success: '' });
-      }
-    })();
+      })();
+    }
   }, [logged, router, setStatus]);
 
   const handleChange = (e) => {

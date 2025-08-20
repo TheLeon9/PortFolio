@@ -23,8 +23,6 @@ async function handleGET(req, res) {
       data: { projects, users, skills },
     });
   } catch (err) {
-    console.log(err);
-    
     return res
       .status(500)
       .json({ message: '❌ Failed to fetch Constants Data' });

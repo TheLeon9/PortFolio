@@ -7,6 +7,7 @@ import { withAdminAuth } from '@/lib/auth/auth.js';
 
 import Title from '@/components/UI/admin/Title';
 import Pillar from '@/components/UI/admin/Pillar';
+import { log } from 'handlebars';
 
 // --- Auth guard SSR ---
 export const getServerSideProps = withAdminAuth();
@@ -33,25 +34,25 @@ export default function User() {
   useEffect(() => {
     if (!logged) {
       router.replace('/admin');
-    }
-
-    (async () => {
-      try {
-        const res = await fetch('/api/user');
-        const data = await res.json();
-        if (res.ok && data.data?.[0]) setFormData(data.data[0]);
-        else
+    } else {
+      (async () => {
+        try {
+          const res = await fetch('/api/user');
+          const data = await res.json();
+          if (res.ok && data.data?.[0]) setFormData(data.data[0]);
+          else
+            setStatus((prev) => ({
+              ...prev,
+              error: data.message || '❌ Failed to fetch user',
+            }));
+        } catch {
           setStatus((prev) => ({
             ...prev,
-            error: data.message || '❌ Failed to fetch user',
+            error: '❌ Failed to fetch user',
           }));
-      } catch {
-        setStatus((prev) => ({
-          ...prev,
-          error: '❌ Failed to fetch user',
-        }));
-      }
-    })();
+        }
+      })();
+    }
   }, [logged, router, setStatus]);
 
   const handleChange = ({ target: { name, value } }) =>

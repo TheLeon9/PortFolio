@@ -23,22 +23,22 @@ export default function Skills() {
     if (!logged) {
       router.replace('/admin');
       return;
+    } else {
+      (async () => {
+        try {
+          const res = await fetch('/api/skill');
+          const data = await res.json();
+          if (res.ok && data.data) setSkillsList(data.data);
+          else
+            setStatus({
+              error: data.message || '❌ Failed to load Skills',
+              success: '',
+            });
+        } catch {
+          setStatus({ error: '❌ Error loading Skills', success: '' });
+        }
+      })();
     }
-
-    (async () => {
-      try {
-        const res = await fetch('/api/skill');
-        const data = await res.json();
-        if (res.ok && data.data) setSkillsList(data.data);
-        else
-          setStatus({
-            error: data.message || '❌ Failed to load Skills',
-            success: '',
-          });
-      } catch {
-        setStatus({ error: '❌ Error loading Skills', success: '' });
-      }
-    })();
   }, [logged, router, setStatus]);
 
   const handleAddSkill = async (e) => {
