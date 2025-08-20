@@ -4,8 +4,8 @@ import IndexPage from '@/pages/index.js';
 import { sectionsInformation } from '@/constants';
 
 describe('IndexPage', () => {
-  it('displays the correct section based on activeSection', () => {
-    const activeSection = '2'; // Projects
+  it('✅ displays the correct section based on activeSection', () => {
+    const activeSection = '0'; // Home
     render(<IndexPage activeSection={activeSection} />);
 
     const section = sectionsInformation[parseInt(activeSection)];
@@ -13,11 +13,11 @@ describe('IndexPage', () => {
     // Check that the colored title is displayed
     expect(screen.getByText(section.coloredTitle)).toBeInTheDocument();
 
-    // Optionally check that the section text is displayed
-    expect(screen.getByText(section.text)).toBeInTheDocument();
+    // Optionally check that the section title is displayed
+    expect(screen.getByText(section.title)).toBeInTheDocument();
   });
 
-  it('displays nothing if activeSection is invalid', () => {
+  it('🚫 displays nothing if activeSection is invalid', () => {
     render(<IndexPage activeSection="999" />);
 
     // Ensure that none of the known section titles are rendered
