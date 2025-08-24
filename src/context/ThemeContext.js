@@ -15,40 +15,6 @@ import {
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // Admin logged
-  const [logged, isLogged] = useState(false);
-
-  // Admin Status
-  const [status, setStatus] = useState({
-    error: '',
-    success: '',
-  });
-  useEffect(() => {
-    if (!status.success && !status.error) return;
-
-    const timer = setTimeout(() => {
-      setStatus({ success: '', error: '' });
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [status.success, status.error]);
-
-  // Admin Dark Mode
-  const [darkMode, setDarkMode] = useState(true);
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('darkMode');
-    if (storedTheme) setDarkMode(storedTheme === 'true');
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.setAttribute(
-      'data-theme',
-      darkMode ? 'dark' : 'light'
-    );
-    localStorage.setItem('darkMode', darkMode);
-  }, [darkMode]);
-  const toggleTheme = () => setDarkMode((prev) => !prev);
-
   // Main Color
   const [mainColor, setMainColor] = useState(DEFAULT_MAIN_COLOR);
 
@@ -108,14 +74,8 @@ export const ThemeProvider = ({ children }) => {
         musicActive,
         setMusicActive,
         toggleMusic,
-        logged,
-        isLogged,
-        status,
-        setStatus,
-        darkMode,
-        toggleTheme,
         messageSent,
-        setMessageSent
+        setMessageSent,
       }}
     >
       {children}
@@ -123,6 +83,7 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
+// Custom hook to use the Theme context
 export const useTheme = () => {
   return useContext(ThemeContext);
 };

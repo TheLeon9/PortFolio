@@ -64,7 +64,7 @@ $slide_tab_width: 20px;
     background-color: variables.$white_color;
     border-radius: variables.$border_radius 0 0 variables.$border_radius;
     border-left: solid variables.$border_width var(--color-primary);
-    cursor: pointer;
+    // cursor: pointer;
   }
 
   .slider_tab_out {
@@ -81,7 +81,7 @@ $slide_tab_width: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    // cursor: pointer;
 
     .custom_title {
       font-family: variables.$first_font;

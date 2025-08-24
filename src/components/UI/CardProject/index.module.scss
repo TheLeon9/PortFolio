@@ -20,7 +20,7 @@
   box-shadow: 0 0 10px variables.$white_color;
   transition: variables.$transition;
   position: relative;
-  cursor: pointer;
+  // cursor: pointer;
   overflow: hidden;
 
   @media only screen and (max-width: variables.$phone_width) {

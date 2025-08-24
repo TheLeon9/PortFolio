@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.module.scss';
 
-import { useTheme } from '@/context/ThemeContext.js';
+import { useConstants } from '@/context/ConstantsContext';
 import { useRouter } from 'next/router';
 import { withAdminAuth } from '@/lib/auth/auth.js';
 
 import Title from '@/components/UI/admin/Title';
 import Pillar from '@/components/UI/admin/Pillar';
-import { log } from 'handlebars';
 
 // --- Auth guard SSR ---
 export const getServerSideProps = withAdminAuth();
 
 export default function User() {
-  const { logged, setStatus } = useTheme();
+  const { logged, setStatus } = useConstants();
   const router = useRouter();
 
   const [formData, setFormData] = useState({

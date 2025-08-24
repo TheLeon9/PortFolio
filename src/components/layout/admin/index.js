@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import styles from './index.module.scss';
 
-import { useTheme } from '@/context/ThemeContext';
+import { useConstants } from '@/context/ConstantsContext';
 import Logo from 'p/img/logo/logo_fm_white.svg';
 import Katana from 'p/img/deco/katana.svg';
 import DecoImage from 'p/img/deco/title_image.svg';
@@ -14,7 +14,7 @@ import DarkImage from 'p/img/custom_img/moon.svg';
 
 export default function Layout({ children }) {
   const router = useRouter();
-  const { logged, isLogged, status, darkMode, toggleTheme } = useTheme();
+  const { logged, isLogged, status, darkMode, toggleTheme } = useConstants();
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });

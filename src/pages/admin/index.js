@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from '@/styles/admin/login/index.module.scss';
-import { useTheme } from '@/context/ThemeContext.js';
+import { useConstants } from '@/context/ConstantsContext';
 import { useRouter } from 'next/router';
 
 import Pillar from '@/components/UI/admin/Pillar';
@@ -8,7 +8,7 @@ import Title from '@/components/UI/admin/Title';
 
 export default function Login() {
   const router = useRouter();
-  const { isLogged } = useTheme();
+  const { isLogged } = useConstants();
 
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');

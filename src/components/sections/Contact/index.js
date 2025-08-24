@@ -7,7 +7,7 @@ import LogoGitHub from 'p/img/share_img/github_logo.svg';
 import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
 import LogoMail from 'p/img/share_img/mail_logo.svg';
 
-import { imgWH, userList } from '@/constants';
+import { imgWH } from '@/constants';
 import { useTheme } from '@/context/ThemeContext';
 import { useConstants } from '@/context/ConstantsContext';
 

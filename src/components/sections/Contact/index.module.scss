@@ -142,7 +142,7 @@
       border-radius: variables.$border_radius;
       box-shadow: 0 0 10px variables.$white_color;
       outline: none;
-      cursor: pointer;
+      // cursor: pointer;
       transition: variables.$transition;
       text-transform: uppercase;
 
@@ -199,7 +199,7 @@
       opacity: variables.$less_opacity;
       outline: none;
       transition: variables.$transition;
-      cursor: pointer;
+      // cursor: pointer;
 
       img {
         width: 20px;

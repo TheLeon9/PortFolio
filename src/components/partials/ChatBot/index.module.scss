@@ -42,7 +42,7 @@ $header_footer_height: 50px;
     justify-content: center;
     align-items: center;
     border-radius: variables.$circle_border_radius;
-    cursor: pointer;
+    // cursor: pointer;
     outline: none;
     transition: variables.$transition;
     border: none;
@@ -149,7 +149,7 @@ $header_footer_height: 50px;
 
       .reset_btn {
         background: none;
-        cursor: pointer;
+        // cursor: pointer;
         border: none;
         outline: none;
       }
@@ -209,7 +209,7 @@ $header_footer_height: 50px;
           border: variables.$border_width solid var(--color-primary);
           border-bottom-right-radius: 0;
           color: var(--color-primary);
-          cursor: pointer;
+          // cursor: pointer;
         }
       }
 
@@ -270,7 +270,7 @@ $header_footer_height: 50px;
       justify-content: center;
       align-items: center;
       border-radius: variables.$circle_border_radius;
-      cursor: pointer;
+      // cursor: pointer;
       outline: none;
       transition: variables.$transition;
       border: none;

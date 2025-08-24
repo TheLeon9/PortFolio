@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './index.module.scss';
 
-import { useTheme } from '@/context/ThemeContext.js';
+import { useConstants } from '@/context/ConstantsContext';
 import { useRouter } from 'next/router';
 import { withAdminAuth } from '@/lib/auth/auth.js';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -13,7 +13,7 @@ import Pillar from '@/components/UI/admin/Pillar';
 export const getServerSideProps = withAdminAuth();
 
 export default function Projects() {
-  const { logged, setStatus } = useTheme();
+  const { logged, setStatus } = useConstants();
   const router = useRouter();
 
   const [project, setProject] = useState({

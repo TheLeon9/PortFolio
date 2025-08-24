@@ -135,7 +135,7 @@ $update_height: 55px;
           height: 26px;
           border-radius: 2px;
           border: solid variables.$border_width var(--color-text);
-          cursor: pointer;
+          // cursor: pointer;
         }
       }
 
@@ -147,7 +147,7 @@ $update_height: 55px;
 
         input[type='range'] {
           flex: 1;
-          cursor: pointer;
+          // cursor: pointer;
           -webkit-appearance: none;
           background: transparent;
           height: variables.$small_small_margin;
@@ -225,7 +225,7 @@ $update_height: 55px;
         height: 20px;
         border-radius: calc(variables.$border_radius * 2);
         border: solid variables.$border_width var(--color-text);
-        cursor: pointer;
+        // cursor: pointer;
         outline: none;
       }
 
@@ -262,7 +262,7 @@ $update_height: 55px;
 
       .reset_color {
         background: none;
-        cursor: pointer;
+        // cursor: pointer;
         border: none;
         outline: none;
       }

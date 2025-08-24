@@ -10,6 +10,8 @@ import Loader from '@/components/partials/Loader';
 import ColorPicker from '@/components/partials/ColorPicker';
 import MusicSelector from '@/components/partials/MusicSelector';
 import ChatBot from '@/components/partials/ChatBot';
+import Cursor from '@/components/UI/Cursor';
+
 // import SideSlider from '@/components/partials/SideSlider';
 
 import { sections } from '@/constants';
@@ -120,6 +122,9 @@ const Layout = ({ children }) => {
 
       {/* 3D Container */}
       <canvas className={style.webgl} id="webgl"></canvas>
+
+      {/* Custom Cursor */}
+      <Cursor />
 
       {/* Loader */}
       {isLoading ? (

@@ -48,7 +48,7 @@ $notActiveWH: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    // cursor: pointer;
     transition: variables.$transition;
     opacity: variables.$less_opacity;
 
@@ -68,7 +68,7 @@ $notActiveWH: 10px;
     border-radius: variables.$circle_border_radius;
     border: none;
     outline: none;
-    cursor: pointer;
+    // cursor: pointer;
     transition: variables.$transition;
     display: flex;
     justify-content: center;

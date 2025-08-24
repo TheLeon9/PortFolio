@@ -9,7 +9,9 @@ import {
 const ConstantsContext = createContext();
 
 export const ConstantsProvider = ({ children }) => {
-  // Default states = static constants
+  // =========================
+  // Static Data States
+  // =========================
   const [user, setUser] = useState(staticUserList[0] || {});
   const [projects, setProjects] = useState(staticProjectsList);
   const [skills, setSkills] = useState(staticSkillsList);
@@ -51,8 +53,66 @@ export const ConstantsProvider = ({ children }) => {
     fetchData();
   }, []);
 
+  // =========================
+  // Admin Logic
+  // =========================
+
+  // Admin logged
+  const [logged, isLogged] = useState(false);
+
+  // Admin Status (error / success)
+  const [status, setStatus] = useState({
+    error: '',
+    success: '',
+  });
+
+  useEffect(() => {
+    if (!status.success && !status.error) return;
+
+    const timer = setTimeout(() => {
+      setStatus({ success: '', error: '' });
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [status.success, status.error]);
+
+  // Admin Dark Mode
+  const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('darkMode');
+    if (storedTheme) setDarkMode(storedTheme === 'true');
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      'data-theme',
+      darkMode ? 'dark' : 'light'
+    );
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
+
+  const toggleTheme = () => setDarkMode((prev) => !prev);
+
+  // =========================
+  // Return Provider
+  // =========================
+
   return (
-    <ConstantsContext.Provider value={{ user, projects, skills }}>
+    <ConstantsContext.Provider
+      value={{
+        user,
+        projects,
+        skills,
+        logged,
+        // Admin
+        isLogged,
+        status,
+        setStatus,
+        darkMode,
+        toggleTheme,
+      }}
+    >
       {children}
     </ConstantsContext.Provider>
   );
