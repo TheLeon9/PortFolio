@@ -50,7 +50,37 @@ git clone [url here]
 npm i
 ```
 
-3. 🏹 **Launch:**
+3. ℹ️ **Add environment variables:**
+   Create a `.env` file at the root of the project with the following content.
+
+```
+DATABASE_URL="yourURL"
+USER_EMAIL="yourEMAIL"
+USER_PASSWORD="yourPassWord"
+JWT_SECRET="yourJWTSECRET"
+SMTP_SERVICE=yourService
+SMTP_USER=yourUser
+SMTP_PASS=yourPass
+NOTIFY_TO=yourContact
+```
+
+4. 💠 **DataBase Update:**
+   Launch the migration with `npx prisma migrate dev`.
+
+```
+npx prisma migrate dev
+```
+
+5. 🦾 **Launch the Test & BUILD:**
+   Launch the test with `npm run test:front / npm run test:back` & the build with `npm run build`.
+
+```
+npm run test:front 
+npm run test:back
+npm run build
+```
+
+6. 🏹 **Launch:**
    Start the project with `npm start` or `npm run dev`.
 
 ```
