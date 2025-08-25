@@ -313,7 +313,9 @@ export function initThreeScene({
 
   // Camera Position
   camera.position.set(0, 0, 10);
-  scene.add(camera);
+  const cameraGroup = new THREE.Group();
+  cameraGroup.add(camera);
+  scene.add(cameraGroup);
 
   //--------------------------------------------------+
   //
@@ -341,8 +343,8 @@ export function initThreeScene({
   //--------------------------------------------------+
 
   const mouse = {
-    x: undefined,
-    y: undefined,
+    x: 0,
+    y: 0,
   };
 
   window.addEventListener('mousemove', (event) => {
@@ -380,8 +382,18 @@ export function initThreeScene({
   const animate = () => {
     const elapsedTime = clock.getElapsedTime();
 
-    // Materials
+    // Update time uniform
     customColor.current.uTime.value = elapsedTime;
+
+    // Calculate the desired parallax offset based on cursor position
+    // Lower multiplier = more subtle movement
+    const parallaxX = mouse.x * 0.1; // Horizontal parallax intensity
+    const parallaxY = mouse.y * 0.1; // Vertical parallax intensity
+
+    // Smoothly interpolate camera group position toward the target offset
+    // Lower factor = smoother and slower transition
+    cameraGroup.position.x += (parallaxX - cameraGroup.position.x) * 0.02; // Horizontal easing
+    cameraGroup.position.y += (parallaxY - cameraGroup.position.y) * 0.02; // Vertical easing
 
     // Render
     composer.render();
