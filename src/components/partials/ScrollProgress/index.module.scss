@@ -1,0 +1,68 @@
+@use '@/styles/variables';
+
+// ------------------------------+
+//
+//      SCROLL PROGRESS
+//
+// ------------------------------+
+
+.scroll_progress_cont {
+  position: absolute;
+  top: 50%;
+  right: variables.$layout_margin;
+  transform: translate(0, -50%);
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn variables.$text_animation ease-in-out;
+  transition: variables.$transition;
+  gap: variables.$small_small_margin;
+  pointer-events: none;
+  z-index: variables.$top_zindex;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(variables.$text_animation_margin, -50%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, -50%);
+    }
+  }
+
+  @media only screen and (max-width: variables.$phone_width) {
+    right: calc(variables.$layout_margin / 2);
+  }
+
+  .progress_segment {
+    width: variables.$small_small_margin;
+    height: variables.$border_width;
+    background-color: var(--color-primary);
+
+    &:nth-child(even) {
+      background-color: variables.$black_color;
+    }
+  }
+
+  .percentage_container {
+    width: auto;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: variables.$small_small_margin 0;
+
+    .percentage_text {
+      font-family: variables.$first_font;
+      font-weight: variables.$font_weight_bold;
+      color: variables.$text_color;
+      font-size: variables.$small_small_small_font_size;
+      text-transform: lowercase;
+      writing-mode: vertical-lr;
+    }
+  }
+}

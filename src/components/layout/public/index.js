@@ -9,6 +9,7 @@ import ShareBtn from '@/components/partials/ShareBtn';
 import Loader from '@/components/partials/Loader';
 import ColorPicker from '@/components/partials/ColorPicker';
 import MusicSelector from '@/components/partials/MusicSelector';
+import ScrollProgress from '@/components/partials/ScrollProgress';
 import ChatBot from '@/components/partials/ChatBot';
 import Cursor from '@/components/UI/Cursor';
 
@@ -179,14 +180,17 @@ const Layout = ({ children }) => {
           {/* Btn Share container */}
           <ShareBtn />
 
-          {/* Scroll Btn container */}
-          <ScrollBtn />
+          {/* Scroll Progress Percentage */}
+          <ScrollProgress />
 
           {/* ChatBot container */}
           <ChatBot />
 
           {/* ColorPicker container */}
           <ColorPicker />
+
+          {/* Scroll Btn container */}
+          <ScrollBtn />
 
           {/* Music Selector container */}
           <MusicSelector />

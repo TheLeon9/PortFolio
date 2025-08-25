@@ -12,10 +12,10 @@ $slide_tab_width: 20px;
 .slider_cont {
   width: $slide_width;
   height: 180px;
+  position: absolute;
   top: 50%;
   left: calc($slide_width * -1);
   transform: translate(0, -50%);
-  position: absolute;
   z-index: variables.$top_zindex;
   transition: variables.$transition;
   animation: fadeIn variables.$text_animation ease-in-out;
