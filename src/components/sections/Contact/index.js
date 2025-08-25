@@ -12,7 +12,6 @@ import { useTheme } from '@/context/ThemeContext';
 import { useConstants } from '@/context/ConstantsContext';
 
 const SectionContact = () => {
-  
   const { user } = useConstants();
   const { messageSent, setMessageSent } = useTheme();
 
@@ -89,7 +88,7 @@ const SectionContact = () => {
               id="firstName"
               type="text"
               placeholder="First Name"
-              className={style.form_input}
+              className={`${style.form_input} hover_target_small`}
               required
               value={formData.firstName}
               onChange={handleChange}
@@ -105,7 +104,7 @@ const SectionContact = () => {
               id="lastName"
               type="text"
               placeholder="Last Name"
-              className={style.form_input}
+              className={`${style.form_input} hover_target_small`}
               required
               value={formData.lastName}
               onChange={handleChange}
@@ -123,7 +122,7 @@ const SectionContact = () => {
               id="email"
               type="email"
               placeholder="Email"
-              className={style.form_input}
+              className={`${style.form_input} hover_target_small`}
               required
               value={formData.email}
               onChange={handleChange}
@@ -139,7 +138,7 @@ const SectionContact = () => {
               id="phone"
               type="tel"
               placeholder="Phone"
-              className={style.form_input}
+              className={`${style.form_input} hover_target_small`}
               required
               value={formData.phone}
               onChange={handleChange}
@@ -155,7 +154,7 @@ const SectionContact = () => {
           <textarea
             id="message"
             placeholder="Message"
-            className={style.textarea}
+            className={`${style.textarea} hover_target_small`}
             required
             value={formData.message}
             onChange={handleChange}
@@ -168,7 +167,7 @@ const SectionContact = () => {
             <>
               <button
                 type="submit"
-                className={style.btn_send}
+                className={`${style.btn_send} hover_target_big`}
                 disabled={loading}
                 aria-busy={loading}
               >
@@ -195,7 +194,7 @@ const SectionContact = () => {
         <Link
           href={user.github}
           target="_blank"
-          className={style.btn_share_contact}
+          className={`${style.btn_share_contact} hover_target_small`}
           aria-label="GitHub"
         >
           <Image
@@ -209,7 +208,7 @@ const SectionContact = () => {
         <Link
           href={user.linkedin}
           target="_blank"
-          className={style.btn_share_contact}
+          className={`${style.btn_share_contact} hover_target_small`}
           aria-label="LinkedIn"
         >
           <Image
@@ -223,7 +222,7 @@ const SectionContact = () => {
         <Link
           href={`mailto:${user.email}`}
           target="_blank"
-          className={style.btn_share_contact}
+          className={`${style.btn_share_contact} hover_target_small`}
           aria-label="Email"
         >
           <Image

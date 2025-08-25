@@ -5,7 +5,7 @@ import MusicButton from '@/components/UI/MusicButton';
 
 const MusicSelector = () => {
   return (
-    <div className={style.music_selector_cont}>
+    <div className={`${style.music_selector_cont} hover_target_big`}>
       <MusicButton />
     </div>
   );

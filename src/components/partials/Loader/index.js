@@ -110,7 +110,7 @@ const SectionPresentation = ({ wobbleRef, wobblePlateRef, setLoader }) => {
       </div>
 
       <div ref={loaderContMusicRef} className={style.music_wrapper}>
-        <div className={style.music_selector_cont}>
+        <div className={`${style.music_selector_cont} hover_target_big`}>
           <MusicButton />
         </div>
         <p className={style.text_music}>

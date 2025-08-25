@@ -10,7 +10,6 @@ import { imgWH, predefinedQuestions } from '@/constants';
 import { useConstants } from '@/context/ConstantsContext';
 
 const ChatBot = () => {
-
   const { user } = useConstants();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +59,10 @@ const ChatBot = () => {
   return (
     <div className={style.chatbot_cont}>
       {/* Opening Button */}
-      <button className={style.chat_btn} onClick={toggleChat}>
+      <button
+        className={`${style.chat_btn} hover_target_big`}
+        onClick={toggleChat}
+      >
         <Image src={LogoChatBot} alt="ChatBot" width={imgWH} height={imgWH} />
       </button>
 
@@ -89,7 +91,10 @@ const ChatBot = () => {
               </div>
               <p className={style.custom_title}>Ghost</p>
             </div>
-            <button className={style.reset_btn} onClick={resetChat}>
+            <button
+              className={`${style.reset_btn} hover_target_small`}
+              onClick={resetChat}
+            >
               <Image src={LogoReset} alt="Reset" width={imgWH} height={imgWH} />
             </button>
           </div>
@@ -114,7 +119,7 @@ const ChatBot = () => {
                   {availableQuestions.slice(0, 2).map((q) => (
                     <button
                       key={q.id}
-                      className={style.question_btn}
+                      className={`${style.question_btn} hover_target_big`}
                       onClick={() => handleQuestionClick(q)}
                     >
                       {q.question}
@@ -149,8 +154,13 @@ const ChatBot = () => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
                   placeholder="Type a message..."
+                  className="hover_target_small"
                 />
-                <button onClick={() => sendMessage(input)} disabled={loading}>
+                <button
+                  className="hover_target_small"
+                  onClick={() => sendMessage(input)}
+                  disabled={loading}
+                >
                   <Image
                     src={LogoSend}
                     alt="Send"

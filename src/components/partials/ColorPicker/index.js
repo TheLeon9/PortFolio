@@ -62,7 +62,7 @@ const ColorPicker = () => {
     <div
       className={`${style.color_picker_cont} ${
         activeFilter != null ? style.open_options_menu : ''
-      }`}
+      } hover_target_small`}
     >
       <div className={style.custom_btn}></div>
 

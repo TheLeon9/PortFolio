@@ -140,7 +140,10 @@ const Layout = ({ children }) => {
 
           {/* Button Home */}
           <div className={style.home_btn_cont}>
-            <button onClick={() => changeSection(0)} className={style.home_btn}>
+            <button
+              onClick={() => changeSection(0)}
+              className={`${style.home_btn} hover_target_big`}
+            >
               <svg
                 role="img"
                 aria-label="Logo FM Black"

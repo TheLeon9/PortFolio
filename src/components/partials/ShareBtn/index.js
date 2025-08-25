@@ -32,7 +32,7 @@ const ShareBtn = () => {
         onClick={handleShareClicked}
         className={`${style.btn_share} ${
           shareOpen ? style.btn_share_close : style.btn_share_open
-        }`}
+        } hover_target_big`}
       >
         <Image
           src={shareOpen ? CloseShare.src : LogoShare.src}
@@ -46,7 +46,7 @@ const ShareBtn = () => {
         <button
           className={`${style.btn_github} ${
             shareOpen ? style.btn_close : style.btn_open
-          }`}
+          } hover_target_small`}
         >
           <Image
             src={LogoGitHub.src}
@@ -61,7 +61,7 @@ const ShareBtn = () => {
         <button
           className={`${style.btn_link} ${
             shareOpen ? style.btn_close : style.btn_open
-          }`}
+          } hover_target_small`}
         >
           <Image
             src={LogoLinkedin.src}
@@ -76,7 +76,7 @@ const ShareBtn = () => {
         <button
           className={`${style.btn_mail} ${
             shareOpen ? style.btn_close : style.btn_open
-          }`}
+          } hover_target_small`}
         >
           <Image
             src={LogoMail.src}

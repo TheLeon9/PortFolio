@@ -8,13 +8,12 @@ import ChevronDown from 'p/img/chevron/chevron_down.svg';
 import { sections, imgWH } from '@/constants';
 
 const NavBar = ({ activeSection, changeSection }) => {
-
   return (
     <header className={style.header_cont}>
       {/* BTN for section UP */}
       <button
         onClick={() => changeSection(parseInt(activeSection) - 1)}
-        className={style.change_active_section}
+        className={`${style.change_active_section} hover_target_small`}
       >
         <Image
           src={ChevronUp.src}
@@ -29,11 +28,11 @@ const NavBar = ({ activeSection, changeSection }) => {
         <button
           key={index}
           onClick={() => changeSection(index)}
-          className={
+          className={`${
             activeSection === index.toString()
-              ? style.nav_bar_link_active
-              : style.nav_bar_link_not_active
-          }
+              ? `${style.nav_bar_link_active} hover_target_big`
+              : `${style.nav_bar_link_not_active} hover_target_small`
+          }`}
         >
           <p className={style.nav_title_btn}>0{index}</p>
           <p className={style.nav_title_section}>{section}</p>
@@ -43,7 +42,7 @@ const NavBar = ({ activeSection, changeSection }) => {
       {/* BTN for section DOWN */}
       <button
         onClick={() => changeSection(parseInt(activeSection) + 1)}
-        className={style.change_active_section}
+        className={`${style.change_active_section} hover_target_small`}
       >
         <Image
           src={ChevronDown.src}

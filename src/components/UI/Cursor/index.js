@@ -23,22 +23,25 @@ const Cursor = () => {
       });
     };
 
-    // Scale up when hovering interactive elements
-    const addHover = () => {
-      gsap.to(cursorRef.current, {
-        scale: 2,
-        duration: 0.25,
-        ease: 'power2.out',
-      });
+    // Scale behaviors depending on target class
+    const handleHover = (e) => {
+      const cursor = cursorRef.current;
+
+      if (e.target.closest('.hover_target_big')) {
+        cursor.classList.remove(style.is_hover_small);
+        cursor.classList.add(style.is_hover_big);
+        gsap.to(cursor, { scale: 2, duration: 0.25, ease: 'power2.out' });
+      } else if (e.target.closest('.hover_target_small')) {
+        cursor.classList.remove(style.is_hover_big);
+        cursor.classList.add(style.is_hover_small);
+        gsap.to(cursor, { scale: 0.5, duration: 0.25, ease: 'power2.out' });
+      }
     };
 
-    // Scale back to normal when leaving interactive elements
-    const removeHover = () => {
-      gsap.to(cursorRef.current, {
-        scale: 1,
-        duration: 0.25,
-        ease: 'power2.out',
-      });
+    const resetHover = () => {
+      const cursor = cursorRef.current;
+      cursor.classList.remove(style.is_hover_big, style.is_hover_small);
+      gsap.to(cursor, { scale: 1, duration: 0.25, ease: 'power2.out' });
     };
 
     // Hide cursor when leaving the window
@@ -48,21 +51,15 @@ const Cursor = () => {
     };
 
     document.addEventListener('mousemove', moveCursor);
-    document.addEventListener('mouseout', hideCursor);
-
-    const hoverElements = document.querySelectorAll('button, a, .hover-target');
-    hoverElements.forEach((el) => {
-      el.addEventListener('mouseenter', addHover);
-      el.addEventListener('mouseleave', removeHover);
-    });
+    document.addEventListener('mouseover', handleHover);
+    document.addEventListener('mouseout', resetHover);
+    document.addEventListener('mouseleave', hideCursor);
 
     return () => {
       document.removeEventListener('mousemove', moveCursor);
-      document.removeEventListener('mouseout', hideCursor);
-      hoverElements.forEach((el) => {
-        el.removeEventListener('mouseenter', addHover);
-        el.removeEventListener('mouseleave', removeHover);
-      });
+      document.removeEventListener('mouseover', handleHover);
+      document.removeEventListener('mouseout', resetHover);
+      document.removeEventListener('mouseleave', hideCursor);
     };
   }, []);
 
