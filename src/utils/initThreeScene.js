@@ -12,6 +12,13 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
+// Text
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+
+// Temporary
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
 import { DEFAULT_BLACK_COLOR } from '@/constants';
 
 export function initThreeScene({
@@ -22,6 +29,8 @@ export function initThreeScene({
   wobblePlateRef,
   customColor,
   TransmissionLevel,
+  TextRef,
+  cameraRef,
 }) {
   //--------------------------------------------------+
   //
@@ -86,10 +95,10 @@ export function initThreeScene({
 
     // MeshPhysicalMaterial
     metalness: 0,
-    roughness: 0.5,
+    roughness: 0.5, //0 vers 1
     color: '#ffffff',
     transmission: TransmissionLevel,
-    ior: 1.5,
+    ior: 1.5, // 1 to 2.5
     thickness: 1.5,
     transparent: true,
     wireframe: false,
@@ -255,6 +264,83 @@ export function initThreeScene({
 
   //--------------------------------------------------+
   //
+  // Text
+  //
+  //--------------------------------------------------+
+
+  // Main text group
+  const textGroup = new THREE.Group();
+  scene.add(textGroup);
+  TextRef.current = textGroup;
+
+  const fontLoader = new FontLoader();
+  fontLoader.load('/font/Orbitron_Bold.json', (font) => {
+    // -------- CONFIG --------
+    const fontSize = 2.8;
+    const depth = 0.28;
+    const curveSegments = 12;
+    const frontColor = 0xffffff;
+    const sideColor = new THREE.Color(debugObject?.mainColor || 0x0132b5);
+    // ------------------------
+
+    const createText = (message) => {
+      const geometry = new TextGeometry(message, {
+        font,
+        size: fontSize,
+        height: depth,
+        curveSegments,
+        bevelEnabled: false,
+      });
+
+      geometry.computeBoundingBox();
+      geometry.center();
+      geometry.computeVertexNormals();
+
+      const frontMat = new THREE.MeshStandardMaterial({
+        color: frontColor,
+        metalness: 0.1,
+        roughness: 0.4,
+      });
+
+      const sideMat = new THREE.MeshStandardMaterial({
+        color: sideColor,
+        metalness: 0.0,
+        roughness: 0.85,
+      });
+
+      const mesh = new THREE.Mesh(geometry, [frontMat, sideMat]);
+      mesh.scale.y = 1.4;
+      return mesh;
+    };
+
+    // Create meshes
+    const welcomeMesh = createText('WELCOME');
+    welcomeMesh.position.set(0, 0, -4); // centered and pushed back
+    welcomeMesh.name = 'welcome';
+    textGroup.add(welcomeMesh);
+
+    // Offset parameters
+    const rightOffsetX = 20; // right distance
+    const startY = -8; // down distance
+    const gapY = -8; // text space
+
+    const sideNames = ['to-my', 'digital', 'portfolio'];
+    ['TO MY', 'DIGITAL', 'PORTFOLIO'].forEach((line, i) => {
+      const mesh = createText(line);
+
+      mesh.position.set(rightOffsetX, startY + i * gapY, 5);
+
+      mesh.rotation.y = -Math.PI / 2;
+
+      mesh.name = sideNames[i];
+      textGroup.add(mesh);
+    });
+
+    textGroup.position.set(0, 0, 0);
+  });
+
+  //--------------------------------------------------+
+  //
   // Lights
   //
   //--------------------------------------------------+
@@ -268,7 +354,7 @@ export function initThreeScene({
   //
   //--------------------------------------------------+
 
-  // scene.fog = new THREE.Fog(fogColor, 0, 100);
+  // scene.fog = new THREE.Fog(DEFAULT_BLACK_COLOR, 0, 100);
   // scene.fog = new THREE.FogExp2( DEFAULT_BLACK_COLOR, 0.02 );
 
   //--------------------------------------------------+
@@ -315,6 +401,7 @@ export function initThreeScene({
   camera.position.set(0, 0, 10);
   const cameraGroup = new THREE.Group();
   cameraGroup.add(camera);
+  cameraRef.current = cameraGroup;
   scene.add(cameraGroup);
 
   //--------------------------------------------------+
@@ -377,6 +464,11 @@ export function initThreeScene({
   //
   //--------------------------------------------------+
 
+  // Enable controls temporarily
+  const controls = new OrbitControls(camera, renderer.domElement);
+  // controls.enableDamping = true; // smoother movement
+  // controls.enabled = true; // disable later when done placing
+
   const clock = new THREE.Clock();
 
   const animate = () => {
@@ -387,16 +479,19 @@ export function initThreeScene({
 
     // Calculate the desired parallax offset based on cursor position
     // Lower multiplier = more subtle movement
-    const parallaxX = mouse.x * 0.1; // Horizontal parallax intensity
-    const parallaxY = mouse.y * 0.1; // Vertical parallax intensity
+    const parallaxX = mouse.x * -0.1; // Horizontal parallax intensity
+    const parallaxY = mouse.y * -0.1; // Vertical parallax intensity
 
     // Smoothly interpolate camera group position toward the target offset
     // Lower factor = smoother and slower transition
-    cameraGroup.position.x += (parallaxX - cameraGroup.position.x) * 0.02; // Horizontal easing
-    cameraGroup.position.y += (parallaxY - cameraGroup.position.y) * 0.02; // Vertical easing
+    cameraGroup.position.x += (parallaxX - cameraGroup.position.x) * 0.04; // Horizontal easing
+    cameraGroup.position.y += (parallaxY - cameraGroup.position.y) * 0.04; // Vertical easing
 
     // Render
     composer.render();
+
+    // required for damping
+    // controls.update();
 
     // Call animate again on the next frame
     requestAnimationFrame(animate);

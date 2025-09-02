@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import style from './index.module.scss';
-import gsap from 'gsap';
+import * as THREE from 'three';
 
 // Components
 import NavBar from '@/components/partials/NavBar';
@@ -12,28 +12,42 @@ import MusicSelector from '@/components/partials/MusicSelector';
 import ScrollProgress from '@/components/partials/ScrollProgress';
 import ChatBot from '@/components/partials/ChatBot';
 import Cursor from '@/components/UI/Cursor';
-
 // import SideSlider from '@/components/partials/SideSlider';
 
-import { sections } from '@/constants';
 import { useTheme } from '@/context/ThemeContext.js';
 import { initThreeScene } from '@/utils/initThreeScene';
+import { sections } from '@/constants';
 
 const Layout = ({ children }) => {
   //  Customisation Features
-  const { mainColor, backgroundColor, TransmissionLevel } = useTheme();
+  const {
+    mainColor,
+    backgroundColor,
+    TransmissionLevel,
+    scrollProgress,
+    setScrollProgress,
+    activeSection,
+    setActiveSection,
+    getSectionProgress,
+  } = useTheme();
 
   // Loader
   const [isLoading, setLoader] = useState(true);
-
-  //  Active Session
-  const [activeSection, setActiveSection] = useState('0');
 
   // 3D ref
   const wobbleRef = useRef();
   const wobblePlateRef = useRef();
   const customColor = useRef();
+  const TextRef = useRef();
+  const cameraRef = useRef();
 
+  //--------------------------------------------------+
+  //
+  //  3D Parts
+  //
+  //--------------------------------------------------+
+
+  // Init Three JS Scene
   useEffect(() => {
     initThreeScene({
       canvasId: 'webgl',
@@ -43,79 +57,142 @@ const Layout = ({ children }) => {
       wobblePlateRef,
       customColor,
       TransmissionLevel,
+      TextRef,
+      cameraRef,
     });
   }, []);
 
+  // Update Colors
   useEffect(() => {
-    if (customColor.current) {
-      customColor.current.uMainColor.value.set(mainColor);
-      customColor.current.uSecondColor.value.set(backgroundColor);
-    }
-    if (wobbleRef.current) {
-      wobbleRef.current.material.transmission = TransmissionLevel;
-    }
+    // Update shader uniforms
+    customColor.current?.uMainColor.value.set(mainColor);
+    customColor.current?.uSecondColor.value.set(backgroundColor);
+
+    // Update wobble transmission
+    wobbleRef.current?.material &&
+      (wobbleRef.current.material.transmission = TransmissionLevel);
+
+    // Update text colors
+    TextRef.current?.traverse((child) => {
+      if (child.isMesh && Array.isArray(child.material)) {
+        // letters Front and Back
+        child.material[0].color.set(backgroundColor);
+        // letter side
+        child.material[1].color.set(mainColor);
+      }
+    });
   }, [mainColor, backgroundColor, TransmissionLevel]);
 
+  // Animate Home Section (Section 1)
   useEffect(() => {
-    // Update localStorage and notify other components when activeSection changes
-    localStorage.setItem('activeSection', activeSection);
-    window.dispatchEvent(new Event('storageChange'));
-  }, [activeSection]);
+    const group = TextRef.current;
+    if (!group) return;
 
-  //--------------------------------------------------+
-  //
-  //  Change the active section on scroll
-  //
-  //--------------------------------------------------+
+    const homeProgress = getSectionProgress(scrollProgress, sections[0].range); // 0..1
 
-  // Change de section if we can
-  const changeSection = (index) => {
-    if (index >= 0 && index < sections.length && index != activeSection) {
-      const sectionElement = document.querySelector('.global_page_container');
-      if (sectionElement) {
-        gsap.to(sectionElement, {
-          x: -50,
-          opacity: 0,
-          duration: 0.6,
-          onComplete: () => {
-            setActiveSection(index.toString());
-            // Reset animation properties for the next activation
-            gsap.set(sectionElement, { x: 0, opacity: 1, delay: 0.2 });
-          },
-        });
-      } else {
-        setActiveSection(index.toString());
-      }
-    }
-  };
+    const welcome = group.getObjectByName('welcome');
+    const toMy = group.getObjectByName('to-my');
+    const digital = group.getObjectByName('digital');
+    const portfolio = group.getObjectByName('portfolio');
 
-  // Simulated scroll event
-  const handleScroll = (event) => {
-    if (event.target.closest?.(`.${style.messages}`)) {
-      return; // On bloque le scroll global
-    }
+    if (!welcome || !toMy || !digital || !portfolio) return;
 
-    const { deltaY } = event;
-    const currentIndex = parseInt(activeSection, 10);
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
-    if (deltaY > 0) {
-      // Scroll down
-      changeSection(currentIndex + 1);
-    } else if (deltaY < 0) {
-      // Scroll up
-      changeSection(currentIndex - 1);
-    }
-  };
+    // ---- Configuration positions ----
+    const center = { x: 0, y: 0, z: -4, ry: 0 }; // Center of the scene
+    const farAway = { x: 100, y: 0, z: -100, ry: 0 }; // Far away for reset
+    const offBottom = { x: 0, y: -20, z: -4, ry: 0 }; // Final exit for last text
+    const startZ = 20; // Start further away on Z-axis for side texts
 
-  useEffect(() => {
-    // Add event listener for simulated scroll
-    window.addEventListener('wheel', handleScroll);
-
-    // Remove event listener when component unmounts
-    return () => {
-      window.removeEventListener('wheel', handleScroll);
+    const init = {
+      welcome: { x: 0, y: 0, z: -4, ry: 0 },
+      'to-my': { x: 20, y: -8, z: startZ, ry: -Math.PI / 2 },
+      digital: { x: 20, y: -12, z: startZ, ry: -Math.PI / 2 },
+      portfolio: { x: 20, y: -16, z: startZ, ry: -Math.PI / 2 },
     };
-  }, [activeSection]);
+
+    // Interpolation function between outgoing and incoming text
+    const transition = (outMesh, inMesh, p) => {
+      const pauseFactor = 0.2; // fraction of the segment to pause at center
+      const t = clamp01((p - pauseFactor) / (1 - pauseFactor)); // delayed interpolation
+
+      if (outMesh) {
+        outMesh.position.x = lerp(center.x, -15, t);
+        outMesh.position.y = lerp(center.y, 10, t);
+        outMesh.position.z = lerp(center.z, -10, t);
+        outMesh.rotation.y = lerp(center.ry, Math.PI / 2, t);
+      }
+
+      if (inMesh) {
+        inMesh.position.x = lerp(init[inMesh.name].x, center.x, t);
+        inMesh.position.y = lerp(init[inMesh.name].y, center.y, t);
+        inMesh.position.z = lerp(init[inMesh.name].z, center.z, t);
+        inMesh.rotation.y = lerp(init[inMesh.name].ry, center.ry, t);
+      }
+    };
+
+    const step = 1 / 4;
+    const segIndex = Math.floor(homeProgress / step); // 0,1,2,3
+    const segProgress = clamp01((homeProgress - segIndex * step) / step);
+
+    // Reset all texts far away
+    [welcome, toMy, digital, portfolio].forEach((m) => {
+      m.position.set(farAway.x, farAway.y, farAway.z);
+    });
+
+    // Sequence transitions with pause at center
+    if (segIndex === 0) transition(welcome, toMy, segProgress);
+    else if (segIndex === 1) transition(toMy, digital, segProgress);
+    else if (segIndex === 2) transition(digital, portfolio, segProgress);
+    else if (segIndex >= 3) {
+      // last text exits downward
+      const exitProgress = clamp01((homeProgress - 3 * step) / step);
+      portfolio.position.x = lerp(center.x, offBottom.x, exitProgress);
+      portfolio.position.y = lerp(center.y, offBottom.y, exitProgress);
+      portfolio.position.z = lerp(center.z, offBottom.z, exitProgress);
+      portfolio.rotation.y = lerp(center.ry, offBottom.ry, exitProgress);
+    }
+  }, [scrollProgress]);
+
+  useEffect(() => {
+    const sphere = wobbleRef.current;
+    const plane = wobblePlateRef.current;
+    const camera = cameraRef.current;
+    const uniforms = customColor.current;
+
+    if (!sphere || !plane || !camera || !uniforms) return;
+
+    const progress = getSectionProgress(scrollProgress, sections[4].range); // 0..1
+    const clamp01 = (v) => Math.max(0, Math.min(1, v));
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const t = clamp01(progress);
+
+    // Animate Sphere
+    sphere.position.y = lerp(0.6, 12, t);
+
+    // Animate Plane (Mur)
+    plane.position.y = lerp(-4, 0, t);
+    plane.position.z = lerp(1, 0, t);
+    plane.rotation.x = lerp(
+      THREE.MathUtils.degToRad(90),
+      THREE.MathUtils.degToRad(180),
+      t
+    );
+
+    // Animate Camera Zoom
+    camera.position.z = lerp(0, -2, t);
+
+    // Animate Shader Uniforms
+    if (uniforms.uWarpStrength) {
+      uniforms.uWarpStrength.value = lerp(1.8, 0.4, t);
+    }
+
+    if (uniforms.uPositionFrequency) {
+      uniforms.uPositionFrequency.value = lerp(0.5, 0.2, t);
+    }
+  }, [scrollProgress]);
 
   return (
     <div className={style.global_cont}>
@@ -137,7 +214,7 @@ const Layout = ({ children }) => {
       ) : (
         <>
           {/* Navigation Bar */}
-          <NavBar activeSection={activeSection} changeSection={changeSection} />
+          <NavBar />
 
           {/* Button Home */}
           <div className={style.home_btn_cont}>

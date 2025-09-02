@@ -50,11 +50,10 @@
 
   .percentage_container {
     width: auto;
-    height: auto;
+    height: calc(variables.$margin + variables.$small_small_margin);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: variables.$small_small_margin 0;
 
     .percentage_text {
       font-family: variables.$first_font;

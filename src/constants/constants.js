@@ -1,5 +1,11 @@
 // 📦 Data for All the sections
-export const sections = ['Home', 'About', 'Projects', 'Skills', 'Contact'];
+export const sections = [
+  { id: 'Home', range: [0, 30] },
+  { id: 'About', range: [30, 50] },
+  { id: 'Projects', range: [50, 75] },
+  { id: 'Skills', range: [75, 95] },
+  { id: 'Contact', range: [95, 100] },
+];
 
 // 📦 Data for All the sections Informations
 export const sectionsInformation = [

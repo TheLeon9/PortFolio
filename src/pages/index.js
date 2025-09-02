@@ -16,7 +16,7 @@ const IndexPage = ({ activeSection }) => {
       {/* Dispaly for each sections */}
       {sectionsInformation.map(
         (oneSection, index) =>
-          activeSection === index.toString() && (
+          activeSection === index && (
             <div
               className={`global_page_container ${style.global_page_container}`}
               key={index}
