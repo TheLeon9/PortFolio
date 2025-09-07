@@ -12,7 +12,7 @@ const ScrollProgress = () => {
         <span key={idx} className={style.progress_segment}></span>
       ))}
       <div className={style.percentage_container}>
-        <p className={style.percentage_text}>{scrollProgress}%</p>
+        <p className={style.percentage_text}>{Math.round(scrollProgress)}%</p>
       </div>
       {[...Array(20)].map((_, idx) => (
         <span key={idx} className={style.progress_segment}></span>

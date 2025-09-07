@@ -14,6 +14,8 @@ import {
   sections,
 } from '@/constants';
 
+import gsap from 'gsap';
+
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
@@ -87,10 +89,11 @@ export const ThemeProvider = ({ children }) => {
     const handleWheel = (e) => {
       e.preventDefault();
 
-      // 1 "notch" de molette => ±1%
-      const step = 1;
-      const direction = Math.sign(e.deltaY); // -1 ou +1
+      // 1 "notch" of the mouse wheel => ±1%
+      const step = 0.5; // Step size (percentage of scroll)
+      const direction = Math.sign(e.deltaY); // -1 or +1 based on wheel direction
 
+      // Update the target position, clamp to ensure it stays within 0 to 100
       targetRef.current = clamp(targetRef.current + step * direction, 0, 100);
     };
 
@@ -103,7 +106,8 @@ export const ThemeProvider = ({ children }) => {
       const newValue = current + (target - current) * smoothSpeed;
 
       proxy.value = newValue;
-      setScrollProgress(Math.round(newValue));
+      setScrollProgress(newValue);
+      // setScrollProgress(Math.round(newValue));
 
       animationFrameId = requestAnimationFrame(update);
     };
@@ -134,31 +138,24 @@ export const ThemeProvider = ({ children }) => {
 
   // Programmatic scroll (e.g., triggered from NavBar)
   const scrollToSection = (index) => {
+    // Check if the index is valid
     if (index < 0 || index >= sections.length) return;
 
+    // Extract the minimum range value of the section
     const [min] = sections[index].range;
 
-    // Define the target inside the section (min + 1 ensures it enters the range)
+    // Target position: just after the section's entry (ensuring it enters the range)
     const target = clamp(min + 1);
 
-    // Instead of jumping directly, smoothly animate towards the target
-    const step = () => {
-      const current = targetRef.current;
-      const diff = target - current;
+    // Stop any ongoing animation (if there is one)
+    gsap.killTweensOf(targetRef);
 
-      // If close enough, snap and stop
-      if (Math.abs(diff) < 0.5) {
-        targetRef.current = target;
-        return;
-      }
-
-      // Smooth interpolation (lower factor = slower & smoother)
-      targetRef.current = current + diff * 0.08;
-
-      requestAnimationFrame(step);
-    };
-
-    step();
+    // Smooth scroll animation to the target position
+    gsap.to(targetRef, {
+      current: target,
+      duration: 2, // Scroll duration
+      ease: 'power3.inOut', // Smooth easing effect
+    });
   };
 
   // Relative section progress

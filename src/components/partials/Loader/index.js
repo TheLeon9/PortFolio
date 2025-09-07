@@ -11,7 +11,12 @@ import BlueCircle from 'p/img/loading/blue_ornament_circle.svg';
 import Sentence from '@/components/UI/Sentence';
 import MusicButton from '@/components/UI/MusicButton';
 
-const SectionPresentation = ({ wobbleRef, wobblePlateRef, setLoader }) => {
+const SectionPresentation = ({
+  wobbleRef,
+  wobblePlateRef,
+  setLoader,
+  textRef,
+}) => {
   const [percentage, setPercentage] = useState(0);
   const [endAnimation, setEndAnimation] = useState(false);
 
@@ -65,6 +70,17 @@ const SectionPresentation = ({ wobbleRef, wobblePlateRef, setLoader }) => {
         duration: 2,
         ease: 'power1.inOut',
       });
+
+      const welcome = textRef?.current?.getObjectByName('welcome');
+      if (welcome) {
+        gsap.to(welcome.position, {
+          x: 0,
+          y: 0,
+          z: -4,
+          duration: 2,
+          ease: 'power1.inOut',
+        });
+      }
 
       setTimeout(() => {
         setLoader(false);
