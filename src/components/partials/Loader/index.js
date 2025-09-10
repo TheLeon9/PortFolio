@@ -86,7 +86,7 @@ const SectionPresentation = ({
         setLoader(false);
       }, 1200);
     }, 400);
-  }, [wobbleRef, wobblePlateRef, setLoader]);
+  }, [wobbleRef, wobblePlateRef, setLoader, textRef]);
 
   // Fade out loader elements
   useEffect(() => {

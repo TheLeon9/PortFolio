@@ -35,15 +35,17 @@ const Layout = ({ children }) => {
   // Loader
   const [isLoading, setLoader] = useState(true);
 
-  // 3D ref
+  // ref
   const wobbleRef = useRef();
   const wobblePlateRef = useRef();
-  const customColor = useRef();
+  const customUniforms = useRef();
   const textRef = useRef();
   const cameraRef = useRef();
+  const glassRef = useRef();
   const projectsRef = useRef();
   const skillsRef = useRef();
   const { skills, projects } = useConstants();
+  const cursorRef = useRef(null);
 
   //--------------------------------------------------+
   //
@@ -59,14 +61,16 @@ const Layout = ({ children }) => {
       backgroundColor,
       wobbleRef,
       wobblePlateRef,
-      customColor,
+      customUniforms,
       TransmissionLevel,
       textRef,
       cameraRef,
+      glassRef,
       skills,
       skillsRef,
       projects,
       projectsRef,
+      cursorRef,
     });
   }, []);
 
@@ -77,8 +81,8 @@ const Layout = ({ children }) => {
   //--------------------------------------------------+
   useEffect(() => {
     // Update shader uniforms
-    customColor.current?.uMainColor.value.set(mainColor);
-    customColor.current?.uSecondColor.value.set(backgroundColor);
+    customUniforms.current?.uMainColor.value.set(mainColor);
+    customUniforms.current?.uSecondColor.value.set(backgroundColor);
 
     // Update wobble transmission
     wobbleRef.current?.material &&
@@ -118,8 +122,12 @@ const Layout = ({ children }) => {
     const camera = cameraRef.current;
     const wobble = wobbleRef.current;
     const plane = wobblePlateRef.current;
+    const group = textRef.current;
+    const uniforms = customUniforms.current;
+    const projects = projectsRef.current;
 
-    if (!camera || !wobble || !plane) return;
+    if (!camera || !wobble || !plane || !group || !uniforms || !projects)
+      return;
 
     // Section Progresses
     const homeT = getSectionProgress(scrollProgress, sections[0].range);
@@ -128,13 +136,18 @@ const Layout = ({ children }) => {
     const skillsT = getSectionProgress(scrollProgress, sections[3].range);
     const contactT = getSectionProgress(scrollProgress, sections[4].range);
 
+    // Utils
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+    const easeInOut = (x) => x * x * (3 - 2 * x); // smooth easing
+    const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3); // easing “rapide puis lent”
+    const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+
     // ------------------------
     // Section 1: Home
     // ------------------------
     if (homeT < 1) {
-      const group = textRef.current;
-      if (!group) return;
-
       const welcome = group.getObjectByName('welcome');
       const toMy = group.getObjectByName('to-my');
       const digital = group.getObjectByName('digital');
@@ -142,27 +155,21 @@ const Layout = ({ children }) => {
 
       if (!welcome || !toMy || !digital || !portfolio) return;
 
-      // Utils
-      const lerp = (a, b, t) => a + (b - a) * t;
-      const clamp01 = (v) => Math.max(0, Math.min(1, v));
-      const segmentProgress = (start, end) =>
-        clamp01((homeT - start) / (end - start));
-
       // Positions
       const center = { x: 0, y: 0, z: -4, ry: 0 }; // Center position
-      const left = { x: -30, y: 4, z: -4, ry: Math.PI / 6 }; // Left exit position
+      const left = { x: -35, y: 4, z: -4, ry: Math.PI / 6 }; // Left exit position
       const offBottom = { x: 0, y: -20, z: -4, ry: 0 }; // Bottom exit position
 
       const init = {
         welcome: { x: 0, y: 0, z: -4, ry: 0 },
-        'to-my': { x: 30, y: -6, z: 0, ry: -Math.PI / 6 },
-        digital: { x: 30, y: -6, z: 0, ry: -Math.PI / 6 },
-        portfolio: { x: 30, y: -6, z: 0, ry: -Math.PI / 6 },
+        'to-my': { x: 35, y: -6, z: 0, ry: -Math.PI / 6 },
+        digital: { x: 35, y: -6, z: 0, ry: -Math.PI / 6 },
+        portfolio: { x: 35, y: -6, z: 0, ry: -Math.PI / 6 },
       };
 
       const animateText = (mesh, entryRange, exitRange, exitTarget = left) => {
-        const easeInOutQuad = (t) =>
-          t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        const segmentProgress = (start, end) =>
+          clamp01((homeT - start) / (end - start));
 
         const rawEntryP = segmentProgress(...entryRange);
         const rawExitP = segmentProgress(...exitRange);
@@ -194,86 +201,163 @@ const Layout = ({ children }) => {
       animateText(portfolio, [0.6, 0.7], [0.8, 0.95], offBottom);
     }
 
-    // // ------------------------
-    // // Section 2 : About
-    // // ------------------------
-    // if (aboutT > 0) {
-    //   const t = clamp01(aboutT);
-    //   // Camera avance vers wobble
-    //   camera.position.z = lerp(0, -2, t);
-    //   camera.position.y = lerp(0, 1.5, t);
-    //   camera.rotation.x = lerp(0, -0.25, t);
-    //   // Wobble avance légèrement
-    //   wobble.position.z = lerp(0.6, 1, t);
-    //   wobble.position.y = lerp(0.6, 1.2, t);
-    //   wobble.scale.setScalar(lerp(1, 1.2, t));
-    //   customColor.current.uWarpStrength.value = lerp(1.8, 2.2, t);
-    // }
+    // ------------------------
+    // Section 2: About
+    // ------------------------
+    if (aboutT < 1) {
+      const phase1T = clamp01(aboutT / 0.25); // Phase 1: 0.0 → 0.25
+      const phaseT = clamp01((aboutT - 0.26) / 0.74); // Phase 3: 0.26 → 1.0
 
-    // // ------------------------
-    // // Section 3 : Projects
-    // // ------------------------
-    // if (projectsT > 0) {
-    //   const t = clamp01(projectsT);
-    //   camera.rotation.x = lerp(-0.25, 0.35, t);
-    //   // Projects descendent
-    //   projectsRef.current?.children.forEach((band, i) => {
-    //     const baseY = 10 + i * 2.5;
-    //     const endY = -5 + i * 2.5;
-    //     band.position.y = lerp(baseY, endY, t);
-    //   });
-    //   // Wobble perd de la force
-    //   wobble.scale.setScalar(lerp(1.2, 0.4, t));
-    //   customColor.current.uWarpStrength.value = lerp(2.2, 0.1, t);
-    // }
+      // Phase 1: fast approach
+      if (aboutT <= 0.25) {
+        const p = easeOutCubic(phase1T);
+        camera.position.z = lerp(0, -3, p);
+        wobble.position.z = lerp(0, 3, p);
+      }
+      // Phase 2: very short impact
+      else if (aboutT <= 0.26) {
+        camera.position.z = -3;
+        wobble.position.z = 3;
+      }
+      // Phase 3: return
+      else {
+        const p = easeInOut(phaseT);
+        camera.position.z = lerp(-3, 0, p);
+        wobble.position.z = lerp(3, 0, p);
+      }
+    }
 
-    // // ------------------------
-    // // Section 4 : Skills
-    // // ------------------------
-    // if (skillsT > 0) {
-    //   const t = clamp01(skillsT);
-    //   camera.rotation.x = lerp(0.35, 0, t);
-    //   wobble.position.y = lerp(0.4, 0.6, t);
-    //   wobble.scale.setScalar(lerp(0.4, 1, t));
-    //   customColor.current.uWarpStrength.value = lerp(0.1, 1.8, t);
+    // ------------------------
+    // Section 3 : Projects
+    // ------------------------
+    if (projectsT < 1) {
+      const phase1T = clamp01(projectsT / 0.2); // Phase 1: 0 → 0.2
+      const phase2T = clamp01((projectsT - 0.2) / 0.8); // Phase 2: 0.2 → 1
 
-    //   // Skills movement
-    //   skillsRef.current?.children.forEach((g) => {
-    //     const spark = g.children[0];
-    //     const label = g.children[1];
-    //     const start = new THREE.Vector3(0, -12, -30);
-    //     const tp = spark.userData.target.clone();
-    //     const pos = start.clone().lerp(tp, smoothstep(0, 0.3, t));
-    //     spark.position.copy(pos);
-    //     const lp = start
-    //       .clone()
-    //       .lerp(label.userData.target, smoothstep(0, 0.3, t));
-    //     label.position.copy(lp);
-    //   });
-    // }
+      // --- Phase 1: quick camera tilt + wobble shift ---
+      const p = easeOutCubic(phase1T);
+      if (projectsT <= 0.2) {
+        camera.rotation.x = lerp(0, 0.2, p); // Camera tilts upward
+        wobble.position.y = lerp(0.6, 2, p); // Wobble rises slightly
+      }
 
-    // // ------------------------
-    // // Section 5 : Contact
-    // // ------------------------
-    // if (contactT > 0) {
-    //   const t = clamp01(contactT);
-    //   wobble.position.y = lerp(0.6, 12, t);
-    //   plane.position.y = lerp(0, 0, t);
-    //   camera.position.z = lerp(-2, -5, t);
-    //   customColor.current.uWarpStrength.value = lerp(1.8, 0.4, t);
-    // }
+      // --- Phase 2: staggered bands + wobble return ---
+      else {
+        const bandDelay = 0.10; // Equal delay between each band
+        const bandCount = projects.children.length;
+
+        projects.children.forEach((band, i) => {
+          // Each band starts after its delay
+          const bandP = clamp01(
+            (phase2T - i * bandDelay) / (1 - bandDelay * bandCount)
+          );
+
+          const baseY = 10 + i * 2.5;
+          const midY = -2; // Slightly below zero
+          const endY = -6; // Final Y position (lower)
+          const endZ = -18; // Final Z position (goes backward)
+
+          if (bandP < 0.4) {
+            // 0 → 0.4 : slide downward
+            const downP = easeInOut(bandP / 0.4);
+            band.position.y = lerp(baseY, midY, downP);
+            band.position.z = 0;
+          } else {
+            // 0.4 → 1 : move backward in Z
+            const backP = easeOutCubic((bandP - 0.4) / 0.6);
+            band.position.y = lerp(midY, endY, backP);
+            band.position.z = lerp(0, endZ, backP);
+            band.material.opacity = lerp(0.4, 0, backP); // Fade out
+          }
+        });
+
+        // Wobble goes back down after last band starts leaving
+        const lastBandP = clamp01(
+          (phase2T - (bandCount - 1) * bandDelay) / 0.4
+        );
+        wobble.position.y = lerp(2.0, 0.6, lastBandP);
+
+        // Wobble shrinks + warp strength decreases during Phase 2
+        wobble.scale.setScalar(lerp(1, 0.8, phase2T));
+        uniforms.uWarpStrength.value = lerp(1.8, 0.1, phase2T);
+      }
+    }
+
+    // ------------------------
+    // Section 4 : Skills
+    // ------------------------
+    if (skillsT < 1) {
+    }
+    // ------------------------
+    // Section 5 : Contact
+    // ------------------------
+    if (contactT < 1) {
+    }
   }, [scrollProgress, getSectionProgress]);
+
+  // // ------------------------
+  // // Section 3 : Projects
+  // // ------------------------
+  // if (projectsT > 0) {
+  //   const t = clamp01(projectsT);
+  //   camera.rotation.x = lerp(-0.25, 0.35, t);
+  //   // Projects descendent
+  //   projectsRef.current?.children.forEach((band, i) => {
+  //     const baseY = 10 + i * 2.5;
+  //     const endY = -5 + i * 2.5;
+  //     band.position.y = lerp(baseY, endY, t);
+  //   });
+  //   // Wobble perd de la force
+  //   wobble.scale.setScalar(lerp(1.2, 0.4, t));
+  //   customUniforms.current.uWarpStrength.value = lerp(2.2, 0.1, t);
+  // }
+
+  // // ------------------------
+  // // Section 4 : Skills
+  // // ------------------------
+  // if (skillsT > 0) {
+  //   const t = clamp01(skillsT);
+  //   camera.rotation.x = lerp(0.35, 0, t);
+  //   wobble.position.y = lerp(0.4, 0.6, t);
+  //   wobble.scale.setScalar(lerp(0.4, 1, t));
+  //   customUniforms.current.uWarpStrength.value = lerp(0.1, 1.8, t);
+
+  //   // Skills movement
+  //   skillsRef.current?.children.forEach((g) => {
+  //     const spark = g.children[0];
+  //     const label = g.children[1];
+  //     const start = new THREE.Vector3(0, -12, -30);
+  //     const tp = spark.userData.target.clone();
+  //     const pos = start.clone().lerp(tp, smoothstep(0, 0.3, t));
+  //     spark.position.copy(pos);
+  //     const lp = start
+  //       .clone()
+  //       .lerp(label.userData.target, smoothstep(0, 0.3, t));
+  //     label.position.copy(lp);
+  //   });
+  // }
+
+  // // ------------------------
+  // // Section 5 : Contact
+  // // ------------------------
+  // if (contactT > 0) {
+  //   const t = clamp01(contactT);
+  //   wobble.position.y = lerp(0.6, 12, t);
+  //   plane.position.y = lerp(0, 0, t);
+  //   camera.position.z = lerp(-2, -5, t);
+  //   customUniforms.current.uWarpStrength.value = lerp(1.8, 0.4, t);
+  // }
 
   // // ----- Animation About (Section 2 => index 1) -----
   // useEffect(() => {}, [scrollProgress]);
 
-  // // ----- Animation PROJECTS (Section 3 => index 2) -----
+  // ----- Animation PROJECTS (Section 3 => index 2) -----
   // useEffect(() => {
   //   if (
   //     !projectsRef.current ||
   //     !cameraRef.current ||
   //     !wobbleRef.current ||
-  //     !customColor.current
+  //     !customUniforms.current
   //   )
   //     return;
 
@@ -284,7 +368,7 @@ const Layout = ({ children }) => {
 
   //   const camera = cameraRef.current;
   //   const wobble = wobbleRef.current;
-  //   const uniforms = customColor.current;
+  //   const uniforms = customUniforms.current;
 
   //   // --- Camera ---
   //   camera.rotation.x = lerp(0, 0.35, tt); // incline vers le bas
@@ -306,7 +390,7 @@ const Layout = ({ children }) => {
   //   if (
   //     !skillsRef.current ||
   //     !wobbleRef.current ||
-  //     !customColor.current ||
+  //     !customUniforms.current ||
   //     !cameraRef.current
   //   )
   //     return;
@@ -325,7 +409,7 @@ const Layout = ({ children }) => {
 
   //   const camera = cameraRef.current;
   //   const wobble = wobbleRef.current;
-  //   const uniforms = customColor.current;
+  //   const uniforms = customUniforms.current;
 
   //   // --- Camera : remise droite et légère remontée ---
   //   camera.rotation.x = lerp(0.35, 0, t); // depuis inclinaison des Projects → droite
@@ -364,7 +448,7 @@ const Layout = ({ children }) => {
   //   const sphere = wobbleRef.current;
   //   const plane = wobblePlateRef.current;
   //   const camera = cameraRef.current;
-  //   const uniforms = customColor.current;
+  //   const uniforms = customUniforms.current;
 
   //   if (!sphere || !plane || !camera || !uniforms) return;
 
@@ -406,7 +490,7 @@ const Layout = ({ children }) => {
       <canvas className={style.webgl} id="webgl"></canvas>
 
       {/* Custom Cursor */}
-      <Cursor />
+      <Cursor cursorRef={cursorRef} />
 
       {/* Loader */}
       {isLoading ? (

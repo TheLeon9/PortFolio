@@ -28,14 +28,16 @@ export function initThreeScene({
   backgroundColor,
   wobbleRef,
   wobblePlateRef,
-  customColor,
+  customUniforms,
   TransmissionLevel,
   textRef,
   cameraRef,
+  glassRef,
   skills,
   skillsRef,
   projects,
   projectsRef,
+  cursorRef,
 }) {
   //--------------------------------------------------+
   //
@@ -86,7 +88,7 @@ export function initThreeScene({
     uSecondColor: new THREE.Uniform(new THREE.Color(debugObject.secondColor)),
   };
   // Link the ref
-  customColor.current = uniforms;
+  customUniforms.current = uniforms;
 
   // Material
   const material = new CustomShaderMaterial({
@@ -326,7 +328,7 @@ export function initThreeScene({
     textGroup.add(welcomeMesh);
 
     // Offset parameters
-    const rightOffsetX = 30; // right distance
+    const rightOffsetX = 35; // right distance
     const startY = -6; // down distance
     const gapY = 0; // text space
 
@@ -705,7 +707,7 @@ export function initThreeScene({
     const elapsedTime = clock.getElapsedTime();
 
     // Update shader uniforms
-    customColor.current.uTime.value = elapsedTime;
+    customUniforms.current.uTime.value = elapsedTime;
 
     // Camera parallax effect
     const parallaxX = mouse.x * -0.1;
@@ -725,6 +727,7 @@ export function initThreeScene({
         projectsRef.current.children,
         true
       );
+      const cursor = cursorRef.current;
 
       if (intersects.length > 0) {
         const band = intersects[0].object;
@@ -750,6 +753,7 @@ export function initThreeScene({
             duration: 0.3,
             ease: 'power2.out',
           });
+          gsap.to(cursor, { scale: 2, duration: 0.25, ease: 'power2.out' });
         }
       } else {
         // when mouse exits hover area
@@ -762,6 +766,8 @@ export function initThreeScene({
             ease: 'power2.out',
           });
           hoveredBand = null;
+
+          gsap.to(cursor, { scale: 1, duration: 0.25, ease: 'power2.out' });
         }
       }
     }

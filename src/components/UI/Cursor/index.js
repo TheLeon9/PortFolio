@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import style from './index.module.scss';
 import gsap from 'gsap';
 
-const Cursor = () => {
-  const cursorRef = useRef(null);
+const Cursor = ({cursorRef}) => {
 
   useEffect(() => {
     let initCursor = false;
