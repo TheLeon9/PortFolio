@@ -392,28 +392,17 @@ export function initThreeScene({
     return tex;
   };
 
-  // ---------- RANDOM POSITION ----------
-  const randomAroundSphere = (
-    radiusMin = 7.5, // push them further away
-    radiusMax = 12.5,
-    avoidY = 2.0
-  ) => {
-    let pos;
+  // ---------- RANDOM POSITION (custom rules) ----------
+  const randomSkillPosition = () => {
+    let x;
     do {
-      const u = Math.random();
-      const v = Math.random();
-      const theta = 2 * Math.PI * u;
-      const phi = Math.acos(2 * v - 1);
-      const r = radiusMin + Math.random() * (radiusMax - radiusMin);
+      x = -4 + Math.random() * 8; // [-4, 4]
+    } while (Math.abs(x) < 1); // skip center zone
 
-      const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = r * Math.cos(phi);
-      const z = r * Math.sin(phi) * Math.sin(theta);
+    const y = -8; // base height
+    const z = 0 + Math.random() * 2; // depth variation
 
-      pos = new THREE.Vector3(x, y, z);
-    } while (Math.abs(pos.y) < avoidY);
-
-    return pos;
+    return new THREE.Vector3(x, y, z);
   };
 
   // ---------- CREATE SKILLS ----------
@@ -437,11 +426,13 @@ export function initThreeScene({
     const label = new THREE.Sprite(labelMat);
     label.scale.set(6 * aspect, 2.5, 1); // much larger labels
 
-    const start = randomAroundSphere(9, 13); // spread out more
+    // --- Place spark & label
+    const start = randomSkillPosition();
     spark.position.copy(start);
     label.position.copy(start).add(new THREE.Vector3(0, 1.2, 0));
 
-    const target = randomAroundSphere();
+    // target (tu peux garder si tu veux pour ton animation d'arrivée)
+    const target = randomSkillPosition();
     const dir = target.clone().normalize();
 
     spark.userData = { target, dir };
@@ -450,7 +441,7 @@ export function initThreeScene({
     const g = new THREE.Group();
     g.add(spark);
     g.add(label);
-    // skillsGroup.add(g);
+    skillsGroup.add(g);
   });
 
   //--------------------------------------------------+
