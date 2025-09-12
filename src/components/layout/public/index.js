@@ -156,7 +156,7 @@ const Layout = ({ children }) => {
     // ------------------------
     // Section 1: Home
     // ------------------------
-    if (homeT < 1) {
+    if (homeT > 0) {
       const welcome = group.getObjectByName('welcome');
       const toMy = group.getObjectByName('to-my');
       const digital = group.getObjectByName('digital');
@@ -213,15 +213,15 @@ const Layout = ({ children }) => {
     // ------------------------
     // Section 2: About
     // ------------------------
-    if (aboutT < 1) {
+    if (aboutT > 0) {
       const phase1T = clamp01(aboutT / 0.25); // Phase 1: 0.0 → 0.25
       const phaseT = clamp01((aboutT - 0.26) / 0.74); // Phase 3: 0.26 → 1.0
 
       // Phase 1: fast approach
       if (aboutT <= 0.25) {
-        const p = easeOutCubic(phase1T);
-        camera.position.z = lerp(0, -3, p);
-        wobble.position.z = lerp(0, 3, p);
+        const pA = easeOutCubic(phase1T);
+        camera.position.z = lerp(0, -3, pA);
+        wobble.position.z = lerp(0, 3, pA);
       }
       // Phase 2: very short impact
       else if (aboutT <= 0.26) {
@@ -230,27 +230,27 @@ const Layout = ({ children }) => {
       }
       // Phase 3: return
       else {
-        const p = easeInOut(phaseT);
-        camera.position.z = lerp(-3, 0, p);
-        wobble.position.z = lerp(3, 0, p);
+        const pA = easeInOut(phaseT);
+        camera.position.z = lerp(-3, 0, pA);
+        wobble.position.z = lerp(3, 0, pA);
       }
     }
 
     // ------------------------
     // Section 3 : Projects
     // ------------------------
-    if (projectsT < 1) {
+    if (projectsT > 0) {
       const phase1T = clamp01(projectsT / 0.2); // Phase 1: 0 → 0.2
       const phase2T = clamp01((projectsT - 0.2) / 0.8); // Phase 2: 0.2 → 1
 
-      // --- Phase 1: quick camera tilt + wobble shift ---
+      // Phase 1: quick camera tilt + wobble shift
       const p = easeOutCubic(phase1T);
       if (projectsT <= 0.2) {
         camera.rotation.x = lerp(0, 0.2, p); // Camera tilts upward
         wobble.position.y = lerp(0.6, 2, p); // Wobble rises slightly
       }
 
-      // --- Phase 2: staggered bands + wobble return ---
+      // Phase 2: staggered bands + wobble return
       else {
         const bandDelay = 0.1; // Equal delay between each band
         const bandCount = projects.children.length;
@@ -295,31 +295,31 @@ const Layout = ({ children }) => {
     // ------------------------
     // Section 4 : Skills
     // ------------------------
-    if (skillsT < 1) {
+    if (skillsT > 0) {
       const phase1T = clamp01(skillsT / 0.15); // 0 → 0.15
       const phase2T = clamp01((skillsT - 0.15) / 0.2); // 0.15 → 0.35
       const phase3T = clamp01((skillsT - 0.35) / 0.4); // 0.35 → 0.75
       const phase4T = clamp01((skillsT - 0.75) / 0.25); // 0.75 → 1.0
 
-      // --- Phase 1: Wobble descends ---
+      // Phase 1: Wobble descends
       if (skillsT <= 0.15) {
         const p = easeInOut(phase1T);
         wobble.position.y = lerp(0.6, -1, p);
       }
 
-      // --- Phase 2: Wobble fixed low ---
+      // Phase 2: Wobble fixed low
       else if (skillsT <= 0.35) {
         wobble.position.y = -1;
       }
 
-      // --- Phase 3: Smooth rise + wobble rotation ---
+      // Phase 3: Smooth rise + wobble rotation
       else if (skillsT <= 0.75) {
         const p = easeInOut(phase3T);
         wobble.position.y = lerp(-1, 2, p);
         wobble.rotation.y += 0.02 * (1 - p);
       }
 
-      // --- Phase 4: Wobble stops + camera tilt ---
+      // Phase 4: Wobble stops + camera tilt
       else {
         const p = easeOutCubic(phase4T);
 
@@ -332,89 +332,25 @@ const Layout = ({ children }) => {
     // ------------------------
     // Section 5 : Contact
     // ------------------------
-    if (contactT < 1) {
-      const p = easeInOut(contactT);
+    if (contactT > 0) {
+      const pC = easeInOut(contactT);
 
-      // Animate Plane (Mur)
-      plane.position.y = lerp(-4, 0, p);
-      plane.position.z = lerp(1, 0, p);
+      // Animate Plane (Wall)
+      plane.position.y = lerp(-4, 0, pC);
+      plane.position.z = lerp(1, 0, pC);
       plane.rotation.x = lerp(
         THREE.MathUtils.degToRad(90),
         THREE.MathUtils.degToRad(180),
-        p
+        pC
       );
 
-      // Animate Camera Zoom
-      camera.position.z = lerp(0, -2, p);
-
       // Animate Shader Uniforms
-      if (uniforms.uWarpStrength) {
-        uniforms.uWarpStrength.value = lerp(1.8, 0.4, p);
-      }
+      uniforms.uPositionFrequency.value = lerp(0.5, 0.2, pC);
 
-      if (uniforms.uPositionFrequency) {
-        uniforms.uPositionFrequency.value = lerp(0.5, 0.2, p);
-      }
+      // Animate Camera Zoom
+      camera.position.z = lerp(0, -2, pC);
     }
   }, [scrollProgress, getSectionProgress]);
-
-  // ----- Animation SKILLS (Section 4 => index 3) -----
-  // useEffect(() => {
-  //   if (
-  //     !skillsRef.current ||
-  //     !wobbleRef.current ||
-  //     !customUniforms.current ||
-  //     !cameraRef.current
-  //   )
-  //     return;
-
-  //   const t = getSectionProgress(scrollProgress, sections[3].range); // 0..1
-  //   const clamp01 = (v) => Math.max(0, Math.min(1, v));
-  //   const lerp = (a, b, x) => a + (b - a) * x;
-  //   const smoothstep = (e0, e1, x) => {
-  //     const tt = clamp01((x - e0) / (e1 - e0));
-  //     return tt * tt * (3 - 2 * tt);
-  //   };
-
-  //   const enter = smoothstep(0.0, 0.3, t); // arrivée
-  //   const idle = smoothstep(0.3, 0.7, t); // phase calme
-  //   const eject = smoothstep(0.7, 1.0, t); // éjection
-
-  //   const camera = cameraRef.current;
-  //   const wobble = wobbleRef.current;
-  //   const uniforms = customUniforms.current;
-
-  //   // --- Camera : remise droite et légère remontée ---
-  //   camera.rotation.x = lerp(0.35, 0, t); // depuis inclinaison des Projects → droite
-
-  //   // --- Wobble Sphere : descente progressive pour rester visible ---
-  //   wobble.position.y = lerp(0, 0.6, t); // depuis hauteur finale des Projects → position normale
-  //   wobble.scale.setScalar(lerp(0.4, 1, t)); // si tu veux qu’elle retrouve sa taille normale
-  //   uniforms.uWarpStrength.value = lerp(0.2, 1.8, t); // récupération du wobble
-
-  //   // ----- Gestion des Skills (inchangé) -----
-  //   skillsRef.current.children.forEach((g) => {
-  //     const spark = g.children[0]; // Mesh
-  //     const label = g.children[1]; // Sprite
-  //     const start = new THREE.Vector3(0, -12, -30);
-  //     const tp = spark.userData.target.clone();
-  //     const pos = start.clone().lerp(tp, enter);
-  //     spark.position.copy(pos);
-
-  //     const lp = start
-  //       .clone()
-  //       .lerp(label.userData.target, enter)
-  //       .add(new THREE.Vector3(0, label.userData.offsetY, 0));
-  //     label.position.copy(lp);
-
-  //     if (eject > 0) {
-  //       const dir = spark.userData.dir;
-  //       const kick = eject * eject * 6.0;
-  //       spark.position.addScaledVector(dir, kick);
-  //       label.position.addScaledVector(dir, kick);
-  //     }
-  //   });
-  // }, [scrollProgress, getSectionProgress]);
 
   return (
     <div className={style.global_cont}>
