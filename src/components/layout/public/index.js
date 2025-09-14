@@ -15,7 +15,7 @@ import Cursor from '@/components/UI/Cursor';
 // import SideSlider from '@/components/partials/SideSlider';
 
 import { useTheme } from '@/context/ThemeContext.js';
-import { initThreeScene } from '@/utils/initThreeScene';
+import { initThreeScene, updateProjectBandsColor} from '@/utils/initThreeScene';
 import { sections } from '@/constants';
 import { useConstants } from '@/context/ConstantsContext';
 
@@ -97,14 +97,11 @@ const Layout = ({ children }) => {
         child.material[1].color.set(mainColor);
       }
     });
-    skillsRef.current?.traverse((obj) => {
-      if (obj.isMesh && obj.material?.emissive) {
-        obj.material.color.set(mainColor);
-        obj.material.emissive.set(mainColor);
-      }
-    });
+
     // Update project ring textures & materials
-    projectsRef.current?.traverse((obj) => {
+    updateProjectBandsColor(mainColor, backgroundColor);
+
+    skillsRef.current?.traverse((obj) => {
       if (obj.isMesh && obj.material?.emissive) {
         obj.material.color.set(mainColor);
         obj.material.emissive.set(mainColor);

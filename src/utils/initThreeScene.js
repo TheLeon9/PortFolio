@@ -20,7 +20,36 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 // Temporary
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { DEFAULT_BLACK_COLOR, DEFAULT_TEXT_COLOR } from '@/constants';
+import { DEFAULT_BLACK_COLOR, DEFAULT_BACKGROUND_COLOR } from '@/constants';
+
+// For the color Picker of the Bandes
+let _projects = [];
+let _projectsRef = null;
+let _makeProjectTexture = null;
+export function updateProjectBandsColor(mainColor, textColor) {
+  if (!_projectsRef || !_projects) return;
+
+  _projectsRef.children.forEach((band, i) => {
+    const project = _projects[i];
+    const highlights = [
+      project.highlight1,
+      project.highlight2,
+      project.highlight3,
+      project.highlight4,
+      project.highlight5,
+    ];
+
+    const tex = _makeProjectTexture(
+      project.title,
+      project.description,
+      highlights,
+      mainColor,
+      textColor
+    );
+    band.material.map = tex;
+    band.material.needsUpdate = true;
+  });
+}
 
 export function initThreeScene({
   canvasId,
@@ -349,6 +378,186 @@ export function initThreeScene({
 
   //--------------------------------------------------+
   //
+  // Project Bands
+  //
+  //--------------------------------------------------+
+
+  const projectsGroup = new THREE.Group();
+  projectsGroup.name = 'projects-group';
+  projectsRef.current = projectsGroup;
+  _projects = projects;
+  _projectsRef = projectsGroup;
+
+  scene.add(projectsGroup);
+
+  // Helper: Create canvas texture for each band
+  const makeProjectTexture = (
+    title,
+    description,
+    highlights = [],
+    colorBg,
+    textColor
+  ) => {
+    const sizeX = 1024;
+    const sizeY = 512;
+    const canvas = document.createElement('canvas');
+    canvas.width = sizeX;
+    canvas.height = sizeY;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, sizeX, sizeY);
+
+    // === Background ===
+    ctx.fillStyle = colorBg;
+    ctx.fillRect(0, 0, sizeX, sizeY);
+
+    // === Common text styles ===
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowBlur = 40;
+
+    // === Title ===
+    ctx.font = `bold 42px Orbitron, sans-serif`;
+    ctx.lineWidth = 2;
+    ctx.strokeStyle =
+      textColor.toLowerCase() === DEFAULT_BACKGROUND_COLOR
+        ? DEFAULT_BLACK_COLOR
+        : DEFAULT_BACKGROUND_COLOR;
+
+    const titleY = sizeY - 120;
+
+    ctx.strokeText(title, sizeX / 2, titleY);
+    ctx.fillStyle = textColor;
+    ctx.fillText(title, sizeX / 2, titleY);
+
+    // === Highlights ===
+    ctx.font = `12px Orbitron, sans-serif`;
+    ctx.shadowBlur = 20;
+    ctx.textAlign = 'right';
+
+    const highlightStartX = sizeX / 2 + 190; // Horizontal offset from title center
+    let highlightStartY = titleY + 30; // Starts below the title
+    const lineHeight = 16; // Line spacing between highlights
+
+    highlights.forEach((highlight) => {
+      ctx.fillText(highlight, highlightStartX, highlightStartY);
+      highlightStartY += lineHeight;
+    });
+
+    // === Description (with line wrapping) ===
+    if (description) {
+      ctx.textAlign = 'left';
+      ctx.font = `12px Orbitron, sans-serif`;
+      ctx.shadowBlur = 10;
+
+      // === Editable config ===
+      const descStartX = 50; // Left margin
+      const descStartY = titleY + 30; // Vertical offset from title
+      const descLineHeight = 16; // Line spacing
+      const descMaxWidth = 400; // Max line width
+      // =======================
+
+      const words = description.split(' ');
+      let line = '';
+      let y = descStartY;
+
+      for (let i = 0; i < words.length; i++) {
+        const testLine = line + words[i] + ' ';
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+
+        if (testWidth > descMaxWidth && i > 0) {
+          ctx.fillText(line, descStartX, y);
+          line = words[i] + ' ';
+          y += descLineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+
+      // Draw last line
+      ctx.fillText(line, descStartX, y);
+    }
+
+    // === Create texture from canvas ===
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.anisotropy = 16;
+    tex.needsUpdate = true;
+    tex.minFilter = THREE.LinearMipMapLinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+
+    return tex;
+  };
+
+  _makeProjectTexture = makeProjectTexture;
+
+  projects.forEach((proj, i) => {
+    const highlights = [
+      proj.highlight1,
+      proj.highlight2,
+      proj.highlight3,
+      proj.highlight4,
+      proj.highlight5,
+    ];
+
+    const tex = makeProjectTexture(
+      proj.title,
+      proj.description,
+      highlights,
+      mainColor,
+      backgroundColor
+    );
+
+    const height = 1.2;
+    const thickness = 0.05;
+    const innerRadius = 3.3;
+    const outerRadius = innerRadius + thickness;
+
+    const points = [
+      new THREE.Vector2(outerRadius, -height / 2),
+      new THREE.Vector2(outerRadius, height / 2),
+      new THREE.Vector2(innerRadius, height / 2),
+      new THREE.Vector2(innerRadius, -height / 2),
+    ];
+
+    const geo = new THREE.LatheGeometry(points, 256);
+
+    const mat = new THREE.MeshPhysicalMaterial({
+      map: tex,
+      transparent: true,
+      opacity: 0.4,
+      roughness: 0.15,
+      metalness: 0,
+      transmission: 1.0,
+      thickness: 0.5,
+      ior: 1.1,
+      clearcoat: 0.5,
+      side: THREE.DoubleSide,
+    });
+
+    const ring = new THREE.Mesh(geo, mat);
+    const startOffset = 10;
+
+    // Default ring orientation
+    ring.rotation.set(0, 0, 0);
+
+    // Stacked position
+    ring.position.set(0, startOffset + i * 2.5, 0);
+
+    // Store metadata (for raycasting or interaction)
+    ring.userData = {
+      index: i,
+      speed: 0.01 + Math.random() * 0.02,
+      hoverClass: 'hover_target_big',
+      isHovered: false,
+      url: proj.url || '',
+    };
+
+    projectsGroup.add(ring);
+  });
+
+  //--------------------------------------------------+
+  //
   // Skill Points
   //
   //--------------------------------------------------+
@@ -442,117 +651,6 @@ export function initThreeScene({
     g.add(spark);
     g.add(label);
     skillsGroup.add(g);
-  });
-
-  //--------------------------------------------------+
-  //
-  // Project Bands
-  //
-  //--------------------------------------------------+
-
-  const projectsGroup = new THREE.Group();
-  projectsGroup.name = 'projects-group';
-  projectsRef.current = projectsGroup;
-  scene.add(projectsGroup);
-
-  // helper: make band texture
-  const makeProjectTexture = (
-    title,
-    desc,
-    colorBg = mainColor,
-    textColor = DEFAULT_TEXT_COLOR
-  ) => {
-    const sizeX = 2048;
-    const sizeY = 512;
-    const canvas = document.createElement('canvas');
-    canvas.width = sizeX;
-    canvas.height = sizeY;
-    const ctx = canvas.getContext('2d');
-
-    ctx.clearRect(0, 0, sizeX, sizeY);
-
-    // background
-    ctx.fillStyle = colorBg;
-    ctx.fillRect(0, 0, sizeX, sizeY);
-
-    // Title
-    ctx.fillStyle = textColor;
-    ctx.shadowColor = textColor;
-    ctx.shadowBlur = 30;
-    ctx.font = `bold 140px Orbitron, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(title, sizeX / 2, sizeY / 2 - 80);
-
-    // Description
-    ctx.font = `bold 80px Orbitron, sans-serif`;
-    ctx.fillStyle = textColor;
-    ctx.shadowColor = textColor;
-    ctx.shadowBlur = 15;
-    ctx.fillText(desc, sizeX / 2, sizeY / 2 + 50);
-
-    // outline
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 4;
-    ctx.strokeText(title, sizeX / 2, sizeY / 2 - 80);
-    ctx.strokeText(desc, sizeX / 2, sizeY / 2 + 50);
-
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.anisotropy = 16;
-    tex.needsUpdate = true;
-    tex.minFilter = THREE.LinearMipMapLinearFilter;
-    tex.magFilter = THREE.LinearFilter;
-
-    return tex;
-  };
-
-  projects.forEach((proj, i) => {
-    const tex = makeProjectTexture(proj.title, proj.description);
-
-    const height = 1.2;
-    const thickness = 0.05;
-    const innerRadius = 3.3;
-    const outerRadius = innerRadius + thickness;
-
-    const points = [
-      new THREE.Vector2(outerRadius, -height / 2),
-      new THREE.Vector2(outerRadius, height / 2),
-      new THREE.Vector2(innerRadius, height / 2),
-      new THREE.Vector2(innerRadius, -height / 2),
-    ];
-
-    const geo = new THREE.LatheGeometry(points, 256);
-
-    const mat = new THREE.MeshPhysicalMaterial({
-      map: tex,
-      transparent: true,
-      opacity: 0.4,
-      roughness: 0.15,
-      metalness: 0,
-      transmission: 1.0,
-      thickness: 0.5,
-      ior: 1.1,
-      clearcoat: 0.5,
-      side: THREE.DoubleSide,
-    });
-
-    const ring = new THREE.Mesh(geo, mat);
-    const startOffset = 10;
-
-    // Saturn-style ring
-    ring.rotation.set(0, 0, 0);
-
-    // Start above viewport
-    ring.position.set(0, startOffset + i * 2.5, 0);
-
-    ring.userData = {
-      index: i,
-      speed: 0.01 + Math.random() * 0.02,
-      hoverClass: 'hover_target_big',
-      isHovered: false,
-    };
-
-    projectsGroup.add(ring);
   });
 
   //--------------------------------------------------+

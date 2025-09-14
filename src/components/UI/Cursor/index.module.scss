@@ -33,6 +33,5 @@ $cursor_wh: 25px;
 
   &.is_hover_small {
     opacity: variables.$less_opacity !important;
-    mix-blend-mode: color-burn;
   }
 }
