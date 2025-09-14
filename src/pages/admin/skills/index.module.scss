@@ -34,6 +34,10 @@
       align-items: center;
       padding-bottom: variables.$margin;
 
+      .container_description {
+        margin-top: variables.$margin;
+      }
+
       .skills_form {
         width: 90%;
         margin-top: variables.$big_margin;
@@ -59,7 +63,7 @@
           justify-content: space-between;
           align-items: center;
           list-style: none;
-          
+
           margin-bottom: variables.$small_margin;
           background: variables.$main_color_rgba;
           padding: variables.$small_margin;

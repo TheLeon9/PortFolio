@@ -152,6 +152,14 @@ export default function Skills() {
           {/* Title */}
           <Title title="Skills" />
 
+          {/* Description */}
+          <p className={`${styles.container_description} p_white`}>
+            Create or Remove Skills
+          </p>
+          <p className="p_white">
+            Max : <span className="p_succes">12</span>
+          </p>
+
           {/* Forms */}
           <form className={styles.skills_form} onSubmit={handleAddSkill}>
             <input

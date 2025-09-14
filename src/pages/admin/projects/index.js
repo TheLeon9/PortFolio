@@ -187,6 +187,14 @@ export default function Projects() {
           {/* Title */}
           <Title title="Projects" />
 
+          {/* Description */}
+          <p className={`${styles.container_description} p_white`}>
+            Create or Remove Projects
+          </p>
+          <p className="p_white">
+            Max : <span className="p_succes">4</span>
+          </p>
+
           {/* Forms */}
           <form className={styles.projects_form} onSubmit={handleAddProject}>
             <input

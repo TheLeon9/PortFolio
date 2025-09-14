@@ -65,6 +65,10 @@ p {
   &_white {
     color: variables.$white_color;
   }
+
+  &_succes {
+    color: variables.$succes_color;
+  }
 }
 
 // ------------------------------+

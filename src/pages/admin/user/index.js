@@ -90,9 +90,21 @@ export default function User() {
   return (
     <div className={styles.section_container}>
       <div className={styles.user}>
+        {/* Pillar */}
         <Pillar />
+        {/* Middle */}
         <div className={styles.container}>
           <Title title="User" />
+
+          {/* Description */}
+          <p className={`${styles.container_description} p_white`}>
+            Manage your personal information
+          </p>
+          <p className="p_white">
+            Max : <span className="p_succes">1</span>
+          </p>
+
+          {/* Forms */}
           <form className={styles.user_form} onSubmit={handleSubmit}>
             <div className={styles.multiple_input_cont}>
               {['lastName', 'firstName'].map((field) => (
@@ -193,6 +205,7 @@ export default function User() {
             </button>
           </form>
         </div>
+        {/* Pillar */}
         <Pillar />
       </div>
     </div>

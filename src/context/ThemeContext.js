@@ -87,6 +87,12 @@ export const ThemeProvider = ({ children }) => {
     let animationFrameId;
 
     const handleWheel = (e) => {
+      // If in "/admin"
+      if (window.location.pathname.includes('/admin')) {
+        return; // We don't cancel the scroll
+      }
+
+      // Cancel the scroll
       e.preventDefault();
 
       // 1 "notch" of the mouse wheel => ±1%

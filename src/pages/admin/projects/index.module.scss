@@ -34,6 +34,10 @@
       align-items: center;
       padding-bottom: variables.$margin;
 
+      .container_description{
+        margin-top: variables.$margin;
+      }
+
       .projects_form {
         width: 90%;
         margin-top: variables.$big_margin;
