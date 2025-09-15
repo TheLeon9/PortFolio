@@ -22,16 +22,16 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { DEFAULT_BLACK_COLOR, DEFAULT_BACKGROUND_COLOR } from '@/constants';
 
-// For the color Picker of the Bandes
-let _projects = [];
-let _projectsRef = null;
-let _makeProjectTexture = null;
+// For the refresh of the scene
 let requestId;
-
 export function stopThreeScene() {
   if (requestId) cancelAnimationFrame(requestId);
 }
 
+// For the color Picker of the Projects Bands
+let _projects = [];
+let _projectsRef = null;
+let _makeProjectTexture = null;
 export function updateProjectBandsColor(mainColor, textColor) {
   if (!_projectsRef || !_projects) return;
 
@@ -54,6 +54,36 @@ export function updateProjectBandsColor(mainColor, textColor) {
     );
     band.material.map = tex;
     band.material.needsUpdate = true;
+  });
+}
+
+// For the color Picker of the Skills Points
+let _skills = [];
+let _skillsRef = null;
+let _makeSkillLabelTexture = null;
+export function updateSkillsColor(mainColor, textColor) {
+  if (!_skillsRef || !_skills) return;
+
+  _skillsRef.traverse((obj) => {
+    if (obj.isMesh && obj.material?.emissive) {
+      // update couleur de la boule
+      obj.material.color.set(mainColor);
+      obj.material.emissive.set(mainColor);
+    }
+
+    if (obj.isSprite && obj.material?.map && obj.userData?.text) {
+      // recrée la texture label avec la nouvelle couleur
+      const newTexture = _makeSkillLabelTexture(
+        obj.userData.text,
+        mainColor,
+        textColor
+      );
+
+      // remplace la texture sur le matériau
+      obj.material.map.dispose(); // libère l’ancienne texture
+      obj.material.map = newTexture;
+      obj.material.needsUpdate = true;
+    }
   });
 }
 
@@ -439,23 +469,36 @@ export function initThreeScene({
 
     // === Highlights ===
     ctx.font = `12px Orbitron, sans-serif`;
+    ctx.fillStyle = textColor;
     ctx.shadowBlur = 20;
     ctx.textAlign = 'right';
+    ctx.lineWidth = 0.5; // Slightly smaller stroke
+    ctx.strokeStyle =
+      textColor.toLowerCase() === DEFAULT_BACKGROUND_COLOR
+        ? DEFAULT_BLACK_COLOR
+        : DEFAULT_BACKGROUND_COLOR;
 
     const highlightStartX = sizeX / 2 + 190; // Horizontal offset from title center
     let highlightStartY = titleY + 30; // Starts below the title
     const lineHeight = 16; // Line spacing between highlights
 
     highlights.forEach((highlight) => {
+      ctx.strokeText(highlight, highlightStartX, highlightStartY);
       ctx.fillText(highlight, highlightStartX, highlightStartY);
       highlightStartY += lineHeight;
     });
 
     // === Description (with line wrapping) ===
     if (description) {
-      ctx.textAlign = 'left';
       ctx.font = `12px Orbitron, sans-serif`;
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'left';
       ctx.shadowBlur = 20;
+      ctx.lineWidth = 0.5;
+      ctx.strokeStyle =
+        textColor.toLowerCase() === DEFAULT_BACKGROUND_COLOR
+          ? DEFAULT_BLACK_COLOR
+          : DEFAULT_BACKGROUND_COLOR;
 
       // === Editable config ===
       const descStartX = 20; // Left margin
@@ -474,6 +517,7 @@ export function initThreeScene({
         const testWidth = metrics.width;
 
         if (testWidth > descMaxWidth && i > 0) {
+          ctx.strokeText(line, descStartX, y);
           ctx.fillText(line, descStartX, y);
           line = words[i] + ' ';
           y += descLineHeight;
@@ -483,6 +527,7 @@ export function initThreeScene({
       }
 
       // Draw last line
+      ctx.strokeText(line, descStartX, y);
       ctx.fillText(line, descStartX, y);
     }
 
@@ -577,32 +622,42 @@ export function initThreeScene({
   const skillsGroup = new THREE.Group();
   skillsGroup.name = 'skills-group';
   skillsRef.current = skillsGroup;
+  _skills = skills;
+  _skillsRef = skillsGroup;
+
   scene.add(skillsGroup);
 
   // Spark geometry (define before use)
-  const sparkGeo = new THREE.SphereGeometry(0.08, 16, 12); // slightly bigger + smoother
+  const sparkGeo = new THREE.SphereGeometry(0.08, 14, 14); // slightly bigger + smoother
 
   // ---------- LABEL TEXTURE ----------
-  const makeLabelTexture = (text, color = mainColor) => {
-    const size = 2048; // Ultra HD canvas
+  const makeSkillLabelTexture = (text, color, textColor) => {
+    const width = 1024;
+    const height = 256;
     const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = size;
+    canvas.width = width;
+    canvas.height = height;
     const ctx = canvas.getContext('2d');
 
-    ctx.clearRect(0, 0, size, size);
+    ctx.clearRect(0, 0, width, height);
 
-    // stronger glow
-    ctx.shadowColor = color;
-    ctx.shadowBlur = 48;
-
-    // big Orbitron font
-    const fontSize = 380;
-    ctx.font = `bold ${fontSize}px Orbitron, sans-serif`;
+    // Text styles (no background, glowing text only)
+    ctx.font = 'bold 12px Orbitron, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.shadowBlur = 20;
+    ctx.lineWidth = 0.5;
+    ctx.strokeStyle =
+      textColor.toLowerCase() === DEFAULT_BACKGROUND_COLOR
+        ? DEFAULT_BLACK_COLOR
+        : DEFAULT_BACKGROUND_COLOR;
 
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    ctx.strokeText(text, centerX, centerY);
     ctx.fillStyle = color;
-    ctx.fillText(text, size / 2, size / 2);
+    ctx.fillText(text, centerX, centerY);
 
     const tex = new THREE.CanvasTexture(canvas);
     tex.anisotropy = 16;
@@ -613,55 +668,95 @@ export function initThreeScene({
     return tex;
   };
 
-  // ---------- RANDOM POSITION (custom rules) ----------
-  const randomSkillPosition = () => {
-    let x;
-    do {
-      x = -4 + Math.random() * 8; // [-4, 4]
-    } while (Math.abs(x) < 1); // skip center zone
+  _makeSkillLabelTexture = makeSkillLabelTexture;
 
-    const y = -8; // base height
-    const z = 0 + Math.random() * 2; // depth variation
+  // ---------- MANUAL PATTERN POSITIONS ----------
+  const skillPositions = [
+    // Left side (order 1–6)
+    new THREE.Vector3(-4.0, 4.0, -4.0), // fond
+    new THREE.Vector3(-4.5, 3.2, -3.0),
+    new THREE.Vector3(-5.0, 2.4, -2.0),
+    new THREE.Vector3(-4.5, 1.6, -1.0),
+    new THREE.Vector3(-4.0, 0.8, -0.5),
+    new THREE.Vector3(-3.5, 0.0, -0.5), // plus proche de la caméra
 
-    return new THREE.Vector3(x, y, z);
+    // Right side (order 7–12 → mirror of left position)
+    new THREE.Vector3(4.0, 4.0, -4.0),
+    new THREE.Vector3(4.5, 3.2, -3.0),
+    new THREE.Vector3(5.0, 2.4, -2.0),
+    new THREE.Vector3(4.5, 1.6, -1.0),
+    new THREE.Vector3(4.0, 0.8, -0.5),
+    new THREE.Vector3(3.5, 0.0, -0.5),
+  ];
+
+  // Fonction to get the skill position depending of his order
+  const getSkillPosition = (order) => {
+    return skillPositions[order - 1] || new THREE.Vector3(0, 0, 0);
   };
+
+  // ---------- RANDOM POSITION (custom rules) ----------
+  // const randomSkillPosition = (order) => {
+  //   const isLeft = order <= 6; // 6 first to the left
+
+  //   let x;
+
+  //   if (isLeft) {
+  //     x = -8 + Math.random() * (8 - 3); // [-8, -3]
+  //   } else {
+  //     x = 3 + Math.random() * (8 - 3); // [3, 8]
+  //   }
+
+  //   const y = -2 + Math.random() * 2; // [-2, 0]
+  //   const z = -4 + Math.random() * 3; // [-4, -1]
+
+  //   return new THREE.Vector3(x, y, z);
+  // };
 
   // ---------- CREATE SKILLS ----------
   skills.forEach((sk) => {
     const sparkMat = new THREE.MeshStandardMaterial({
       color: new THREE.Color(mainColor),
       emissive: new THREE.Color(mainColor),
-      emissiveIntensity: 2.5, // brighter sparks
+      emissiveIntensity: 2, // brighter sparks
       roughness: 0.2,
       metalness: 0.1,
+      transparent: true,
+      opacity: 0,
     });
     const spark = new THREE.Mesh(sparkGeo, sparkMat);
 
-    const labelMap = makeLabelTexture(sk.value, mainColor);
+    // Create text label (canvas sprite)
+    const labelMap = makeSkillLabelTexture(
+      sk.value,
+      mainColor,
+      backgroundColor
+    );
     const aspect = labelMap.image.width / labelMap.image.height;
     const labelMat = new THREE.SpriteMaterial({
       map: labelMap,
       transparent: true,
+      opacity: 0,
       depthTest: true,
     });
     const label = new THREE.Sprite(labelMat);
     label.scale.set(6 * aspect, 2.5, 1); // much larger labels
+    label.userData.text = sk.value;
 
     // --- Place spark & label
-    const start = randomSkillPosition();
-    spark.position.copy(start);
-    label.position.copy(start).add(new THREE.Vector3(0, 1.2, 0));
-
-    // target (tu peux garder si tu veux pour ton animation d'arrivée)
-    const target = randomSkillPosition();
-    const dir = target.clone().normalize();
-
-    spark.userData = { target, dir };
-    label.userData = { target, dir, offsetY: 1.2 };
-
+    // const start = randomSkillPosition(sk.order);
+    const start = getSkillPosition(sk.order);
     const g = new THREE.Group();
+
+    // Position spark and label relative to the group center
+    spark.position.set(0, 0, 0);
+    label.position.set(0, 0.2, 0);
+
     g.add(spark);
     g.add(label);
+
+    // Position the group at the target start position
+    g.position.copy(start);
+    g.userData.initialPosition = g.position.clone();
     skillsGroup.add(g);
   });
 

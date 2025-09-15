@@ -17,8 +17,9 @@ import Cursor from '@/components/UI/Cursor';
 import { useTheme } from '@/context/ThemeContext.js';
 import {
   initThreeScene,
-  updateProjectBandsColor,
   stopThreeScene,
+  updateProjectBandsColor,
+  updateSkillsColor,
 } from '@/utils/initThreeScene';
 import { sections } from '@/constants';
 import { useConstants } from '@/context/ConstantsContext';
@@ -114,12 +115,8 @@ const Layout = ({ children }) => {
     // Update project ring textures & materials
     updateProjectBandsColor(mainColor, backgroundColor);
 
-    skillsRef.current?.traverse((obj) => {
-      if (obj.isMesh && obj.material?.emissive) {
-        obj.material.color.set(mainColor);
-        obj.material.emissive.set(mainColor);
-      }
-    });
+    // Update skills points textures & materials
+    updateSkillsColor(mainColor, backgroundColor);
   }, [mainColor, backgroundColor, TransmissionLevel]);
 
   //--------------------------------------------------+
@@ -306,36 +303,106 @@ const Layout = ({ children }) => {
     // Section 4 : Skills
     // ------------------------
     if (skillsT > 0) {
-      const phase1T = clamp01(skillsT / 0.15); // 0 → 0.15
-      const phase2T = clamp01((skillsT - 0.15) / 0.2); // 0.15 → 0.35
-      const phase3T = clamp01((skillsT - 0.35) / 0.4); // 0.35 → 0.75
+      const phase1T = clamp01(skillsT / 0.12); // 0 → 0.12
+      const phase2T = clamp01((skillsT - 0.12) / 0.16); // 0.12 → 0.28
+      const phase3T = clamp01((skillsT - 0.28) / 0.47); // 0.28 → 0.75
       const phase4T = clamp01((skillsT - 0.75) / 0.25); // 0.75 → 1.0
 
+      const skillGroups = skillsRef.current.children;
+
       // Phase 1: Wobble descends
-      if (skillsT <= 0.15) {
+      if (skillsT <= 0.12) {
         const p = easeInOut(phase1T);
         wobble.position.y = lerp(0.6, -1, p);
+
+        skillGroups.forEach((sk) => {
+          // Slight drop from the initial Y position
+          const startY = sk.userData.initialPosition.y;
+          const targetY = sk.userData.initialPosition.y - 2; // Move below initial position
+
+          sk.position.y = lerp(startY, targetY, p);
+
+          // Fade in points and labels
+          sk.children.forEach((obj) => {
+            if (obj.material) obj.material.opacity = p;
+          });
+        });
       }
 
-      // Phase 2: Wobble fixed low
-      else if (skillsT <= 0.35) {
+      // Phase 2: Quick bump up then drop
+      else if (skillsT <= 0.28) {
         wobble.position.y = -1;
+        const p = phase2T;
+
+        skillGroups.forEach((sk) => {
+          const startY = sk.userData.initialPosition.y - 2;
+          const midY = sk.userData.initialPosition.y - 1.2;
+          const endY = sk.userData.initialPosition.y - 2;
+
+          // Go up quickly, then down again
+          let y;
+          if (p < 0.5) {
+            const subP = easeOutCubic(p * 2); // first half
+            y = lerp(startY, midY, subP);
+          } else {
+            const subP = easeOutCubic((p - 0.5) * 2); // second half
+            y = lerp(midY, endY, subP);
+          }
+
+          sk.position.y = y;
+        });
       }
 
-      // Phase 3: Smooth rise + wobble rotation
+      // Phase 3: Wobble rises first, then skills rise + recenter with 0.1s delay
       else if (skillsT <= 0.75) {
         const p = easeInOut(phase3T);
+
+        // Wobble rises full time (0 → 1)
         wobble.position.y = lerp(-1, 2, p);
         wobble.rotation.y += 0.02 * (1 - p);
+
+        // Delay of 0.1s relative to total phase duration (0.55)
+        const desiredDelay = 0.2; // seconds
+        const delay = desiredDelay / 0.55; // normalise between 0 and 1
+
+        // Adjust skill progress after delay
+        const skillP = clamp01((p - delay) / (1 - delay));
+
+        skillGroups.forEach((sk) => {
+          // X recenter from initial to 0
+          const startX = sk.userData.initialPosition.x;
+          const targetX = 0;
+          sk.position.x = lerp(startX, targetX, skillP);
+
+          // Y rise from initial -2 to initial +0.5
+          const startY = sk.userData.initialPosition.y - 2;
+          const targetY = sk.userData.initialPosition.y + 0.5;
+          sk.position.y = lerp(startY, targetY, skillP);
+        });
       }
 
-      // Phase 4: Wobble stops + camera tilt
+      // Phase 4: Wobble continues up + camera tilt + skills fade out
       else {
         const p = easeOutCubic(phase4T);
 
+        // Wobble moves up and slows rotation
         wobble.position.y = lerp(2, 8, p);
         wobble.rotation.y += 0.02 * (1 - p);
+
+        // Camera tilts slightly back to default
         camera.rotation.x = lerp(0.2, 0, p);
+
+        skillGroups.forEach((sk) => {
+          // Skills follow the wobble upward, but with a delay factor
+          sk.position.y = lerp(sk.userData.initialPosition.y, 10, p * 0.6);
+
+          // Fade out points and labels
+          sk.children.forEach((obj) => {
+            if (obj.material) {
+              obj.material.opacity = 1 - p;
+            }
+          });
+        });
       }
     }
 
