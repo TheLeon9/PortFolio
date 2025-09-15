@@ -26,6 +26,12 @@ import { DEFAULT_BLACK_COLOR, DEFAULT_BACKGROUND_COLOR } from '@/constants';
 let _projects = [];
 let _projectsRef = null;
 let _makeProjectTexture = null;
+let requestId;
+
+export function stopThreeScene() {
+  if (requestId) cancelAnimationFrame(requestId);
+}
+
 export function updateProjectBandsColor(mainColor, textColor) {
   if (!_projectsRef || !_projects) return;
 
@@ -61,6 +67,7 @@ export function initThreeScene({
   TransmissionLevel,
   textRef,
   cameraRef,
+  user,
   glassRef,
   skills,
   skillsRef,
@@ -74,7 +81,7 @@ export function initThreeScene({
   //
   //--------------------------------------------------+
 
-  const white_color = '#fff';
+  const white_color = DEFAULT_BACKGROUND_COLOR;
   // const fogColor = '#d3d3d3';
 
   //--------------------------------------------------+
@@ -448,13 +455,13 @@ export function initThreeScene({
     if (description) {
       ctx.textAlign = 'left';
       ctx.font = `12px Orbitron, sans-serif`;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 20;
 
       // === Editable config ===
-      const descStartX = 50; // Left margin
-      const descStartY = titleY + 30; // Vertical offset from title
-      const descLineHeight = 16; // Line spacing
-      const descMaxWidth = 400; // Max line width
+      const descStartX = 20; // Left margin
+      const descStartY = titleY - 20; // Vertical offset from title
+      const descLineHeight = 20; // Line spacing
+      const descMaxWidth = 300; // Max line width
       // =======================
 
       const words = description.split(' ');
@@ -491,7 +498,12 @@ export function initThreeScene({
 
   _makeProjectTexture = makeProjectTexture;
 
-  projects.forEach((proj, i) => {
+  // We sort Projects by Order
+  const sortedProjects = [...projects].sort(
+    (a, b) => (a.projectNumber || 0) - (b.projectNumber || 0)
+  );
+
+  sortedProjects.forEach((proj, i) => {
     const highlights = [
       proj.highlight1,
       proj.highlight2,
@@ -792,6 +804,22 @@ export function initThreeScene({
     mouseVec.y = -(e.clientY / window.innerHeight) * 2 + 1;
   });
 
+  // PointerDown event listener
+  window.addEventListener('pointerdown', () => {
+    const intersects = raycaster.intersectObjects(
+      projectsRef.current.children,
+      true
+    );
+
+    if (intersects.length > 0) {
+      const band = intersects[0].object;
+
+      if (band.userData?.url) {
+        window.open(band.userData.url, '_blank');
+      }
+    }
+  });
+
   const animate = () => {
     const elapsedTime = clock.getElapsedTime();
 
@@ -872,7 +900,8 @@ export function initThreeScene({
     // Render the scene
     composer.render();
     // controls.update();
-    requestAnimationFrame(animate);
+    // requestAnimationFrame(animate);
+    requestId = requestAnimationFrame(animate);
   };
 
   animate();

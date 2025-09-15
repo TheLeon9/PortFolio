@@ -15,6 +15,7 @@ export const ConstantsProvider = ({ children }) => {
   const [user, setUser] = useState(staticUserList[0] || {});
   const [projects, setProjects] = useState(staticProjectsList);
   const [skills, setSkills] = useState(staticSkillsList);
+  const [isReady, setIsReady] = useState(false);
 
   // Fetch dynamic data from API
   useEffect(() => {
@@ -47,6 +48,8 @@ export const ConstantsProvider = ({ children }) => {
         if (cachedUser) setUser(JSON.parse(cachedUser));
         if (cachedProjects) setProjects(JSON.parse(cachedProjects));
         if (cachedSkills) setSkills(JSON.parse(cachedSkills));
+      } finally {
+        setIsReady(true);
       }
     }
 
@@ -105,6 +108,8 @@ export const ConstantsProvider = ({ children }) => {
         projects,
         skills,
         logged,
+        isReady,
+        setIsReady,
         // Admin
         isLogged,
         status,

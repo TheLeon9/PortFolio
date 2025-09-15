@@ -15,7 +15,11 @@ import Cursor from '@/components/UI/Cursor';
 // import SideSlider from '@/components/partials/SideSlider';
 
 import { useTheme } from '@/context/ThemeContext.js';
-import { initThreeScene, updateProjectBandsColor} from '@/utils/initThreeScene';
+import {
+  initThreeScene,
+  updateProjectBandsColor,
+  stopThreeScene,
+} from '@/utils/initThreeScene';
 import { sections } from '@/constants';
 import { useConstants } from '@/context/ConstantsContext';
 
@@ -26,10 +30,9 @@ const Layout = ({ children }) => {
     backgroundColor,
     TransmissionLevel,
     scrollProgress,
-    setScrollProgress,
     activeSection,
-    setActiveSection,
     getSectionProgress,
+    scrollToSection,
   } = useTheme();
 
   // Loader
@@ -44,7 +47,8 @@ const Layout = ({ children }) => {
   const glassRef = useRef();
   const projectsRef = useRef();
   const skillsRef = useRef();
-  const { skills, projects } = useConstants();
+  const { user, skills, projects, isReady } = useConstants();
+  const initialized = useRef(false);
   const cursorRef = useRef(null);
 
   //--------------------------------------------------+
@@ -55,24 +59,33 @@ const Layout = ({ children }) => {
 
   // Init Three JS Scene
   useEffect(() => {
-    initThreeScene({
-      canvasId: 'webgl',
-      mainColor,
-      backgroundColor,
-      wobbleRef,
-      wobblePlateRef,
-      customUniforms,
-      TransmissionLevel,
-      textRef,
-      cameraRef,
-      glassRef,
-      skills,
-      skillsRef,
-      projects,
-      projectsRef,
-      cursorRef,
-    });
-  }, []);
+    if (isReady && !initialized.current) {
+      initThreeScene({
+        canvasId: 'webgl',
+        mainColor,
+        backgroundColor,
+        wobbleRef,
+        wobblePlateRef,
+        customUniforms,
+        TransmissionLevel,
+        textRef,
+        cameraRef,
+        user,
+        glassRef,
+        skills,
+        skillsRef,
+        projects,
+        projectsRef,
+        cursorRef,
+      });
+      initialized.current = true;
+    }
+
+    return () => {
+      stopThreeScene(); // 🛑 clean when dismantling
+    };
+  }, [isReady]);
+  // }, [user, projects, skills]);
 
   //--------------------------------------------------+
   //
@@ -375,7 +388,7 @@ const Layout = ({ children }) => {
           {/* Button Home */}
           <div className={style.home_btn_cont}>
             <button
-              onClick={() => changeSection(0)}
+              onClick={() => scrollToSection(0)}
               className={`${style.home_btn} hover_target_big`}
             >
               <svg
