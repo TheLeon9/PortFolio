@@ -2,15 +2,18 @@
 import fs from 'fs';
 import path from 'path';
 
-// Import direct de ton handler Next.js
+// Import of the handler Next.js
 import handler from '../src/pages/api/constant.js';
+
+// Redifine DATABASE_URL
+process.env.DATABASE_URL = 'file:./dev.db';
 
 if (!process.env.DATABASE_URL) {
   console.warn('⚠️  DATABASE_URL not found. Skipping constants generation.');
-  process.exit(0); // exit normalement sans erreur
+  process.exit(0); // exit without error
 }
 
-// Fake request/response pour exécuter ton handler en local
+// Fake request/response to execute the handler in local
 function runApiHandler() {
   return new Promise((resolve, reject) => {
     const req = { method: 'GET' };

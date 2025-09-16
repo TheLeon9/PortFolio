@@ -1,4 +1,4 @@
-// 🚨 File generated automatically on 17/08/2025 17:03:06
+// 🚨 File generated automatically on 16/09/2025 13:37:57
 
 // 📦 Data for user
 export const userList = [
@@ -6,7 +6,7 @@ export const userList = [
   id: 1,
   lastName: 'Moracchini',
   firstName: 'Florian',
-  year: 23,
+  year: 22,
   country: 'France',
   city: 'Paris',
   linkedin: 'https://www.linkedin.com/in/florian-moracchini/',
@@ -98,7 +98,7 @@ export const projectsList = [
 },
 {
   id: 2,
-  projectNumber: 2,
+  projectNumber: 3,
   title: '3D Saber',
   description: 'Presentation of a 3D Saber',
   url: '',
@@ -107,18 +107,6 @@ export const projectsList = [
   highlight3: 'Animations',
   highlight4: 'Responsive',
   highlight5: 'ThreeJS'
-},
-{
-  id: 16,
-  projectNumber: 3,
-  title: 'Another Test',
-  description: '',
-  url: '',
-  highlight1: '',
-  highlight2: '',
-  highlight3: '',
-  highlight4: '',
-  highlight5: ''
 },
 {
   id: 19,
@@ -131,5 +119,17 @@ export const projectsList = [
   highlight3: '',
   highlight4: '',
   highlight5: ''
+},
+{
+  id: 21,
+  projectNumber: 2,
+  title: 'Beauty Tech Med',
+  description: 'Website created for the medical branch of BeautyTech, a French national leader in cosmetics. The site showcases medical devices and aesthetic machines, targeting healthcare professionals in the aesthetic industry.',
+  url: 'https://beautytech-med.fr',
+  highlight1: 'Wordpress',
+  highlight2: 'Work Study',
+  highlight3: 'CSS',
+  highlight4: 'Company',
+  highlight5: 'Medical'
 }
 ];

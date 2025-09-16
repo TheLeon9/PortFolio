@@ -1,6 +1,16 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Check if DATABASE_URL is define and not empty
+if (!process.env.DATABASE_URL || process.env.DATABASE_URL.trim() === '') {
+  console.warn(
+    '⚠️ DATABASE_URL is not set or is empty. Skipping Prisma Client initialization.'
+  );
+}
+
+const prisma =
+  process.env.DATABASE_URL && process.env.DATABASE_URL.trim() !== ''
+    ? new PrismaClient()
+    : null;
 
 // GET /api/constants
 async function handleGET(req, res) {

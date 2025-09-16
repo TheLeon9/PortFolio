@@ -5,7 +5,7 @@ import { sectionsInformation } from '@/constants';
 
 describe('IndexPage', () => {
   it('✅ displays the correct section based on activeSection', () => {
-    const activeSection = '0'; // Home
+    const activeSection = 0; // Home
     render(<IndexPage activeSection={activeSection} />);
 
     const section = sectionsInformation[parseInt(activeSection)];
