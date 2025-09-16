@@ -22,7 +22,7 @@ const IndexPage = ({ activeSection }) => {
               key={index}
             >
               <section className={style.section_top}>
-                {/* {index === 1 && <SectionAbout />} */}
+                {index === 1 && <SectionAbout />}
                 {/* {index === 2 && <SectionProject />} */}
                 {/* {index === 3 && <SectionSkill />} */}
                 {index === 4 && <SectionContact />}
