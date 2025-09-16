@@ -1,13 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 
-// Redifine DATABASE_URL
-process.env.DATABASE_URL = 'file:./dev.db';
-
 // Check if DATABASE_URL is define and not empty
 if (!process.env.DATABASE_URL || process.env.DATABASE_URL.trim() === '') {
   console.warn(
     '⚠️ DATABASE_URL is not set or is empty. Skipping Prisma Client initialization.'
   );
+  process.exit(0);
 }
 
 const prisma =

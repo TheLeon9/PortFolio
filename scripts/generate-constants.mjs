@@ -5,8 +5,8 @@ import path from 'path';
 // Import of the handler Next.js
 import handler from '../src/pages/api/constant.js';
 
-// Redifine DATABASE_URL
-process.env.DATABASE_URL = 'file:./dev.db';
+// // Redifine DATABASE_URL
+// process.env.DATABASE_URL = 'file:./dev.db';
 
 if (!process.env.DATABASE_URL) {
   console.warn('⚠️  DATABASE_URL not found. Skipping constants generation.');
