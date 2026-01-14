@@ -7,12 +7,10 @@ import LogoGitHub from 'p/img/share_img/github_logo.svg';
 import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
 import LogoMail from 'p/img/share_img/mail_logo.svg';
 
-import { imgWH } from '@/constants';
+import { imgWH, userList } from '@/constants';
 import { useTheme } from '@/context/ThemeContext';
-import { useConstants } from '@/context/ConstantsContext';
 
 const SectionContact = () => {
-  const { user } = useConstants();
   const { messageSent, setMessageSent } = useTheme();
 
   const [formData, setFormData] = useState({
@@ -42,36 +40,6 @@ const SectionContact = () => {
     setLoading(true);
     setErrorMsg('');
     setSuccessMsg('');
-
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setSuccessMsg('✅ Your message has been sent successfully!');
-        setMessageSent(true);
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          message: '',
-        });
-      } else {
-        setErrorMsg(
-          data.message || '❌ Something went wrong, please try again.'
-        );
-      }
-    } catch {
-      setErrorMsg('❌ Failed to send the message. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -162,7 +130,7 @@ const SectionContact = () => {
           />
         </div>
 
-        {user.user_contact ? (
+        {userList.user_contact ? (
           !messageSent ? (
             <>
               <button
@@ -192,7 +160,7 @@ const SectionContact = () => {
       <div className={style.images_container}>
         {/* GitHub Button */}
         <Link
-          href={user.github}
+          href={userList.github}
           target="_blank"
           className={`${style.btn_share_contact} hover_target_small`}
           aria-label="GitHub"
@@ -206,7 +174,7 @@ const SectionContact = () => {
         </Link>
         {/* LinkedIn Button */}
         <Link
-          href={user.linkedin}
+          href={userList.linkedin}
           target="_blank"
           className={`${style.btn_share_contact} hover_target_small`}
           aria-label="LinkedIn"
@@ -220,7 +188,7 @@ const SectionContact = () => {
         </Link>
         {/* Mail Button */}
         <Link
-          href={`mailto:${user.email}`}
+          href={`mailto:${userList.email}`}
           target="_blank"
           className={`${style.btn_share_contact} hover_target_small`}
           aria-label="Email"

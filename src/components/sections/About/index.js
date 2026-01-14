@@ -4,12 +4,9 @@ import style from './index.module.scss';
 
 import LogoFM from 'p/img/about/shadow_lion.png';
 
-import { useConstants } from '@/context/ConstantsContext';
+import { userList } from '@/constants';
 
 const SectionAbout = () => {
-  
-  const { user } = useConstants();
-
   return (
     <div className={style.section_about_cont}>
       <div className={style.about_wrapper}>
@@ -17,7 +14,7 @@ const SectionAbout = () => {
           <div className={style.profile_picture}>
             <Image
               src={LogoFM.src}
-              alt={`${user.firstName} ${user.lastName}`}
+              alt={`${userList.firstName} ${userList.lastName}`}
               width={200}
               height={200}
               className={style.profile_image}
@@ -28,16 +25,16 @@ const SectionAbout = () => {
               Name
               <span
                 className={style.info_value}
-              >{`${user.firstName} ${user.lastName}`}</span>
+              >{`${userList.firstName} ${userList.lastName}`}</span>
             </p>
             <p>
-              Age<span className={style.info_value}>{user.year}</span>
+              Age<span className={style.info_value}>{userList.year}</span>
             </p>
             <p>
               Location
               <span
                 className={style.info_value}
-              >{`${user.city}, ${user.country}`}</span>
+              >{`${userList.city}, ${userList.country}`}</span>
             </p>
           </div>
         </div>
@@ -57,7 +54,7 @@ const SectionAbout = () => {
             Next.js, and ⚛️ Three.js. My goal is to build responsive and
             interactive applications 💻 that provide a seamless user experience.
           </p>
-          <p>{user.description}</p>
+          <p>{userList.description}</p>
         </div>
       </div>
     </div>

@@ -9,12 +9,9 @@ import LogoLinkedin from 'p/img/share_img/linkedin_logo.svg';
 import LogoMail from 'p/img/share_img/mail_logo.svg';
 import LogoShare from 'p/img/share_img/share_logo.svg';
 
-import { imgWH } from '@/constants';
-import { useConstants } from '@/context/ConstantsContext';
+import { imgWH, userList } from '@/constants';
 
 const ShareBtn = () => {
-  
-  const { user } = useConstants();
   const [shareOpen, setShareOpen] = useState(false);
 
   const handleShareClicked = () => {
@@ -42,7 +39,7 @@ const ShareBtn = () => {
         />
       </button>
       {/* GitHub Button */}
-      <Link href={user.github} target="_blank">
+      <Link href={userList.github} target="_blank">
         <button
           className={`${style.btn_github} ${
             shareOpen ? style.btn_close : style.btn_open
@@ -57,7 +54,7 @@ const ShareBtn = () => {
         </button>
       </Link>
       {/* LinkedIn Button */}
-      <Link href={user.linkedin} target="_blank">
+      <Link href={userList.linkedin} target="_blank">
         <button
           className={`${style.btn_link} ${
             shareOpen ? style.btn_close : style.btn_open
@@ -72,7 +69,7 @@ const ShareBtn = () => {
         </button>
       </Link>
       {/* Mail Button */}
-      <Link href={`mailto:${user.email}`} target="_blank">
+      <Link href={`mailto:${userList.email}`} target="_blank">
         <button
           className={`${style.btn_mail} ${
             shareOpen ? style.btn_close : style.btn_open

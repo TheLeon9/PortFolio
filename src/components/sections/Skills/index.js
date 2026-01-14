@@ -2,16 +2,13 @@ import React from 'react';
 import style from './index.module.scss';
 
 import CardSkill from '@/components/UI/CardSkill';
-import { useConstants } from '@/context/ConstantsContext';
+import { skillsList } from '@/constants';
 
 const SectionSkill = () => {
-
-  const { skills } = useConstants();
-  
   return (
     <div className={style.section_skill_cont}>
       <div className={style.middle_wrapper}>
-        {skills
+        {skillsList
           .sort((a, b) => a.order - b.order)
           .map((item, index) => (
             <CardSkill key={index} cardTitle={item.value} />

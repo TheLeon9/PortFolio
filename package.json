@@ -5,24 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "node ./scripts/generate-constants.mjs",
     "start": "next start",
-    "lint": "next lint",
-    "test:back": "mocha \"test/handlers/*.test.mjs\" --timeout 5000",
-    "test:front": "jest --config jest.config.mjs --testMatch \"<rootDir>/test/pages/**/*.test.mjs\""
+    "lint": "next lint"
   },
   "dependencies": {
-    "@hello-pangea/dnd": "^18.0.1",
-    "@prisma/client": "^6.12.0",
-    "cookie": "^1.0.2",
     "gsap": "^3.12.5",
-    "handlebars": "^4.7.8",
-    "jsonwebtoken": "^9.0.2",
     "lil-gui": "^0.19.2",
     "next": "^15.4.5",
-    "nodemailer": "^7.0.5",
     "postprocessing": "^6.34.3",
-    "prisma": "^6.12.0",
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.71.0",
@@ -30,15 +20,7 @@
     "three-custom-shader-material": "5.4"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.7.0",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1",
-    "chai": "^5.2.1",
     "eslint": "^8",
-    "eslint-config-next": "13.5.4",
-    "jest": "^30.0.5",
-    "jest-environment-jsdom": "^30.0.5",
-    "mocha": "^11.7.1",
-    "supertest": "^7.1.4"
+    "eslint-config-next": "13.5.4"
   }
 }

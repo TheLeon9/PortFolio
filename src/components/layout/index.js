@@ -21,8 +21,7 @@ import {
   updateProjectBandsColor,
   updateSkillsColor,
 } from '@/utils/initThreeScene';
-import { sections } from '@/constants';
-import { useConstants } from '@/context/ConstantsContext';
+import { sections, userList, skillsList, projectsList } from '@/constants';
 
 const Layout = ({ children }) => {
   //  Customisation Features
@@ -48,7 +47,6 @@ const Layout = ({ children }) => {
   const glassRef = useRef();
   const projectsRef = useRef();
   const skillsRef = useRef();
-  const { user, skills, projects, isReady } = useConstants();
   const initialized = useRef(false);
   const cursorRef = useRef(null);
 
@@ -60,7 +58,7 @@ const Layout = ({ children }) => {
 
   // Init Three JS Scene
   useEffect(() => {
-    if (isReady && !initialized.current) {
+    if (!initialized.current) {
       initThreeScene({
         canvasId: 'webgl',
         mainColor,
@@ -71,11 +69,11 @@ const Layout = ({ children }) => {
         TransmissionLevel,
         textRef,
         cameraRef,
-        user,
+        userList,
         glassRef,
-        skills,
+        skillsList,
         skillsRef,
-        projects,
+        projectsList,
         projectsRef,
         cursorRef,
       });
@@ -85,7 +83,7 @@ const Layout = ({ children }) => {
     return () => {
       stopThreeScene(); // 🛑 clean when dismantling
     };
-  }, [isReady]);
+  }, []);
   // }, [user, projects, skills]);
 
   //--------------------------------------------------+

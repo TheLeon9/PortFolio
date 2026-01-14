@@ -6,12 +6,9 @@ import LogoReset from 'p/img/custom_img/reset.svg';
 import LogoChatBot from 'p/img/custom_img/chatbot.svg';
 import LogoSend from 'p/img/custom_img/send.svg';
 
-import { imgWH, predefinedQuestions } from '@/constants';
-import { useConstants } from '@/context/ConstantsContext';
+import { imgWH, predefinedQuestions, userList } from '@/constants';
 
 const ChatBot = () => {
-  const { user } = useConstants();
-
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -19,7 +16,7 @@ const ChatBot = () => {
   const [availableQuestions, setAvailableQuestions] =
     useState(predefinedQuestions);
 
-  const isOnline = user.user_chatbot === true;
+  const isOnline = userList.user_chatbot === true;
   const messagesEndRef = useRef(null);
 
   const toggleChat = () => setIsOpen(!isOpen);

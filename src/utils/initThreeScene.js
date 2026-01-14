@@ -99,9 +99,9 @@ export function initThreeScene({
   cameraRef,
   user,
   glassRef,
-  skills,
+  skillsList,
   skillsRef,
-  projects,
+  projectsList,
   projectsRef,
   cursorRef,
 }) {
@@ -422,7 +422,7 @@ export function initThreeScene({
   const projectsGroup = new THREE.Group();
   projectsGroup.name = 'projects-group';
   projectsRef.current = projectsGroup;
-  _projects = projects;
+  _projects = projectsList;
   _projectsRef = projectsGroup;
 
   scene.add(projectsGroup);
@@ -544,7 +544,7 @@ export function initThreeScene({
   _makeProjectTexture = makeProjectTexture;
 
   // We sort Projects by Order
-  const sortedProjects = [...projects].sort(
+  const sortedProjects = [...projectsList].sort(
     (a, b) => (a.projectNumber || 0) - (b.projectNumber || 0)
   );
 
@@ -622,7 +622,7 @@ export function initThreeScene({
   const skillsGroup = new THREE.Group();
   skillsGroup.name = 'skills-group';
   skillsRef.current = skillsGroup;
-  _skills = skills;
+  _skills = skillsList;
   _skillsRef = skillsGroup;
 
   scene.add(skillsGroup);
@@ -713,7 +713,7 @@ export function initThreeScene({
   // };
 
   // ---------- CREATE SKILLS ----------
-  skills.forEach((sk) => {
+  skillsList.forEach((sk) => {
     const sparkMat = new THREE.MeshStandardMaterial({
       color: new THREE.Color(mainColor),
       emissive: new THREE.Color(mainColor),
