@@ -18,6 +18,7 @@ import { useTheme } from '@/context/ThemeContext.js';
 import {
   initThreeScene,
   stopThreeScene,
+  updateAboutGlassColor,
   updateProjectBandsColor,
   updateSkillsColor,
 } from '@/utils/initThreeScene';
@@ -110,6 +111,9 @@ const Layout = ({ children }) => {
       }
     });
 
+    // Update about glass textures & materials
+    updateAboutGlassColor(mainColor, backgroundColor);
+
     // Update project ring textures & materials
     updateProjectBandsColor(mainColor, backgroundColor);
 
@@ -129,6 +133,7 @@ const Layout = ({ children }) => {
     const plane = wobblePlateRef.current;
     const group = textRef.current;
     const uniforms = customUniforms.current;
+    const glass = glassRef.current;
     const projects = projectsRef.current;
     const skills = skillsRef.current;
 
@@ -138,6 +143,7 @@ const Layout = ({ children }) => {
       !plane ||
       !group ||
       !uniforms ||
+      !glass ||
       !projects ||
       !skills
     )
@@ -219,25 +225,59 @@ const Layout = ({ children }) => {
     // Section 2: About
     // ------------------------
     if (aboutT > 0) {
-      const phase1T = clamp01(aboutT / 0.25); // Phase 1: 0.0 → 0.25
-      const phaseT = clamp01((aboutT - 0.26) / 0.74); // Phase 3: 0.26 → 1.0
+      const phase1T = clamp01(aboutT / 0.33); // Phase 1: 0.0 → 0.33
+      const phase2T = clamp01((aboutT - 0.33) / 0.33); // Phase 2: 0.33 → 0.66
+      const phase3T = clamp01((aboutT - 0.66) / 0.34); // Phase 3: 0.66 → 1.0
 
-      // Phase 1: fast approach
-      if (aboutT <= 0.25) {
-        const pA = easeOutCubic(phase1T);
-        camera.position.z = lerp(0, -3, pA);
-        wobble.position.z = lerp(0, 3, pA);
+      // Phase 1: wobble step back, glass step front
+      if (aboutT <= 0.33) {
+        const p = easeOutCubic(phase1T);
+        wobble.position.z = lerp(0, -3, p);
+
+        glass.children.forEach((frag) => {
+          const basePos = frag.userData.initialPosition;
+          frag.position.z = lerp(basePos.z, 0, p);
+          frag.position.x = basePos.x;
+          frag.position.y = basePos.y;
+          if (frag.material) {
+            frag.material.opacity = 0.4;
+            frag.material.needsUpdate = true;
+          }
+        });
       }
-      // Phase 2: very short impact
-      else if (aboutT <= 0.26) {
-        camera.position.z = -3;
-        wobble.position.z = 3;
+      // Phase 2: cam step front, fragments move from 0 to 2
+      else if (aboutT <= 0.66) {
+        const p = easeOutCubic(phase2T);
+        camera.position.z = lerp(0, -3, p);
+
+        glass.children.forEach((frag) => {
+          const basePos = frag.userData.initialPosition;
+          frag.position.z = lerp(0, 1, p);
+          frag.position.x = basePos.x;
+          frag.position.y = basePos.y;
+          if (frag.material) {
+            frag.material.opacity = 0.4;
+            frag.material.needsUpdate = true;
+          }
+        });
       }
-      // Phase 3: return
+      // Phase 3: wobble & cam return to 0, fragments return to initial position
       else {
-        const pA = easeInOut(phaseT);
-        camera.position.z = lerp(-3, 0, pA);
-        wobble.position.z = lerp(3, 0, pA);
+        const p = easeInOut(phase3T);
+        camera.position.z = lerp(-3, 0, p);
+        wobble.position.z = lerp(-3, 0, p);
+
+        glass.children.forEach((frag) => {
+          const basePos = frag.userData.initialPosition;
+          frag.position.z = lerp(1, basePos.z, p);
+          frag.position.x = basePos.x;
+          frag.position.y = basePos.y;
+
+          if (frag.material) {
+            frag.material.opacity = 0.4;
+            frag.material.needsUpdate = true;
+          }
+        });
       }
     }
 

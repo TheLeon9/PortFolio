@@ -20,12 +20,35 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 // Temporary
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { DEFAULT_BLACK_COLOR, DEFAULT_BACKGROUND_COLOR } from '@/constants';
+import {
+  DEFAULT_BLACK_COLOR,
+  DEFAULT_BACKGROUND_COLOR,
+  userList,
+} from '@/constants';
 
 // For the refresh of the scene
 let requestId;
 export function stopThreeScene() {
   if (requestId) cancelAnimationFrame(requestId);
+}
+
+// For the color Picker of the About Glass
+let _aboutFrag = [];
+let _aboutRef = null;
+let _makeAboutTexture = null;
+export function updateAboutGlassColor(mainColor, textColor) {
+  if (!_aboutRef) return;
+
+  _aboutRef.children.forEach((glass, i) => {
+    const frag = _aboutFrag[i];
+    const tex = _makeAboutTexture(frag.label, mainColor, textColor);
+
+    if (glass.material.map) {
+      glass.material.map.dispose();
+    }
+    glass.material.map = tex;
+    glass.material.needsUpdate = true;
+  });
 }
 
 // For the color Picker of the Projects Bands
@@ -52,6 +75,9 @@ export function updateProjectBandsColor(mainColor, textColor) {
       mainColor,
       textColor
     );
+    if (band.material.map) {
+      band.material.map.dispose();
+    }
     band.material.map = tex;
     band.material.needsUpdate = true;
   });
@@ -66,21 +92,20 @@ export function updateSkillsColor(mainColor, textColor) {
 
   _skillsRef.traverse((obj) => {
     if (obj.isMesh && obj.material?.emissive) {
-      // update couleur de la boule
       obj.material.color.set(mainColor);
       obj.material.emissive.set(mainColor);
     }
 
     if (obj.isSprite && obj.material?.map && obj.userData?.text) {
-      // recrée la texture label avec la nouvelle couleur
       const newTexture = _makeSkillLabelTexture(
         obj.userData.text,
         mainColor,
         textColor
       );
 
-      // remplace la texture sur le matériau
-      obj.material.map.dispose(); // libère l’ancienne texture
+      if (obj.material.map) {
+        obj.material.map.dispose();
+      }
       obj.material.map = newTexture;
       obj.material.needsUpdate = true;
     }
@@ -415,6 +440,147 @@ export function initThreeScene({
 
   //--------------------------------------------------+
   //
+  // About Glass Fragments
+  //
+  //--------------------------------------------------+
+
+  // ---------- DATA ----------
+  const aboutFragmentsData = [
+    {
+      label: userList.lastName,
+      type: 'lastname',
+    },
+    {
+      label: userList.firstName,
+      type: 'firstname',
+    },
+    {
+      label: `${userList.year} years old`,
+      type: 'age',
+    },
+    {
+      label: `${userList.city}, ${userList.country}`,
+      type: 'location',
+    },
+    {
+      label: userList.description,
+      type: 'description',
+    },
+  ];
+
+  const aboutGlassGroup = new THREE.Group();
+  aboutGlassGroup.name = 'about-glass-group';
+  glassRef.current = aboutGlassGroup;
+  _aboutFrag = aboutFragmentsData;
+  _aboutRef = aboutGlassGroup;
+
+  scene.add(aboutGlassGroup);
+
+  // ---------- TEXTURE TEXT (CANVAS) ----------
+  const makeAboutTexture = (text, colorBg, textColor) => {
+    const sizeX = 1024;
+    const sizeY = 256;
+    const canvas = document.createElement('canvas');
+    canvas.width = sizeX;
+    canvas.height = sizeY;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, sizeX, sizeY);
+
+    // === Background ===
+    ctx.fillStyle = colorBg;
+    ctx.fillRect(0, 0, sizeX, sizeY);
+
+    // === Common text styles ===
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowBlur = 40;
+
+    // === Text ===
+    ctx.font = 'bold 60px Orbitron, sans-serif';
+    ctx.lineWidth = 2;
+    ctx.strokeStyle =
+      textColor.toLowerCase() === DEFAULT_BACKGROUND_COLOR
+        ? DEFAULT_BLACK_COLOR
+        : DEFAULT_BACKGROUND_COLOR;
+
+    ctx.strokeText(text, sizeX / 2, sizeY / 2);
+    ctx.fillStyle = textColor;
+    ctx.fillText(text, sizeX / 2, sizeY / 2);
+
+    // === Create texture from canvas ===
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.anisotropy = 16;
+    tex.needsUpdate = true;
+    tex.minFilter = THREE.LinearMipMapLinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+
+    return tex;
+  };
+
+  _makeAboutTexture = makeAboutTexture;
+
+  // ---------- MANUAL ABOUT POSITIONS ----------
+  const aboutPositions = [
+    new THREE.Vector3(-2, 2, 10), // lastname
+    new THREE.Vector3(2, 2, 10), // firstname
+    new THREE.Vector3(-3, 0, 10), // age
+    new THREE.Vector3(3, 0, 10), // location
+    new THREE.Vector3(0, -2, 10), // description
+  ];
+
+  // Helper
+  const getAboutPosition = (index) => {
+    return aboutPositions[index] || new THREE.Vector3(0, 0, 0);
+  };
+
+  // ---------- CREATION FRAGMENTS ----------
+  aboutFragmentsData.forEach((frag, i) => {
+    const tex = makeAboutTexture(frag.label, mainColor, backgroundColor);
+
+    const geo = new THREE.BoxGeometry(2, 1, 0.1);
+
+    const mat = new THREE.MeshPhysicalMaterial({
+      map: tex,
+      transparent: true,
+      opacity: 0.4,
+      roughness: 0.15,
+      metalness: 0,
+      transmission: 1.0,
+      thickness: 0.5,
+      ior: 1.1,
+      clearcoat: 0.5,
+      side: THREE.FrontSide,
+    });
+
+    const glass = new THREE.Mesh(geo, mat);
+
+    // ---- POSITION
+    const start = getAboutPosition(i);
+
+    // ---- ROTATION
+    if (start.x === 0) {
+      glass.rotation.x = -0.2;
+      glass.rotation.y = 0;
+    } else if (start.x > 0) {
+      glass.rotation.y = -0.2;
+      glass.rotation.x = 0;
+    } else if (start.x < 0) {
+      glass.rotation.y = 0.2;
+      glass.rotation.x = 0;
+    } else {
+      glass.rotation.set(0, 0, 0);
+    }
+
+    // Stacked position
+    glass.position.copy(start);
+    glass.userData.initialPosition = start.clone();
+    glass.userData.initialRotation = glass.rotation.clone();
+    aboutGlassGroup.add(glass);
+  });
+
+  //--------------------------------------------------+
+  //
   // Project Bands
   //
   //--------------------------------------------------+
@@ -619,6 +785,7 @@ export function initThreeScene({
   //
   //--------------------------------------------------+
 
+  // ---------- GROUP ----------
   const skillsGroup = new THREE.Group();
   skillsGroup.name = 'skills-group';
   skillsRef.current = skillsGroup;
@@ -995,7 +1162,7 @@ export function initThreeScene({
     // Render the scene
     composer.render();
     // controls.update();
-    // requestAnimationFrame(animate);
+
     requestId = requestAnimationFrame(animate);
   };
 
