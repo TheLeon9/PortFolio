@@ -28,8 +28,14 @@ import {
 
 // For the refresh of the scene
 let requestId;
+let _cleanup = null;
+
 export function stopThreeScene() {
   if (requestId) cancelAnimationFrame(requestId);
+  if (_cleanup) {
+    _cleanup();
+    _cleanup = null;
+  }
 }
 
 // For the color Picker of the About Glass
@@ -132,6 +138,39 @@ export function initThreeScene({
 }) {
   //--------------------------------------------------+
   //
+  // Resource Tracking for Cleanup
+  //
+  //--------------------------------------------------+
+
+  const resources = {
+    geometries: [],
+    materials: [],
+    textures: [],
+    eventListeners: [],
+  };
+
+  const trackGeometry = (geo) => {
+    resources.geometries.push(geo);
+    return geo;
+  };
+
+  const trackMaterial = (mat) => {
+    resources.materials.push(mat);
+    return mat;
+  };
+
+  const trackTexture = (tex) => {
+    resources.textures.push(tex);
+    return tex;
+  };
+
+  const addEventListenerTracked = (target, event, handler, options) => {
+    target.addEventListener(event, handler, options);
+    resources.eventListeners.push({ target, event, handler, options });
+  };
+
+  //--------------------------------------------------+
+  //
   // Color SCSS
   //
   //--------------------------------------------------+
@@ -182,7 +221,7 @@ export function initThreeScene({
   customUniforms.current = uniforms;
 
   // Material
-  const material = new CustomShaderMaterial({
+  const material = trackMaterial(new CustomShaderMaterial({
     // Custom Shader Material
     baseMaterial: THREE.MeshPhysicalMaterial,
     vertexShader: wobbleVertexShader,
@@ -200,10 +239,10 @@ export function initThreeScene({
     thickness: 1.5,
     transparent: true,
     wireframe: false,
-  });
+  }));
 
   // Material
-  const depthMaterial = new CustomShaderMaterial({
+  const depthMaterial = trackMaterial(new CustomShaderMaterial({
     // Custom Shader Material
     baseMaterial: THREE.MeshDepthMaterial,
     vertexShader: wobbleVertexShader,
@@ -213,10 +252,10 @@ export function initThreeScene({
 
     // MeshDepthMaterial
     depthPacking: THREE.RGBADepthPacking,
-  });
+  }));
 
   // Gradial Material
-  let radialMaterial = new THREE.ShaderMaterial({
+  let radialMaterial = trackMaterial(new THREE.ShaderMaterial({
     uniforms: {
       colorInt: { value: new THREE.Color(mainColor) },
       colorExt: { value: new THREE.Color(mainColor) },
@@ -236,7 +275,7 @@ export function initThreeScene({
             vec2 uv = (vUv - 0.5) * vec2(ratio, 1.);
             gl_FragColor = vec4( mix( colorInt, colorExt, length(uv)), .4);
           }`,
-  });
+  }));
 
   //--------------------------------------------------+
   //
@@ -310,7 +349,7 @@ export function initThreeScene({
     icoWidth = 2.4;
     icoDetails = 40;
   }
-  let sphereGeometry = new THREE.IcosahedronGeometry(icoWidth, icoDetails);
+  let sphereGeometry = trackGeometry(new THREE.IcosahedronGeometry(icoWidth, icoDetails));
   sphereGeometry = mergeVertices(sphereGeometry);
   sphereGeometry.computeTangents();
 
@@ -336,12 +375,12 @@ export function initThreeScene({
     planeH = 8;
     planeDetailsXY = 40;
   }
-  let planeGeometry = new THREE.PlaneGeometry(
+  let planeGeometry = trackGeometry(new THREE.PlaneGeometry(
     planeW,
     planeH,
     planeDetailsXY,
     planeDetailsXY
-  );
+  ));
   planeGeometry = mergeVertices(planeGeometry);
   planeGeometry.computeTangents();
 
@@ -355,7 +394,7 @@ export function initThreeScene({
   wobblePlateRef.current = wavePlane;
 
   // Background radial
-  const radialPlaneGeometry = new THREE.PlaneGeometry(2, 2);
+  const radialPlaneGeometry = trackGeometry(new THREE.PlaneGeometry(2, 2));
   const radialPlane = new THREE.Mesh(radialPlaneGeometry, radialMaterial);
 
   //scene.add(wavePlane, radialPlane);
@@ -509,7 +548,7 @@ export function initThreeScene({
     ctx.fillText(text, sizeX / 2, sizeY / 2);
 
     // === Create texture from canvas ===
-    const tex = new THREE.CanvasTexture(canvas);
+    const tex = trackTexture(new THREE.CanvasTexture(canvas));
     tex.anisotropy = 16;
     tex.needsUpdate = true;
     tex.minFilter = THREE.LinearMipMapLinearFilter;
@@ -538,9 +577,9 @@ export function initThreeScene({
   aboutFragmentsData.forEach((frag, i) => {
     const tex = makeAboutTexture(frag.label, mainColor, backgroundColor);
 
-    const geo = new THREE.BoxGeometry(2, 1, 0.1);
+    const geo = trackGeometry(new THREE.BoxGeometry(2, 1, 0.1));
 
-    const mat = new THREE.MeshPhysicalMaterial({
+    const mat = trackMaterial(new THREE.MeshPhysicalMaterial({
       map: tex,
       transparent: true,
       opacity: 0.4,
@@ -551,7 +590,7 @@ export function initThreeScene({
       ior: 1.1,
       clearcoat: 0.5,
       side: THREE.FrontSide,
-    });
+    }));
 
     const glass = new THREE.Mesh(geo, mat);
 
@@ -698,7 +737,7 @@ export function initThreeScene({
     }
 
     // === Create texture from canvas ===
-    const tex = new THREE.CanvasTexture(canvas);
+    const tex = trackTexture(new THREE.CanvasTexture(canvas));
     tex.anisotropy = 16;
     tex.needsUpdate = true;
     tex.minFilter = THREE.LinearMipMapLinearFilter;
@@ -743,9 +782,9 @@ export function initThreeScene({
       new THREE.Vector2(innerRadius, -height / 2),
     ];
 
-    const geo = new THREE.LatheGeometry(points, 256);
+    const geo = trackGeometry(new THREE.LatheGeometry(points, 256));
 
-    const mat = new THREE.MeshPhysicalMaterial({
+    const mat = trackMaterial(new THREE.MeshPhysicalMaterial({
       map: tex,
       transparent: true,
       opacity: 0.4,
@@ -756,7 +795,7 @@ export function initThreeScene({
       ior: 1.1,
       clearcoat: 0.5,
       side: THREE.DoubleSide,
-    });
+    }));
 
     const ring = new THREE.Mesh(geo, mat);
     const startOffset = 10;
@@ -795,7 +834,7 @@ export function initThreeScene({
   scene.add(skillsGroup);
 
   // Spark geometry (define before use)
-  const sparkGeo = new THREE.SphereGeometry(0.08, 14, 14); // slightly bigger + smoother
+  const sparkGeo = trackGeometry(new THREE.SphereGeometry(0.08, 14, 14)); // slightly bigger + smoother
 
   // ---------- LABEL TEXTURE ----------
   const makeSkillLabelTexture = (text, color, textColor) => {
@@ -826,7 +865,7 @@ export function initThreeScene({
     ctx.fillStyle = color;
     ctx.fillText(text, centerX, centerY);
 
-    const tex = new THREE.CanvasTexture(canvas);
+    const tex = trackTexture(new THREE.CanvasTexture(canvas));
     tex.anisotropy = 16;
     tex.needsUpdate = true;
     tex.minFilter = THREE.LinearMipMapLinearFilter;
@@ -881,7 +920,7 @@ export function initThreeScene({
 
   // ---------- CREATE SKILLS ----------
   skillsList.forEach((sk) => {
-    const sparkMat = new THREE.MeshStandardMaterial({
+    const sparkMat = trackMaterial(new THREE.MeshStandardMaterial({
       color: new THREE.Color(mainColor),
       emissive: new THREE.Color(mainColor),
       emissiveIntensity: 2, // brighter sparks
@@ -889,7 +928,7 @@ export function initThreeScene({
       metalness: 0.1,
       transparent: true,
       opacity: 0,
-    });
+    }));
     const spark = new THREE.Mesh(sparkGeo, sparkMat);
 
     // Create text label (canvas sprite)
@@ -899,12 +938,12 @@ export function initThreeScene({
       backgroundColor
     );
     const aspect = labelMap.image.width / labelMap.image.height;
-    const labelMat = new THREE.SpriteMaterial({
+    const labelMat = trackMaterial(new THREE.SpriteMaterial({
       map: labelMap,
       transparent: true,
       opacity: 0,
       depthTest: true,
-    });
+    }));
     const label = new THREE.Sprite(labelMat);
     label.scale.set(6 * aspect, 2.5, 1); // much larger labels
     label.userData.text = sk.value;
@@ -957,7 +996,7 @@ export function initThreeScene({
     pixelRatio: Math.min(window.devicePixelRatio, 2),
   };
 
-  window.addEventListener('resize', () => {
+  const handleResize = () => {
     // Update sizes
     sizes.width = window.innerWidth;
     sizes.height = window.innerHeight;
@@ -970,7 +1009,8 @@ export function initThreeScene({
     // Update renderer
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(sizes.pixelRatio);
-  });
+  };
+  addEventListenerTracked(window, 'resize', handleResize);
 
   //--------------------------------------------------+
   //
@@ -1022,10 +1062,11 @@ export function initThreeScene({
     y: 0,
   };
 
-  window.addEventListener('mousemove', (event) => {
+  const handleMouseMove = (event) => {
     mouse.x = (event.clientX / sizes.width) * 2 - 1;
     mouse.y = -(event.clientY / sizes.height) * 2 + 1;
-  });
+  };
+  addEventListenerTracked(window, 'mousemove', handleMouseMove);
 
   //--------------------------------------------------+
   //
@@ -1061,13 +1102,14 @@ export function initThreeScene({
   let hoveredBand = null; // track the hovered element
 
   // Mouse event listener
-  window.addEventListener('mousemove', (e) => {
+  const handleMouseVec = (e) => {
     mouseVec.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouseVec.y = -(e.clientY / window.innerHeight) * 2 + 1;
-  });
+  };
+  addEventListenerTracked(window, 'mousemove', handleMouseVec);
 
   // PointerDown event listener
-  window.addEventListener('pointerdown', () => {
+  const handlePointerDown = () => {
     const intersects = raycaster.intersectObjects(
       projectsRef.current.children,
       true
@@ -1080,7 +1122,8 @@ export function initThreeScene({
         window.open(band.userData.url, '_blank');
       }
     }
-  });
+  };
+  addEventListenerTracked(window, 'pointerdown', handlePointerDown);
 
   const animate = () => {
     const elapsedTime = clock.getElapsedTime();
@@ -1167,4 +1210,87 @@ export function initThreeScene({
   };
 
   animate();
+
+  //--------------------------------------------------+
+  //
+  // Cleanup Function
+  //
+  //--------------------------------------------------+
+
+  _cleanup = () => {
+    // Stop animation loop
+    if (requestId) {
+      cancelAnimationFrame(requestId);
+      requestId = null;
+    }
+
+    // Remove all event listeners
+    resources.eventListeners.forEach(({ target, event, handler, options }) => {
+      target.removeEventListener(event, handler, options);
+    });
+
+    // Dispose all textures
+    resources.textures.forEach((texture) => {
+      if (texture && texture.dispose) {
+        texture.dispose();
+      }
+    });
+
+    // Dispose all materials
+    resources.materials.forEach((material) => {
+      if (material && material.dispose) {
+        material.dispose();
+      }
+    });
+
+    // Dispose all geometries
+    resources.geometries.forEach((geometry) => {
+      if (geometry && geometry.dispose) {
+        geometry.dispose();
+      }
+    });
+
+    // Dispose post-processing
+    if (composer) {
+      composer.dispose();
+    }
+
+    // Dispose renderer
+    if (renderer) {
+      renderer.dispose();
+      renderer.forceContextLoss();
+    }
+
+    // Clear scene
+    scene.traverse((object) => {
+      if (object.geometry) {
+        object.geometry.dispose();
+      }
+      if (object.material) {
+        if (Array.isArray(object.material)) {
+          object.material.forEach((mat) => mat.dispose());
+        } else {
+          object.material.dispose();
+        }
+      }
+    });
+    scene.clear();
+
+    // Reset global refs
+    _aboutFrag = [];
+    _aboutRef = null;
+    _makeAboutTexture = null;
+    _projects = [];
+    _projectsRef = null;
+    _makeProjectTexture = null;
+    _skills = [];
+    _skillsRef = null;
+    _makeSkillLabelTexture = null;
+
+    // Clear resources arrays
+    resources.geometries.length = 0;
+    resources.materials.length = 0;
+    resources.textures.length = 0;
+    resources.eventListeners.length = 0;
+  };
 }

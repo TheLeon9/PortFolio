@@ -4,6 +4,8 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useMemo,
+  useCallback,
 } from 'react';
 
 import {
@@ -59,7 +61,7 @@ export const ThemeProvider = ({ children }) => {
     }
   }, [musicActive]);
 
-  const toggleMusic = () => setMusicActive((prev) => !prev);
+  const toggleMusic = useCallback(() => setMusicActive((prev) => !prev), []);
 
   // Message Sent
   const [messageSent, setMessageSent] = useState(false);
@@ -139,7 +141,7 @@ export const ThemeProvider = ({ children }) => {
   }, [scrollProgress, activeSection]);
 
   // Programmatic scroll (e.g., triggered from NavBar)
-  const scrollToSection = (index) => {
+  const scrollToSection = useCallback((index) => {
     // Check if the index is valid
     if (index < 0 || index >= sections.length) return;
 
@@ -158,42 +160,58 @@ export const ThemeProvider = ({ children }) => {
       duration: 2, // Scroll duration
       ease: 'power3.inOut', // Smooth easing effect
     });
-  };
+  }, []);
 
   // Relative section progress
-  function getSectionProgress(scrollProgress, range) {
+  const getSectionProgress = useCallback((scrollProgress, range) => {
     const [min, max] = range;
     return Math.min(Math.max((scrollProgress - min) / (max - min), 0), 1);
-  }
+  }, []);
 
   // useEffect(() => {
   //   console.log('Scroll progress:', scrollProgress.toFixed(2));
   // }, [scrollProgress]);
 
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({
+      mainColor,
+      setMainColor,
+      backgroundColor,
+      setBackgroundColor,
+      textColor,
+      setTextColor,
+      TransmissionLevel,
+      SetTransmissionLevel,
+      musicActive,
+      setMusicActive,
+      toggleMusic,
+      messageSent,
+      setMessageSent,
+      scrollProgress,
+      setScrollProgress,
+      activeSection,
+      setActiveSection,
+      scrollToSection,
+      getSectionProgress,
+    }),
+    [
+      mainColor,
+      backgroundColor,
+      textColor,
+      TransmissionLevel,
+      musicActive,
+      toggleMusic,
+      messageSent,
+      scrollProgress,
+      activeSection,
+      scrollToSection,
+      getSectionProgress,
+    ]
+  );
+
   return (
-    <ThemeContext.Provider
-      value={{
-        mainColor,
-        setMainColor,
-        backgroundColor,
-        setBackgroundColor,
-        textColor,
-        setTextColor,
-        TransmissionLevel,
-        SetTransmissionLevel,
-        musicActive,
-        setMusicActive,
-        toggleMusic,
-        messageSent,
-        setMessageSent,
-        scrollProgress,
-        setScrollProgress,
-        activeSection,
-        setActiveSection,
-        scrollToSection,
-        getSectionProgress,
-      }}
-    >
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

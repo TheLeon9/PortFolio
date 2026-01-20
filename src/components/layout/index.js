@@ -1,18 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import style from './index.module.scss';
 import * as THREE from 'three';
 
-// Components
-import NavBar from '@/components/partials/NavBar';
-import ScrollBtn from '@/components/partials/ScrollBtn';
-import ShareBtn from '@/components/partials/ShareBtn';
+// Critical components (loaded immediately)
 import Loader from '@/components/partials/Loader';
-import ColorPicker from '@/components/partials/ColorPicker';
-import MusicSelector from '@/components/partials/MusicSelector';
-import ScrollProgress from '@/components/partials/ScrollProgress';
-import ChatBot from '@/components/partials/ChatBot';
 import Cursor from '@/components/UI/Cursor';
-// import SideSlider from '@/components/partials/SideSlider';
+
+// Non-critical components (lazy loaded)
+const NavBar = dynamic(() => import('@/components/partials/NavBar'), {
+  ssr: false,
+});
+const ScrollBtn = dynamic(() => import('@/components/partials/ScrollBtn'), {
+  ssr: false,
+});
+const ShareBtn = dynamic(() => import('@/components/partials/ShareBtn'), {
+  ssr: false,
+});
+const ColorPicker = dynamic(() => import('@/components/partials/ColorPicker'), {
+  ssr: false,
+});
+const MusicSelector = dynamic(
+  () => import('@/components/partials/MusicSelector'),
+  { ssr: false }
+);
+const ScrollProgress = dynamic(
+  () => import('@/components/partials/ScrollProgress'),
+  { ssr: false }
+);
+const ChatBot = dynamic(() => import('@/components/partials/ChatBot'), {
+  ssr: false,
+});
+// const SideSlider = dynamic(() => import('@/components/partials/SideSlider'), { ssr: false });
 
 import { useTheme } from '@/context/ThemeContext.js';
 import {
@@ -83,6 +102,7 @@ const Layout = ({ children }) => {
 
     return () => {
       stopThreeScene(); // 🛑 clean when dismantling
+      initialized.current = false; // Allow reinitialization on remount
     };
   }, []);
   // }, [user, projects, skills]);
