@@ -74,7 +74,8 @@ You can visit the live site at [https://port-folio-peach-kappa.vercel.app/](http
 
 ## 🏯 License
 
-This project is licensed under the [MIT License](LICENSE.md) - share, modify, live in peace! ☠️
+This project is not licensed for public use.
+All rights reserved. ☠️
 
 ---
 

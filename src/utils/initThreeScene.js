@@ -627,7 +627,6 @@ export function initThreeScene({
   const projectsGroup = new THREE.Group();
   projectsGroup.name = 'projects-group';
   projectsRef.current = projectsGroup;
-  _projects = projectsList;
   _projectsRef = projectsGroup;
 
   scene.add(projectsGroup);
@@ -752,6 +751,7 @@ export function initThreeScene({
   const sortedProjects = [...projectsList].sort(
     (a, b) => (a.projectNumber || 0) - (b.projectNumber || 0)
   );
+  _projects = sortedProjects;
 
   sortedProjects.forEach((proj, i) => {
     const highlights = [

@@ -8,7 +8,7 @@ const SectionProject = () => {
   return (
     <div className={style.section_project_cont}>
       <div className={style.middle_project_wrapper}>
-        {projectsList
+        {[...projectsList]
           .sort((a, b) => a.projectNumber - b.projectNumber)
           .map((item, index) => (
             <CardProject
