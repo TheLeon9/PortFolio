@@ -1,22 +1,28 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// Sentence — Animated "Imagine • Create • Inspire" tagline
 //
-//          SENTENCE
-//
-// ------------------------------+
+// Two visual variants: light (used on the dark loader background) and dark
+// (used on the light section header background). The decorative dots can
+// pulse with the loading animation when the parent passes `loading=true`.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Sentence wrapper --------------------------------------------------------
+// Holds the words + the dot dividers in a horizontal row. The fadeIn
+// keyframe plays once when the component mounts.
 .loader_title {
   width: 100%;
-  font-weight: variables.$font_weight_regular;
+  font-weight: $font_weight_regular;
   display: flex;
   align-items: center;
-  animation: fadeIn variables.$text_animation ease-in;
+  animation: fadeIn $text_animation ease-in;
 
+  // Mount entrance: slide up from a positive Y offset while fading in.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(variables.$text_animation_margin);
+      transform: translateY($text_animation_margin);
     }
     to {
       opacity: 1;
@@ -24,34 +30,52 @@
     }
   }
 
+  // Light variant — used on the dark loader background.
   &_white {
-    font-family: variables.$first_font;
-    font-size: variables.$medium_font_size;
-    color: variables.$white_color;
+    font-family: $first_font;
+    font-size: $medium_font_size;
+    color: $white_color;
     justify-content: center;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$small_small_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
     }
   }
 
+  // Dark variant — used on the light section header background.
   &_black {
-    font-family: variables.$second_font;
-    font-size: variables.$font_size;
-    color: variables.$text_color;
-    margin-top: variables.$margin;
+    font-family: $second_font;
+    font-size: $font_size;
+    color: $text_color;
+    margin-top: $small_margin;
     justify-content: flex-start;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      justify-content: center;
+    @media only screen and (max-width: $phone_width) {
+      justify-content: flex-start;
+      font-size: $small_small_small_font_size;
+      margin-top: $small_small_margin;
     }
   }
 
+  // Decorative dot between two words. Coloured with the live brand colour.
   .word_dot {
     width: 4px;
     height: 4px;
     background-color: var(--color-primary);
-    border-radius: variables.$circle_border_radius;
-    margin: 0 variables.$small_margin;
+    border-radius: $circle_border_radius;
+    margin: 0 $small_margin;
+
+    // Loading variant — used by the loader, swaps to the static brand
+    // colour so it doesn't follow the live ColorPicker.
+    &_loading {
+      background-color: $main_color;
+    }
+
+    // Mobile: smaller dots + tighter spacing.
+    @media only screen and (max-width: $phone_width) {
+      width: 3px;
+      height: 3px;
+      margin: 0 $small_small_margin;
+    }
   }
 }

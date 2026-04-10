@@ -1,13 +1,54 @@
+//=============================================================================
+// Layout — Global wrapper: 3D scene init, per-section animations, floating UI
+//
+// This is the heart of the React side of the portfolio. Responsibilities:
+//   1. Mount the Three.js scene once (via initThreeScene) and tear it down
+//      on unmount.
+//   2. Hold every React ref that the Three.js scene needs (sphere, plane,
+//      groups, camera, cursor, ...).
+//   3. Listen to scrollProgress from the ThemeContext and run the per-
+//      section 3D animations (Home, About, Projects, Skills, Contact).
+//   4. Push colour changes (ColorPicker) into the three layers (uniforms,
+//      canvas textures, CSS variables) on every theme change.
+//   5. Render the floating UI (Cursor, NavBar, ColorPicker, ChatBot, ...)
+//      around the canvas.
+//=============================================================================
+
+//-- Imports ------------------------------------------------------------------
+// React core hooks.
 import React, { useState, useEffect, useRef } from 'react';
+
+// `next/dynamic` is used for lazy-loading the non-critical UI partials so
+// the initial bundle stays small and the canvas appears as fast as possible.
 import dynamic from 'next/dynamic';
-import style from './index.module.scss';
-import * as THREE from 'three';
 
-// Critical components (loaded immediately)
+// Global theme/scroll/active section state.
+import { useTheme } from '@/context/ThemeContext.js';
+
+// Public API of the Three.js scene module.
+import {
+  initThreeScene,
+  initDebugGUI,
+  stopThreeScene,
+  updateAboutGlassColor,
+  updateProjectBandsColor,
+  updateSkillsColor,
+  updateRadialColor,
+  syncDebugDisplay,
+  isSecondColorManual,
+} from '@/utils/initThreeScene';
+
+// Static data: user info, skills and projects.
+import { userList, skillsList, projectsList } from '@/constants';
+
+// Critical UI components — loaded immediately because they appear from the
+// very first frame (loader, custom cursor, error boundary).
 import Loader from '@/components/partials/Loader';
-import Cursor from '@/components/UI/Cursor';
+import Cursor from '@/components/layout/Cursor';
+import ErrorBoundary from '@/components/layout/ErrorBoundary';
 
-// Non-critical components (lazy loaded)
+// Non-critical UI partials — lazy loaded (`ssr: false` so they only mount
+// client-side, after hydration).
 const NavBar = dynamic(() => import('@/components/partials/NavBar'), {
   ssr: false,
 });
@@ -31,473 +72,176 @@ const ScrollProgress = dynamic(
 const ChatBot = dynamic(() => import('@/components/partials/ChatBot'), {
   ssr: false,
 });
-// const SideSlider = dynamic(() => import('@/components/partials/SideSlider'), { ssr: false });
+const Portrait_Overlay = dynamic(
+  () => import('@/components/partials/Portrait_Overlay'),
+  { ssr: false }
+);
 
-import { useTheme } from '@/context/ThemeContext.js';
-import {
-  initThreeScene,
-  stopThreeScene,
-  updateAboutGlassColor,
-  updateProjectBandsColor,
-  updateSkillsColor,
-} from '@/utils/initThreeScene';
-import { sections, userList, skillsList, projectsList } from '@/constants';
+// CSS module for the layout shell.
+import style from './index.module.scss';
 
+/**
+ * Layout
+ * Compose the Three.js scene, animate it section by section based on the
+ * scroll progress, and render the floating React UI around the canvas.
+ *
+ * The per-section 3D animations used to live in a giant `useEffect` here,
+ * re-running on every React render of `scrollProgress`. They have been
+ * moved into `src/utils/three/sectionAnimations.js` and are now called
+ * directly from the RAF loop in `animationLoop.js`, so React is no longer
+ * on the hot path of a scroll.
+ */
 const Layout = ({ children }) => {
-  //  Customisation Features
+  //-- State / Refs -----------------------------------------------------------
+
+  // Pull global state from the ThemeContext.
   const {
-    mainColor,
-    backgroundColor,
-    TransmissionLevel,
-    scrollProgress,
-    activeSection,
-    getSectionProgress,
-    scrollToSection,
+    mainColor,                // current main colour (hex)
+    setMainColor,             // setter (used by the debug GUI callback)
+    backgroundColor,          // current background colour (hex)
+    TransmissionLevel,        // glass transparency 0..1
+    activeSection,            // 0..4 detected from scrollProgress
+    scrollProxyRef,           // live scroll proxy ref (read each frame in RAF)
+    scrollToSection,          // programmatic scroll for the home button
   } = useTheme();
 
-  // Loader
+  // Loader visibility — true until the loader animation finishes.
   const [isLoading, setLoader] = useState(true);
 
-  // ref
-  const wobbleRef = useRef();
-  const wobblePlateRef = useRef();
-  const customUniforms = useRef();
-  const textRef = useRef();
-  const cameraRef = useRef();
-  const glassRef = useRef();
-  const projectsRef = useRef();
-  const skillsRef = useRef();
+  // Refs to every Three.js object the React side needs to control. They are
+  // populated by `initThreeScene` and read by the section animation effect.
+  const wobbleRef = useRef();        // central wobble sphere
+  const wobblePlateRef = useRef();   // wave plane
+  const customUniforms = useRef();   // shared shader uniforms
+  const textRef = useRef();          // text Group
+  const cameraRef = useRef();        // cameraGroup (parallax-friendly)
+  const glassRef = useRef();         // about glass Group
+  const projectsRef = useRef();      // projects Group
+  const skillsRef = useRef();        // skills Group
+  const cursorRef = useRef(null);    // <div> of the custom cursor
+
+  // Guard so the scene is initialised only once even under React strict mode
+  // (which mounts effects twice in dev).
   const initialized = useRef(false);
-  const cursorRef = useRef(null);
 
-  //--------------------------------------------------+
-  //
-  //  Init Three JS Scene
-  //
-  //--------------------------------------------------+
+  //-- Effects ----------------------------------------------------------------
 
-  // Init Three JS Scene
+  // Init the Three.js scene on mount; tear it down on unmount.
   useEffect(() => {
     if (!initialized.current) {
       initThreeScene({
         canvasId: 'webgl',
         mainColor,
         backgroundColor,
+        TransmissionLevel,
         wobbleRef,
         wobblePlateRef,
         customUniforms,
-        TransmissionLevel,
         textRef,
         cameraRef,
-        userList,
         glassRef,
-        skillsList,
-        skillsRef,
-        projectsList,
         projectsRef,
+        skillsRef,
         cursorRef,
+        // The RAF loop calls this every frame to read the live scroll value
+        // straight from the proxy ref — no React re-render involved.
+        getScrollProgress: () => scrollProxyRef?.current?.value ?? 0,
+        skillsList,
+        projectsList,
       });
       initialized.current = true;
     }
 
     return () => {
-      stopThreeScene(); // 🛑 clean when dismantling
-      initialized.current = false; // Allow reinitialization on remount
+      // stopThreeScene cancels the RAF loop and disposes every resource.
+      stopThreeScene();
+      // Allow re-init on remount (HMR / strict mode double-mount).
+      initialized.current = false;
+    };
+    // We intentionally want this effect to run only once on mount.
+  }, []);
+
+  // Debug GUI — only mounted when `#debug` is in the URL. We retry once
+  // after 100ms because the hash might not be ready on the very first render.
+  useEffect(() => {
+    const tryInitDebug = () => {
+      if (window.location.hash.includes('debug')) {
+        initDebugGUI({ setMainColor });
+      }
+    };
+
+    const timer = setTimeout(tryInitDebug, 100);
+    // Also re-check when the hash changes so the user can toggle debug
+    // mode without reloading.
+    window.addEventListener('hashchange', tryInitDebug);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('hashchange', tryInitDebug);
     };
   }, []);
-  // }, [user, projects, skills]);
 
-  //--------------------------------------------------+
-  //
-  //  Update Colors
-  //
-  //--------------------------------------------------+
+  // Propagate colour changes to the three layers:
+  //   1) GPU shader uniforms (real-time)
+  //   2) The CanvasTexture-based meshes (About / Projects / Skills)
+  //   3) The CSS variables consumed by the React UI
   useEffect(() => {
-    // Update shader uniforms
+    // 1) Update the wobble shader colour.
     customUniforms.current?.uMainColor.value.set(mainColor);
-    customUniforms.current?.uSecondColor.value.set(backgroundColor);
+    // Only update the second colour if the user has not overridden it via
+    // the debug GUI.
+    if (!isSecondColorManual()) {
+      customUniforms.current?.uSecondColor.value.set(backgroundColor);
+    }
 
-    // Update wobble transmission
-    wobbleRef.current?.material &&
-      (wobbleRef.current.material.transmission = TransmissionLevel);
+    // Update the wobble material transmission level.
+    if (wobbleRef.current?.material) {
+      wobbleRef.current.material.transmission = TransmissionLevel;
+    }
 
-    // Update text colors
+    // Update the radial background gradient.
+    updateRadialColor(mainColor);
+
+    // Walk the text group and update each letter's two materials
+    //   - material[0] = front face = background colour
+    //   - material[1] = side face  = main colour
     textRef.current?.traverse((child) => {
       if (child.isMesh && Array.isArray(child.material)) {
-        // letters Front and Back
         child.material[0].color.set(backgroundColor);
-        // letter side
         child.material[1].color.set(mainColor);
       }
     });
 
-    // Update about glass textures & materials
+    // 2) Repaint every CanvasTexture-based mesh.
     updateAboutGlassColor(mainColor, backgroundColor);
-
-    // Update project ring textures & materials
     updateProjectBandsColor(mainColor, backgroundColor);
-
-    // Update skills points textures & materials
     updateSkillsColor(mainColor, backgroundColor);
+
+    // Sync the debug GUI sliders so they reflect the new colours.
+    syncDebugDisplay(mainColor, backgroundColor);
   }, [mainColor, backgroundColor, TransmissionLevel]);
 
-  //--------------------------------------------------+
-  //
-  // Animations Section by Section
-  //
-  //--------------------------------------------------+
+  // (The giant per-section 3D animation effect that used to live here has
+  //  been moved into `src/utils/three/sectionAnimations.js`. It is now
+  //  invoked by the RAF loop in `animationLoop.js` so React no longer
+  //  re-renders on every scroll tick.)
 
-  useEffect(() => {
-    const camera = cameraRef.current;
-    const wobble = wobbleRef.current;
-    const plane = wobblePlateRef.current;
-    const group = textRef.current;
-    const uniforms = customUniforms.current;
-    const glass = glassRef.current;
-    const projects = projectsRef.current;
-    const skills = skillsRef.current;
-
-    if (
-      !camera ||
-      !wobble ||
-      !plane ||
-      !group ||
-      !uniforms ||
-      !glass ||
-      !projects ||
-      !skills
-    )
-      return;
-
-    // Section Progresses
-    const homeT = getSectionProgress(scrollProgress, sections[0].range);
-    const aboutT = getSectionProgress(scrollProgress, sections[1].range);
-    const projectsT = getSectionProgress(scrollProgress, sections[2].range);
-    const skillsT = getSectionProgress(scrollProgress, sections[3].range);
-    const contactT = getSectionProgress(scrollProgress, sections[4].range);
-
-    // Utils
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const clamp01 = (v) => Math.max(0, Math.min(1, v));
-
-    const easeInOut = (x) => x * x * (3 - 2 * x); // smooth easing
-    const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3); // easing “rapide puis lent”
-    const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
-
-    // ------------------------
-    // Section 1: Home
-    // ------------------------
-    if (homeT > 0) {
-      const welcome = group.getObjectByName('welcome');
-      const toMy = group.getObjectByName('to-my');
-      const digital = group.getObjectByName('digital');
-      const portfolio = group.getObjectByName('portfolio');
-
-      if (!welcome || !toMy || !digital || !portfolio) return;
-
-      // Positions
-      const center = { x: 0, y: 0, z: -4, ry: 0 }; // Center position
-      const left = { x: -35, y: 4, z: -4, ry: Math.PI / 6 }; // Left exit position
-      const offBottom = { x: 0, y: -20, z: -4, ry: 0 }; // Bottom exit position
-
-      const init = {
-        welcome: { x: 0, y: 0, z: -4, ry: 0 },
-        'to-my': { x: 35, y: -6, z: 0, ry: -Math.PI / 6 },
-        digital: { x: 35, y: -6, z: 0, ry: -Math.PI / 6 },
-        portfolio: { x: 35, y: -6, z: 0, ry: -Math.PI / 6 },
-      };
-
-      const animateText = (mesh, entryRange, exitRange, exitTarget = left) => {
-        const segmentProgress = (start, end) =>
-          clamp01((homeT - start) / (end - start));
-
-        const rawEntryP = segmentProgress(...entryRange);
-        const rawExitP = segmentProgress(...exitRange);
-
-        const entryP = easeInOutQuad(rawEntryP);
-        const exitP = easeInOutQuad(rawExitP);
-
-        // If in the entry phase → interpolate towards the center
-        if (rawEntryP < 1 && rawExitP <= 0) {
-          const from = init[mesh.name];
-          mesh.position.x = lerp(from.x, center.x, entryP);
-          mesh.position.y = lerp(from.y, center.y, entryP);
-          mesh.position.z = lerp(from.z, center.z, entryP);
-          mesh.rotation.y = lerp(from.ry, center.ry, entryP);
-        }
-        // If in the exit phase OR during the pause between entry and exit → interpolate from center towards exit
-        else if (rawExitP > 0 || rawEntryP >= 1) {
-          mesh.position.x = lerp(center.x, exitTarget.x, exitP);
-          mesh.position.y = lerp(center.y, exitTarget.y, exitP);
-          mesh.position.z = lerp(center.z, exitTarget.z, exitP);
-          mesh.rotation.y = lerp(center.ry, exitTarget.ry, exitP);
-        }
-      };
-
-      // Animate each text with precise overlapping segments
-      animateText(welcome, [0.0, 0.1], [0.15, 0.3]);
-      animateText(toMy, [0.15, 0.3], [0.4, 0.5]);
-      animateText(digital, [0.35, 0.5], [0.6, 0.7]);
-      animateText(portfolio, [0.6, 0.7], [0.8, 0.95], offBottom);
-    }
-
-    // ------------------------
-    // Section 2: About
-    // ------------------------
-    if (aboutT > 0) {
-      const phase1T = clamp01(aboutT / 0.33); // Phase 1: 0.0 → 0.33
-      const phase2T = clamp01((aboutT - 0.33) / 0.33); // Phase 2: 0.33 → 0.66
-      const phase3T = clamp01((aboutT - 0.66) / 0.34); // Phase 3: 0.66 → 1.0
-
-      // Phase 1: wobble step back, glass step front
-      if (aboutT <= 0.33) {
-        const p = easeOutCubic(phase1T);
-        wobble.position.z = lerp(0, -3, p);
-
-        glass.children.forEach((frag) => {
-          const basePos = frag.userData.initialPosition;
-          frag.position.z = lerp(basePos.z, 0, p);
-          frag.position.x = basePos.x;
-          frag.position.y = basePos.y;
-          if (frag.material) {
-            frag.material.opacity = 0.4;
-            frag.material.needsUpdate = true;
-          }
-        });
-      }
-      // Phase 2: cam step front, fragments move from 0 to 2
-      else if (aboutT <= 0.66) {
-        const p = easeOutCubic(phase2T);
-        camera.position.z = lerp(0, -3, p);
-
-        glass.children.forEach((frag) => {
-          const basePos = frag.userData.initialPosition;
-          frag.position.z = lerp(0, 1, p);
-          frag.position.x = basePos.x;
-          frag.position.y = basePos.y;
-          if (frag.material) {
-            frag.material.opacity = 0.4;
-            frag.material.needsUpdate = true;
-          }
-        });
-      }
-      // Phase 3: wobble & cam return to 0, fragments return to initial position
-      else {
-        const p = easeInOut(phase3T);
-        camera.position.z = lerp(-3, 0, p);
-        wobble.position.z = lerp(-3, 0, p);
-
-        glass.children.forEach((frag) => {
-          const basePos = frag.userData.initialPosition;
-          frag.position.z = lerp(1, basePos.z, p);
-          frag.position.x = basePos.x;
-          frag.position.y = basePos.y;
-
-          if (frag.material) {
-            frag.material.opacity = 0.4;
-            frag.material.needsUpdate = true;
-          }
-        });
-      }
-    }
-
-    // ------------------------
-    // Section 3 : Projects
-    // ------------------------
-    if (projectsT > 0) {
-      const phase1T = clamp01(projectsT / 0.2); // Phase 1: 0 → 0.2
-      const phase2T = clamp01((projectsT - 0.2) / 0.8); // Phase 2: 0.2 → 1
-
-      // Phase 1: quick camera tilt + wobble shift
-      const p = easeOutCubic(phase1T);
-      if (projectsT <= 0.2) {
-        camera.rotation.x = lerp(0, 0.2, p); // Camera tilts upward
-        wobble.position.y = lerp(0.6, 2, p); // Wobble rises slightly
-      }
-
-      // Phase 2: staggered bands + wobble return
-      else {
-        const bandDelay = 0.1; // Equal delay between each band
-        const bandCount = projects.children.length;
-
-        projects.children.forEach((band, i) => {
-          // Each band starts after its delay
-          const bandP = clamp01(
-            (phase2T - i * bandDelay) / (1 - bandDelay * bandCount)
-          );
-
-          const baseY = 10 + i * 2.5;
-          const midY = -2; // Slightly below zero
-          const endY = -6; // Final Y position (lower)
-          const endZ = -18; // Final Z position (goes backward)
-
-          if (bandP < 0.4) {
-            // 0 → 0.4 : slide downward
-            const downP = easeInOut(bandP / 0.4);
-            band.position.y = lerp(baseY, midY, downP);
-            band.position.z = 0;
-          } else {
-            // 0.4 → 1 : move backward in Z
-            const backP = easeOutCubic((bandP - 0.4) / 0.6);
-            band.position.y = lerp(midY, endY, backP);
-            band.position.z = lerp(0, endZ, backP);
-            band.material.opacity = lerp(0.4, 0, backP); // Fade out
-          }
-        });
-
-        // Wobble goes back down after last band starts leaving
-        const lastBandP = clamp01(
-          (phase2T - (bandCount - 1) * bandDelay) / 0.4
-        );
-        wobble.position.y = lerp(2.0, 0.6, lastBandP);
-
-        // Wobble shrinks + warp strength decreases during Phase 2
-        wobble.scale.setScalar(lerp(1, 0.8, phase2T));
-        uniforms.uWarpStrength.value = lerp(1.8, 0.1, phase2T);
-      }
-    }
-
-    // ------------------------
-    // Section 4 : Skills
-    // ------------------------
-    if (skillsT > 0) {
-      const phase1T = clamp01(skillsT / 0.12); // 0 → 0.12
-      const phase2T = clamp01((skillsT - 0.12) / 0.16); // 0.12 → 0.28
-      const phase3T = clamp01((skillsT - 0.28) / 0.47); // 0.28 → 0.75
-      const phase4T = clamp01((skillsT - 0.75) / 0.25); // 0.75 → 1.0
-
-      const skillGroups = skillsRef.current.children;
-
-      // Phase 1: Wobble descends
-      if (skillsT <= 0.12) {
-        const p = easeInOut(phase1T);
-        wobble.position.y = lerp(0.6, -1, p);
-
-        skillGroups.forEach((sk) => {
-          // Slight drop from the initial Y position
-          const startY = sk.userData.initialPosition.y;
-          const targetY = sk.userData.initialPosition.y - 2; // Move below initial position
-
-          sk.position.y = lerp(startY, targetY, p);
-
-          // Fade in points and labels
-          sk.children.forEach((obj) => {
-            if (obj.material) obj.material.opacity = p;
-          });
-        });
-      }
-
-      // Phase 2: Quick bump up then drop
-      else if (skillsT <= 0.28) {
-        wobble.position.y = -1;
-        const p = phase2T;
-
-        skillGroups.forEach((sk) => {
-          const startY = sk.userData.initialPosition.y - 2;
-          const midY = sk.userData.initialPosition.y - 1.2;
-          const endY = sk.userData.initialPosition.y - 2;
-
-          // Go up quickly, then down again
-          let y;
-          if (p < 0.5) {
-            const subP = easeOutCubic(p * 2); // first half
-            y = lerp(startY, midY, subP);
-          } else {
-            const subP = easeOutCubic((p - 0.5) * 2); // second half
-            y = lerp(midY, endY, subP);
-          }
-
-          sk.position.y = y;
-        });
-      }
-
-      // Phase 3: Wobble rises first, then skills rise + recenter with 0.1s delay
-      else if (skillsT <= 0.75) {
-        const p = easeInOut(phase3T);
-
-        // Wobble rises full time (0 → 1)
-        wobble.position.y = lerp(-1, 2, p);
-        wobble.rotation.y += 0.02 * (1 - p);
-
-        // Delay of 0.1s relative to total phase duration (0.55)
-        const desiredDelay = 0.2; // seconds
-        const delay = desiredDelay / 0.55; // normalise between 0 and 1
-
-        // Adjust skill progress after delay
-        const skillP = clamp01((p - delay) / (1 - delay));
-
-        skillGroups.forEach((sk) => {
-          // X recenter from initial to 0
-          const startX = sk.userData.initialPosition.x;
-          const targetX = 0;
-          sk.position.x = lerp(startX, targetX, skillP);
-
-          // Y rise from initial -2 to initial +0.5
-          const startY = sk.userData.initialPosition.y - 2;
-          const targetY = sk.userData.initialPosition.y + 0.5;
-          sk.position.y = lerp(startY, targetY, skillP);
-        });
-      }
-
-      // Phase 4: Wobble continues up + camera tilt + skills fade out
-      else {
-        const p = easeOutCubic(phase4T);
-
-        // Wobble moves up and slows rotation
-        wobble.position.y = lerp(2, 8, p);
-        wobble.rotation.y += 0.02 * (1 - p);
-
-        // Camera tilts slightly back to default
-        camera.rotation.x = lerp(0.2, 0, p);
-
-        skillGroups.forEach((sk) => {
-          // Skills follow the wobble upward, but with a delay factor
-          sk.position.y = lerp(sk.userData.initialPosition.y, 10, p * 0.6);
-
-          // Fade out points and labels
-          sk.children.forEach((obj) => {
-            if (obj.material) {
-              obj.material.opacity = 1 - p;
-            }
-          });
-        });
-      }
-    }
-
-    // ------------------------
-    // Section 5 : Contact
-    // ------------------------
-    if (contactT > 0) {
-      const pC = easeInOut(contactT);
-
-      // Animate Plane (Wall)
-      plane.position.y = lerp(-4, 0, pC);
-      plane.position.z = lerp(1, 0, pC);
-      plane.rotation.x = lerp(
-        THREE.MathUtils.degToRad(90),
-        THREE.MathUtils.degToRad(180),
-        pC
-      );
-
-      // Animate Shader Uniforms
-      uniforms.uPositionFrequency.value = lerp(0.5, 0.2, pC);
-
-      // Animate Camera Zoom
-      camera.position.z = lerp(0, -2, pC);
-    }
-  }, [scrollProgress, getSectionProgress]);
-
+  //-- Render -----------------------------------------------------------------
   return (
     <div className={style.global_cont}>
-      {/* Page Content */}
+      {/* 3D canvas wrapped in an error boundary so a Three.js crash never
+          breaks the React tree. */}
+      <ErrorBoundary>
+        <canvas className={style.webgl} id="webgl"></canvas>
+      </ErrorBoundary>
 
-      {/* 3D Container */}
-      <canvas className={style.webgl} id="webgl"></canvas>
+      {/* Mobile-portrait overlay asking the user to rotate the device. */}
+      <Portrait_Overlay />
 
-      {/* Custom Cursor */}
+      {/* Custom global cursor (no-op on touch devices). */}
       <Cursor cursorRef={cursorRef} />
 
-      {/* Loader */}
+      {/* Loader covers the screen until the intro animation is done. */}
       {isLoading ? (
         <Loader
           setLoader={setLoader}
@@ -506,15 +250,16 @@ const Layout = ({ children }) => {
           textRef={textRef}
         />
       ) : (
+        // Once the loader is gone, render every floating UI element.
         <>
-          {/* Navigation Bar */}
           <NavBar />
 
-          {/* Button Home */}
+          {/* Centre Home button (FM logo) — scrolls back to section 0. */}
           <div className={style.home_btn_cont}>
             <button
               onClick={() => scrollToSection(0)}
               className={`${style.home_btn} hover_target_big`}
+              aria-label="Go to home"
             >
               <svg
                 role="img"
@@ -548,28 +293,17 @@ const Layout = ({ children }) => {
             </button>
           </div>
 
-          {/* Btn Share container */}
+          {/* Floating UI partials. Order doesn't matter visually because each
+              partial positions itself absolutely. */}
           <ShareBtn />
-
-          {/* Scroll Progress Percentage */}
           <ScrollProgress />
-
-          {/* ChatBot container */}
           <ChatBot />
-
-          {/* ColorPicker container */}
           <ColorPicker />
-
-          {/* Scroll Btn container */}
           <ScrollBtn />
-
-          {/* Music Selector container */}
           <MusicSelector />
 
-          {/* Side Slider container */}
-          {/* <SideSlider /> */}
-
-          {/* {children} */}
+          {/* Inject the active section index into the page child so it can
+              decide which section component to render. */}
           {React.cloneElement(children, { activeSection })}
         </>
       )}

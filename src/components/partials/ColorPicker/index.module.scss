@@ -1,35 +1,52 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// ColorPicker — Customisation panel pinned to the bottom-right
 //
-//          COLOR PICKER
-//
-// ------------------------------+
+// Uses a clip-path circle that grows on hover to reveal the controls. The
+// `.open_options_menu` class is added by JS when a filter is selected and
+// expands the panel further to expose the colour dots / transparency slider.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Local variables ----------------------------------------------------------
+// Resting height of the panel — covers the three filter buttons + the title row.
 $min_height: 85px;
+// Maximum width when fully expanded.
 $max_width: 250px;
+// Extra height added when a filter is active (slider / dots).
 $update_height: 55px;
 
+// Mobile counterparts.
+$min_height_mob: 60px;
+$max_width_mob: 200px;
+$update_height_mob: 40px;
+
+// -- Container ----------------------------------------------------------------
+// Pinned to the bottom-right. Starts as a single circle (clip-path) and
+// expands on hover.
 .color_picker_cont {
   width: $max_width;
   min-height: $min_height;
   position: absolute;
-  bottom: variables.$layout_margin;
-  right: variables.$layout_margin;
-  background-color: variables.$white_color;
-  border-radius: calc(variables.$bouton_size / 2);
-  z-index: variables.$top_zindex;
-  transition: variables.$transition;
-  animation: fadeIn variables.$text_animation ease-in-out;
+  bottom: $layout_margin;
+  right: $layout_margin;
+  background-color: $white_color;
+  border-radius: calc($bouton_size / 2);
+  z-index: $top_zindex;
+  transition: $transition;
+  animation: fadeIn $text_animation ease-in-out;
+  // Initial clip-path: a small circle pinned to the bottom-right corner.
+  // Hover and `.open_options_menu` widen this circle to reveal the panel.
   clip-path: circle(
-    calc(variables.$bouton_size / 2) at calc(100% - variables.$layout_margin)
-      calc(100% - variables.$layout_margin)
+    calc($bouton_size / 2) at calc(100% - $layout_margin)
+      calc(100% - $layout_margin)
   );
 
+  // Mount entrance: slide in from the right.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX(variables.$text_animation_margin);
+      transform: translateX($text_animation_margin);
     }
     to {
       opacity: 1;
@@ -37,25 +54,44 @@ $update_height: 55px;
     }
   }
 
-  @media only screen and (max-width: variables.$phone_width) {
-    bottom: calc(variables.$layout_margin / 2);
-    right: calc(variables.$layout_margin / 2);
+  // Mobile: smaller dimensions and clip-path centred on the smaller button.
+  @media only screen and (max-width: $phone_width) {
+    width: $max_width_mob;
+    min-height: $min_height_mob;
+    bottom: $layout_margin_mob;
+    right: $layout_margin_mob;
+    clip-path: circle(
+      calc($bouton_size_mob / 2) at calc(100% - $bouton_size_mob / 2)
+        calc(100% - $bouton_size_mob / 2)
+    );
   }
 
+  // -- Open state (added by JS when a filter is selected) -----------------
+  // Drops the bottom radius and exposes the options menu above.
   &.open_options_menu {
-    border-radius: 0 0 calc(variables.$bouton_size / 2)
-      calc(variables.$bouton_size / 2);
+    border-radius: 0 0 calc($bouton_size / 2) calc($bouton_size / 2);
 
+    // Slide the options menu up so it sits above the visible row.
     .custom_options_menu {
       height: $update_height;
-      transform: translateY($update_height * -1 + variables.$margin);
+      transform: translateY($update_height * -1 + $margin);
+
+      @media only screen and (max-width: $phone_width) {
+        height: $update_height_mob;
+        transform: translateY($update_height_mob * -1 + $small_margin);
+      }
 
       .filter_section {
         height: $update_height;
 
+        @media only screen and (max-width: $phone_width) {
+          height: $update_height_mob;
+        }
+
+        // Each colour dot fades in via `fadeInColor`.
         .color_buttons {
           .color_dot {
-            animation: fadeInColor variables.$medium_transition_time ease-in-out;
+            animation: fadeInColor $medium_transition_time ease-in-out;
 
             @keyframes fadeInColor {
               from {
@@ -71,122 +107,167 @@ $update_height: 55px;
     }
   }
 
+  // -- Hover state ---------------------------------------------------------
+  // Expand the clip-path circle to reveal the whole panel + spin the
+  // colourful corner button.
   &:hover {
     clip-path: circle($max_width);
 
     .custom_btn {
       transform: rotate(360deg) scale(0.6);
     }
+
+    @media only screen and (max-width: $phone_width) {
+      clip-path: circle($max_width_mob);
+    }
   }
 
+  // -- Corner button (the colourful "rainbow" circle) ---------------------
+  // Decorative — its only purpose is to be the visible part of the panel
+  // when the clip-path circle is small.
   .custom_btn {
     position: absolute;
     bottom: 0;
     right: 0;
-    height: variables.$bouton_size;
-    width: variables.$bouton_size;
-    border-radius: variables.$circle_border_radius;
-    border: solid variables.$white_color variables.$border_width;
-    background: linear-gradient(
-        217deg,
-        rgba(255, 0, 0, 0.8),
-        rgba(255, 0, 0, 0) 70.71%
-      ),
+    height: $bouton_size;
+    width: $bouton_size;
+    border-radius: $circle_border_radius;
+    border: solid $white_color $border_width;
+    // Three radial gradients stacked together — gives the prismatic look.
+    background:
+      linear-gradient(217deg, rgba(255, 0, 0, 0.8), rgba(255, 0, 0, 0) 70.71%),
       linear-gradient(127deg, rgba(0, 255, 0, 0.8), rgba(0, 255, 0, 0) 70.71%),
       linear-gradient(336deg, rgba(0, 0, 255, 0.8), rgba(0, 0, 255, 0) 70.71%);
-    transition: variables.$transition;
+    transition: $transition;
+
+    @media only screen and (max-width: $phone_width) {
+      height: $bouton_size_mob;
+      width: $bouton_size_mob;
+    }
   }
 
+  // -- Options menu (slides up when a filter is active) -------------------
   .custom_options_menu {
     width: $max_width;
     position: absolute;
-    background-color: variables.$white_color;
-    border-radius: calc(variables.$bouton_size / 2)
-      calc(variables.$bouton_size / 2) 0 0;
-    padding: variables.$small_margin;
+    @media only screen and (max-width: $phone_width) {
+      width: $max_width_mob;
+    }
+    background-color: $white_color;
+    // Round only the top corners — the bottom is shared with the panel.
+    border-radius: calc($bouton_size / 2) calc($bouton_size / 2) 0 0;
+    padding: $small_margin;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     overflow: hidden;
-    height: 0;
-    transition: variables.$transition;
+    height: 0;                  // collapsed by default
+    transition: $transition;
 
+    @media only screen and (max-width: $phone_width) {
+      width: $max_width_mob;
+      padding: $small_small_margin;
+    }
+
+    // -- Filter section (one of: main / background / transparency) ------
     .filter_section {
       width: 100%;
       position: absolute;
       top: 0;
-      transition: variables.$transition;
+      transition: $transition;
 
+      // Row of round colour swatches.
       .color_buttons {
         width: 100%;
         display: flex;
         justify-content: space-between;
-        gap: variables.$small_margin;
-        padding: variables.$small_margin;
-        transition: variables.$transition;
+        gap: $small_margin;
+        padding: $small_margin;
+        transition: $transition;
 
+        @media only screen and (max-width: $phone_width) {
+          gap: $small_small_margin;
+        }
+
+        // Background-colour variant uses left alignment because the
+        // palette has fewer entries.
         &.background_color {
           justify-content: flex-start;
         }
 
+        // Individual colour dot.
         .color_dot {
           width: 26px;
           height: 26px;
-          border-radius: 2px;
-          border: solid variables.$border_width var(--color-text);
-          // cursor: pointer;
+          border-radius: $small_border_radius;
+          border: solid $border_width var(--color-text);
+
+          @media only screen and (max-width: $phone_width) {
+            width: 20px;
+            height: 20px;
+          }
         }
       }
 
+      // -- Transparency slider (range input + percentage label) ---------
       .transparency_slider {
         display: flex;
         align-items: center;
-        gap: variables.$small_margin;
-        padding: variables.$small_margin;
+        gap: $small_margin;
+        padding: $small_margin;
 
+        // Custom range input — both Webkit and Firefox vendor prefixes.
         input[type='range'] {
           flex: 1;
-          // cursor: pointer;
           -webkit-appearance: none;
           background: transparent;
-          height: variables.$small_small_margin;
+          height: $small_small_margin;
 
+          // Track styling (Chrome).
           &::-webkit-slider-runnable-track {
-            height: variables.$small_small_margin;
+            height: $small_small_margin;
             background: var(--color-primary);
-            border-radius: variables.$border_radius;
+            border-radius: $border_radius;
           }
 
+          // Track styling (Firefox).
           &::-moz-range-track {
-            height: variables.$small_small_margin;
+            height: $small_small_margin;
             background: var(--color-primary);
-            border-radius: variables.$border_radius;
+            border-radius: $border_radius;
           }
 
+          // Thumb styling (Chrome).
           &::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: variables.$margin;
-            height: variables.$margin;
+            width: $margin;
+            height: $margin;
             background: var(--color-primary);
             border: none;
-            border-radius: variables.$circle_border_radius;
-            margin-top: calc(
-              (variables.$small_small_margin - variables.$margin) / 2
-            );
-            box-shadow: variables.$shadow_box;
-            transition: variables.$transition;
+            border-radius: $circle_border_radius;
+            // Negative margin to vertically centre the thumb on the track.
+            margin-top: calc(($small_small_margin - $margin) / 2);
+            box-shadow: $shadow_box;
+            transition: $transition;
           }
+          // Thumb styling (Firefox).
           &::-moz-range-thumb {
-            width: variables.$margin;
-            height: variables.$margin;
+            width: $margin;
+            height: $margin;
             background: var(--color-primary);
             border: none;
-            border-radius: variables.$circle_border_radius;
-            box-shadow: variables.$shadow_box;
-            transition: variables.$transition;
+            border-radius: $circle_border_radius;
+            box-shadow: $shadow_box;
+            transition: $transition;
+
+            @media only screen and (max-width: $phone_width) {
+              width: $small_margin;
+              height: $small_margin;
+            }
           }
 
+          // Hover scales the thumb up slightly for feedback.
           &:hover::-webkit-slider-thumb {
             transform: scale(1.1);
           }
@@ -195,84 +276,113 @@ $update_height: 55px;
           }
         }
 
+        // Percentage label sitting next to the slider.
         p {
           min-width: 40px;
           text-align: right;
-          font-size: variables.$font_size;
+          font-size: $font_size;
+
+          @media only screen and (max-width: $phone_width) {
+            font-size: $small_font_size;
+          }
         }
       }
     }
   }
 
+  // -- Always-visible bar (filter buttons + reset + title) ----------------
   .custom_selected_menu {
     width: $max_width;
     height: $min_height;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0 0 variables.$small_margin;
+    padding: 0 0 $small_margin;
     position: absolute;
 
+    @media only screen and (max-width: $phone_width) {
+      width: $max_width_mob;
+      height: $min_height_mob;
+      padding: 0 0 $small_small_margin;
+    }
+
+    // Top row — three filter buttons (main / bg / transparency).
     .custom_selected_top {
       width: 100%;
-      padding: 0 variables.$small_margin;
+      padding: 0 $small_margin;
       display: flex;
       justify-content: space-between;
-      transform: translateY(variables.$margin);
+      transform: translateY($margin);
 
+      @media only screen and (max-width: $phone_width) {
+        padding: 0 $small_small_margin;
+        transform: translateY($small_margin);
+        justify-content: space-between;
+      }
+
+      // Pill-shaped filter button.
       .custom_button {
         width: 60px;
         height: 20px;
-        border-radius: calc(variables.$border_radius * 2);
-        border: solid variables.$border_width var(--color-text);
-        // cursor: pointer;
+        border-radius: calc($border_radius * 2);
+        border: solid $border_width var(--color-text);
         outline: none;
+
+        @media only screen and (max-width: $phone_width) {
+          width: 45px;
+          height: 18px;
+        }
       }
 
+      // Transparency button — uses a checker pattern to look "transparent".
       .opacity_button {
-        background: linear-gradient(
-            variables.$white_color_rgba,
-            variables.$white_color_rgba
-          ),
-          repeating-conic-gradient(
-              variables.$black_color 0% 25%,
-              transparent 0% 50%
-            )
-            0% / 10px 10px,
+        background:
+          linear-gradient($white_color_rgba, $white_color_rgba),
+          repeating-conic-gradient($black_color 0% 25%, transparent 0% 50%) 0% /
+            10px 10px,
           linear-gradient(
             to right,
             rgba(255, 255, 255, 0) 0%,
             rgba(255, 255, 255, 1) 100%
           );
+        // Blend the layers so the gradient softens the checker pattern.
         background-blend-mode: lighten, normal, normal;
       }
     }
 
+    // Bottom row — reset button + "customize me" title + spacer.
     .custom_selected_bot {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
 
+      // Both the spacer and the reset button share the same dimensions
+      // so the title stays centred.
       .custom_space,
       .reset_color {
         width: 40px;
         height: 20px;
       }
 
+      // Reset button — strips native styles, the icon comes from JSX.
       .reset_color {
         background: none;
-        // cursor: pointer;
         border: none;
         outline: none;
       }
 
+      // "customize me" label.
       .custom_title {
-        font-family: variables.$first_font;
-        font-weight: variables.$font_weight_bold;
-        color: variables.$text_color;
-        font-size: variables.$small_font_size;
+        font-family: $first_font;
+        font-weight: $font_weight_bold;
+        color: $text_color;
+        font-size: $small_font_size;
         text-transform: lowercase;
+
+        @media only screen and (max-width: $phone_width) {
+          font-size: $small_small_small_font_size;
+        }
       }
     }
   }

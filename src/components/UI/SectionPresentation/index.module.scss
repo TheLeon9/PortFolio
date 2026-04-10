@@ -1,33 +1,38 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// SectionPresentation — Animated section header (title + tagline)
 //
-//      SECTION PRESENTATION
-//
-// ------------------------------+
+// Owns the typography of the big title and the special "Developer / Designer"
+// vertical-swap animation used by the Home variant.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Section header container -------------------------------------------------
+// Pinned to the bottom of the section with a left padding so it sits to the
+// right of the NavBar.
 .section_presentation_cont {
   width: 100%;
   height: 100%;
-  padding-left: calc(variables.$layout_margin + variables.$big_margin);
+  padding-left: $layout_margin + $big_margin;
 
-  @media only screen and (max-width: variables.$phone_width) {
-    text-align: center;
-    padding-left: 0;
+  @media only screen and (max-width: $phone_width) {
+    padding-left: $layout_margin_mob + $big_margin;
   }
 
+  // -- Big section title (e.g. "Florian Moracchini") ------------------------
   .presentation_title {
-    font-family: variables.$first_font;
-    color: variables.$text_color;
-    font-size: variables.$big_font_size;
-    font-weight: variables.$font_weight_bold;
+    font-family: $first_font;
+    color: $text_color;
+    font-size: $big_font_size;
+    font-weight: $font_weight_bold;
     text-transform: uppercase;
-    animation: fadeIn variables.$text_animation ease-in-out;
+    animation: fadeIn $text_animation ease-in-out;
 
+    // Mount entrance: slide in from the right.
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateX(variables.$text_animation_margin);
+        transform: translateX($text_animation_margin);
       }
       to {
         opacity: 1;
@@ -35,27 +40,31 @@
       }
     }
 
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$medium_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
     }
 
+    // Coloured suffix part of the title — uses the live brand colour.
     .presentation_title_colored {
       color: var(--color-primary);
     }
   }
 
+  // -- Tagline / subtitle row ------------------------------------------------
+  // Holds the static "Creative Web" prefix + the swapping word block.
   .span_text_cont {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    margin-top: variables.$margin;
+    margin-top: $small_margin;
     height: 28px;
-    animation: fadeIn calc(variables.$text_animation + 0.4s) ease-in-out;
+    // Slightly delayed entrance so the title lands first.
+    animation: fadeIn calc($text_animation + 0.4s) ease-in-out;
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateX(variables.$text_animation_margin);
+        transform: translateX($text_animation_margin);
       }
       to {
         opacity: 1;
@@ -63,11 +72,15 @@
       }
     }
 
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$font_size;
-      height: 28px;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
+      height: 22px;
+      margin-top: $small_small_margin;
     }
 
+    // -- Animated swap container ("[Developer]" ↔ "[Designer]") -------------
+    // Fixed width + overflow hidden so the second word stays clipped while
+    // it slides in/out.
     .span_animation_cont {
       height: 100%;
       position: relative;
@@ -77,40 +90,47 @@
       width: 100px;
       overflow: hidden;
 
-      @media only screen and (max-width: variables.$phone_width) {
-        width: 100px;
+      @media only screen and (max-width: $phone_width) {
+        width: 80px;
       }
 
+      // Hook brackets "[" and "]" — coloured with the brand colour.
       .span_hook {
         color: var(--color-primary);
-        font-weight: variables.$font_weight_bold;
+        font-weight: $font_weight_bold;
       }
 
+      // First word (Developer): animates from "shown" to "hidden above".
       .span_developer {
         transform-origin: top;
         animation: swaptop 4s 1s infinite alternate ease-in-out;
 
         @keyframes swaptop {
+          // Stays in place during the first 40% of the cycle...
           40% {
             transform: translateY(0%);
           }
+          // ...then slides up out of view for the remaining 60%.
           60%,
           100% {
-            transform: translateY(variables.$text_animation_negative_margin);
+            transform: translateY($text_animation_negative_margin);
           }
         }
       }
 
+      // Second word (Designer): mirror animation, sliding in from the bottom.
       .span_designer {
         position: absolute;
         left: 50%;
-        transform: translate(-50%, 120%);
+        transform: translate(-50%, 120%); // start below the visible area
         animation: swapbot 4s 1s infinite alternate ease-in-out;
 
         @keyframes swapbot {
+          // Stays below the line for the first 40%...
           40% {
             transform: translate(-50%, 120%);
           }
+          // ...then slides up to the visible position.
           60%,
           100% {
             transform: translate(-50%, 0%);
@@ -119,9 +139,9 @@
       }
     }
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
     }
   }
 }

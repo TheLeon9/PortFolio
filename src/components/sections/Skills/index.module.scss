@@ -1,24 +1,26 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// SectionSkill — Section wrapper for the Skills overlay
 //
-//      SECTION SKILL
-//
-// ------------------------------+
+// Centres the badges in a flexible grid and fades in on mount.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Section container --------------------------------------------------------
 .section_skill_cont {
   width: 90%;
   height: 90%;
   z-index: 50;
-  animation: fadeIn variables.$text_animation ease-in;
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: fadeIn $text_animation ease-in;
 
+  // Mount entrance — fades in from below.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(variables.$text_animation_negative_margin);
+      transform: translateY($text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -26,6 +28,9 @@
     }
   }
 
+  // -- Badges grid ------------------------------------------------------------
+  // 60% × 60% on desktop so the badges cluster in the centre of the page.
+  // Mobile expands to full width/height.
   .middle_wrapper {
     width: 60%;
     height: 60%;
@@ -34,7 +39,7 @@
     justify-content: center;
     align-items: center;
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
       width: 100%;
       height: 100%;
     }

@@ -1,28 +1,40 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// ChatBot — Floating chat widget pinned to the bottom-right
 //
-//          CHAT BOT
-//
-// ------------------------------+
+// Three blocks: header (avatar + status + reset), messages area (scrollable),
+// input area (text field + send button). The whole window is a vertical flex
+// column with the messages block taking the remaining space.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Local variables ----------------------------------------------------------
+// Height reserved for the header AND the input area (they share the same value
+// so the messages block height calculation is symmetric).
 $header_footer_height: 50px;
+// Mobile counterpart.
+$header_footer_height_mob: 35px;
 
+// -- Container ----------------------------------------------------------------
+// Just the round toggle button at rest. The chat window is a child positioned
+// absolutely above the button so it pops up when opened.
 .chatbot_cont {
-  height: variables.$bouton_size;
-  width: variables.$bouton_size;
+  height: $bouton_size;
+  width: $bouton_size;
   position: absolute;
-  bottom: variables.$layout_margin;
-  bottom: calc(variables.$layout_margin * 4);
-  right: variables.$layout_margin;
-  z-index: variables.$top_zindex;
-  animation: fadeIn variables.$text_animation ease-in-out;
-  transition: variables.$transition;
+  // Sit four "layout margins" above the bottom so it does not overlap the
+  // ColorPicker / MusicSelector / ScrollBtn rows.
+  bottom: calc($layout_margin * 4);
+  right: $layout_margin;
+  z-index: $top_zindex;
+  animation: fadeIn $text_animation ease-in-out;
+  transition: $transition;
 
+  // Mount entrance: slide in from the right.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX(variables.$text_animation_margin);
+      transform: translateX($text_animation_margin);
     }
     to {
       opacity: 1;
@@ -30,61 +42,86 @@ $header_footer_height: 50px;
     }
   }
 
-  @media only screen and (max-width: variables.$phone_width) {
-    bottom: calc(variables.$layout_margin * 3);
-    right: calc(variables.$layout_margin / 2);
+  @media only screen and (max-width: $phone_width) {
+    bottom: calc($layout_margin_mob + $bouton_size_mob + $small_margin);
+    right: $layout_margin_mob;
+    height: $bouton_size_mob;
+    width: $bouton_size_mob;
   }
 
+  // -- Toggle button --------------------------------------------------------
+  // Round white button with the chatbot icon inside.
   .chat_btn {
-    height: variables.$bouton_size;
-    width: variables.$bouton_size;
+    height: $bouton_size;
+    width: $bouton_size;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: variables.$circle_border_radius;
-    // cursor: pointer;
+    border-radius: $circle_border_radius;
     outline: none;
-    transition: variables.$transition;
+    transition: $transition;
     border: none;
-    background: variables.$white_color;
+    background: $white_color;
+
+    @media only screen and (max-width: $phone_width) {
+      width: $bouton_size_mob;
+      height: $bouton_size_mob;
+    }
 
     img {
       width: 20px;
       height: 20px;
+
+      @media only screen and (max-width: $phone_width) {
+        width: 15px;
+        height: 15px;
+      }
     }
   }
 
+  // -- Chat window (popup) -------------------------------------------------
+  // Anchored above the toggle button. Vertical flex column with the messages
+  // block stretching to fill the available space.
   .chat_window {
     position: absolute;
-    bottom: variables.$bouton_size + variables.$small_margin;
+    bottom: $bouton_size + $small_margin;
     right: 0;
     width: 300px;
     height: 420px;
-    border-radius: variables.$border_radius;
-    box-shadow: variables.$shadow_box;
+    border-radius: $border_radius;
+    box-shadow: $shadow_box;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: variables.$transition;
-    animation: fadeInChat variables.$text_animation ease-in-out;
-    z-index: calc(variables.$top_zindex + 1);
+    transition: $transition;
+    animation: fadeInChat $text_animation ease-in-out;
+    // Sit one z-index above the parent so the popup beats the toggle button.
+    z-index: calc($top_zindex + 1);
+    background-color: $white_color_rgba;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      width: 80vw;
+    @media only screen and (max-width: $phone_width) {
+      width: 40vw;
       height: 60vh;
+      bottom: $bouton_size;
     }
 
+    // -- Header (avatar + status + reset) ----------------------------------
     .header_area {
       width: 100%;
       height: $header_footer_height;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 variables.$margin;
-      background: variables.$white_color;
-      border-radius: 0 0 variables.$border_radius variables.$border_radius;
-      border-bottom: solid variables.$border_width var(--color-primary);
+      padding: 0 $margin;
+      background: $white_color;
+      border-radius: 0 0 $border_radius $border_radius;
+      border-bottom: solid $border_width var(--color-primary);
 
+      @media only screen and (max-width: $phone_width) {
+        height: $header_footer_height_mob;
+      }
+
+      // Avatar container — wraps the chatbot icon.
       .header_avatar {
         width: auto;
         height: auto;
@@ -93,6 +130,7 @@ $header_footer_height: 50px;
         align-items: center;
       }
 
+      // Header text block (status + name).
       .header_text {
         width: auto;
         height: auto;
@@ -102,94 +140,147 @@ $header_footer_height: 50px;
         align-items: center;
         position: relative;
 
+        // Online/offline indicator floating below the name.
         .chatbot_online {
           width: 100%;
           position: absolute;
-          bottom: calc(
-            variables.$small_margin * -1 - variables.$small_small_margin
-          );
+          bottom: calc($small_margin * -1 - $small_small_margin);
           left: 0;
           display: flex;
           align-items: center;
           justify-content: space-around;
 
+          @media only screen and (max-width: $phone_width) {
+            bottom: calc($small_small_margin * -1 - $small_small_margin);
+            justify-content: flex-start;
+          }
+
+          // Tiny status dot.
           .chat_dot {
-            width: variables.$small_margin;
-            height: variables.$small_margin;
-            border-radius: variables.$circle_border_radius;
-            border: solid variables.$black_color variables.$border_width;
+            width: $small_margin;
+            height: $small_margin;
+            border-radius: $circle_border_radius;
+            border: solid $black_color $border_width;
+
+            @media only screen and (max-width: $phone_width) {
+              width: $small_small_margin;
+              height: $small_small_margin;
+            }
           }
         }
 
+        // Online state — green dot + green label.
         .online {
           .chat_dot {
-            background-color: variables.$succes_color_two;
+            background-color: $succes_color_two;
           }
           p {
-            color: variables.$succes_color_two;
+            color: $succes_color_two;
+
+            @media only screen and (max-width: $phone_width) {
+              font-size: $small_small_small_font_size;
+            }
           }
         }
+        // Offline state — red dot + red label.
         .offline {
           .chat_dot {
-            background-color: variables.$error_color;
+            background-color: $error_color;
           }
           p {
-            color: variables.$error_color;
+            color: $error_color;
+
+            @media only screen and (max-width: $phone_width) {
+              font-size: $small_small_small_font_size;
+            }
           }
         }
 
+        // Bot name "Ghost".
         .custom_title {
-          font-family: variables.$first_font;
-          font-weight: variables.$font_weight_bold;
+          font-family: $first_font;
+          font-weight: $font_weight_bold;
           color: var(--color-primary);
-          font-size: variables.$small_font_size;
+          font-size: $small_font_size;
           text-transform: uppercase;
+
+          @media only screen and (max-width: $phone_width) {
+            font-size: $small_small_font_size;
+          }
         }
       }
 
+      // Reset button on the right.
       .reset_btn {
         background: none;
-        // cursor: pointer;
         border: none;
         outline: none;
       }
     }
 
+    // -- Messages area (scrollable list of bubbles + suggestions) ----------
     .messages {
       width: 100%;
+      // Take the full height minus header + input area.
       height: calc(100% - ($header_footer_height * 2));
       display: flex;
       flex-direction: column;
       background-color: transparent;
-      gap: variables.$small_margin;
-      padding: variables.$small_margin;
+      gap: $small_margin;
+      padding: $small_margin;
       overflow-y: auto;
-      background-color: variables.$white_color_rgba;
+      // `overscroll-behavior: contain` stops the body from scrolling when the
+      // user reaches the top/bottom of the chat — keeps the custom scroll
+      // system safe.
       overscroll-behavior: contain;
 
+      @media only screen and (max-width: $phone_width) {
+        height: calc(100% - ($header_footer_height_mob * 2));
+      }
+
+      // Each message bubble.
       .message {
-        padding: variables.$small_margin variables.$small_small_margin;
-        border-radius: variables.$border_radius;
+        padding: $small_margin $small_small_margin;
+        border-radius: $border_radius;
         max-width: 80%;
         word-wrap: break-word;
+        // Default tail on the bottom-right (user-style); the assistant
+        // variant overrides this with the bottom-left tail.
         border-bottom-right-radius: 0;
 
+        @media only screen and (max-width: $phone_width) {
+          padding: $small_small_margin $small_small_margin;
+        }
+        // User bubble — brand colour, aligned to the right.
         &.user {
           background: var(--color-primary);
           align-self: flex-end;
 
           p {
-            color: variables.$white_color;
+            color: $white_color;
+
+            @media only screen and (max-width: $phone_width) {
+              font-size: $small_small_small_font_size;
+            }
           }
         }
 
+        // Assistant bubble — white background, aligned to the left, with
+        // the tail flipped to the bottom-left.
         &.assistant {
-          background: variables.$white_color;
+          background: $white_color;
           align-self: flex-start;
           border-bottom-left-radius: 0;
+
+          p {
+            @media only screen and (max-width: $phone_width) {
+              font-size: $small_small_small_font_size;
+            }
+          }
         }
       }
 
+      // -- Suggested questions block (chips below the messages) -----------
       .suggested_questions {
         width: 100%;
         height: auto;
@@ -197,22 +288,27 @@ $header_footer_height: 50px;
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-end;
-        gap: variables.$small_small_margin;
+        gap: $small_small_margin;
         background-color: transparent;
 
+        // Each chip — outlined button styled like an inverted user bubble.
         .question_btn {
-          padding: variables.$small_small_margin;
-          border-radius: variables.$border_radius;
+          padding: $small_small_margin;
+          border-radius: $border_radius;
           max-width: 80%;
           word-wrap: break-word;
           background: transparent;
-          border: variables.$border_width solid var(--color-primary);
+          border: $border_width solid var(--color-primary);
           border-bottom-right-radius: 0;
           color: var(--color-primary);
-          // cursor: pointer;
+
+          @media only screen and (max-width: $phone_width) {
+            font-size: $small_small_small_font_size;
+          }
         }
       }
 
+      // Offline placeholder shown when the bot is unavailable.
       .offline_banner {
         margin: auto;
         display: flex;
@@ -221,7 +317,8 @@ $header_footer_height: 50px;
         align-items: center;
 
         .offline_text {
-          margin-top: variables.$margin;
+          margin-top: $margin;
+          // Highlight "GHOST" in the brand colour.
           .custom_span {
             color: var(--color-primary);
           }
@@ -229,10 +326,11 @@ $header_footer_height: 50px;
       }
     }
 
+    // Mount entrance for the chat window itself.
     @keyframes fadeInChat {
       from {
         opacity: 0;
-        transform: translateY(variables.$text_animation_margin);
+        transform: translateY($text_animation_margin);
       }
       to {
         opacity: 1;
@@ -241,38 +339,48 @@ $header_footer_height: 50px;
     }
   }
 
+  // -- Input area (text field + send button) -------------------------------
   .input_area {
     width: 100%;
     height: $header_footer_height;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 variables.$margin;
-    background: variables.$white_color;
-    border-radius: variables.$border_radius variables.$border_radius 0 0;
-    border-top: solid variables.$border_width var(--color-primary);
+    padding: 0 $margin;
+    background: $white_color;
+    border-radius: $border_radius $border_radius 0 0;
+    border-top: solid $border_width var(--color-primary);
 
+    @media only screen and (max-width: $phone_width) {
+      height: $header_footer_height_mob;
+    }
+
+    // Borderless text input with a brand-coloured caret.
     input {
       width: 80%;
       outline: none;
       background: none;
       border: none;
-      font-family: variables.$second_font;
-      font-weight: variables.$font_weight_regular;
+      font-family: $second_font;
+      font-weight: $font_weight_regular;
       color: var(--color-primary);
-      font-size: variables.$small_font_size;
+      font-size: $small_font_size;
+
+      @media only screen and (max-width: $phone_width) {
+        font-size: $small_small_font_size;
+      }
     }
 
+    // Send button — round, transparent, with a slight contrast filter when disabled.
     button {
-      height: variables.$bouton_size;
-      width: variables.$bouton_size;
+      height: $bouton_size;
+      width: $bouton_size;
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: variables.$circle_border_radius;
-      // cursor: pointer;
+      border-radius: $circle_border_radius;
       outline: none;
-      transition: variables.$transition;
+      transition: $transition;
       border: none;
       background: none;
 
@@ -281,6 +389,7 @@ $header_footer_height: 50px;
         height: 20px;
       }
 
+      // Disabled state (while waiting for the fake reply).
       &:disabled {
         filter: contrast(0.8);
         cursor: not-allowed;

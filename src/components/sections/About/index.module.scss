@@ -1,24 +1,27 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// SectionAbout — Section wrapper for the About overlay (avatar + bio)
 //
-//      SECTION ABOUT
-//
-// ------------------------------+
+// Frosted-glass card holding two columns: profile (avatar + quick info) on
+// the left and the bio paragraphs on the right.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Section container --------------------------------------------------------
 .section_about_cont {
   width: 90%;
   height: 90%;
   z-index: 50;
-  animation: fadeIn variables.$text_animation ease-in;
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: fadeIn $text_animation ease-in;
 
+  // Mount entrance: fade in from below.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(variables.$text_animation_negative_margin);
+      transform: translateY($text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -26,27 +29,32 @@
     }
   }
 
-  @media only screen and (max-width: variables.$phone_width) {
+  @media only screen and (max-width: $phone_width) {
     width: 100%;
   }
 
+  // -- Frosted-glass wrapper --------------------------------------------------
+  // 60% width on desktop, full width on mobile. The translucent background +
+  // soft border + glow give the "frosted glass" feel that matches the rest
+  // of the UI.
   .about_wrapper {
     width: 60%;
     height: 80%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: variables.$small_margin;
-    background-color: variables.$white_color_rgba;
-    border: variables.$border_width solid variables.$white_color;
-    border-radius: variables.$border_radius;
-    box-shadow: 0 0 10px variables.$white_color;
+    padding: $small_margin;
+    background-color: $white_color_rgba;
+    border: $border_width solid $white_color;
+    border-radius: $border_radius;
+    box-shadow: 0 0 10px $white_color;
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
       width: 100%;
       height: 90%;
     }
 
+    // -- Profile column (avatar + quick info) --------------------------------
     .profile_section {
       width: 20%;
       height: 100%;
@@ -55,6 +63,7 @@
       align-items: center;
       justify-content: space-between;
 
+      // Avatar container — fixed height ratio.
       .profile_picture {
         width: 100%;
         height: 40%;
@@ -62,38 +71,42 @@
         justify-content: center;
         align-items: center;
 
-        @media only screen and (max-width: variables.$phone_width) {
+        @media only screen and (max-width: $phone_width) {
           height: 30%;
         }
 
+        // Round avatar image.
         .profile_image {
-          border-radius: variables.$circle_border_radius;
+          border-radius: $circle_border_radius;
           width: 120px;
           height: 120px;
 
-          @media only screen and (max-width: variables.$phone_width) {
+          @media only screen and (max-width: $phone_width) {
             width: 60px;
             height: 60px;
           }
         }
       }
 
+      // Quick info block (Name / Age / Location).
       .profile_info {
         width: 100%;
         height: 60%;
         text-align: center;
 
-        @media only screen and (max-width: variables.$phone_width) {
+        @media only screen and (max-width: $phone_width) {
           height: 70%;
         }
 
+        // Each info row stacks the label above the value.
         p {
-          margin: variables.$small_margin;
+          margin: $small_margin;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: space-between;
 
+          // Value text takes the brand colour to stand out.
           .info_value {
             color: var(--color-primary);
           }
@@ -101,6 +114,8 @@
       }
     }
 
+    // -- Bio column ----------------------------------------------------------
+    // 80% of the wrapper width so the bio takes most of the room.
     .bio_section {
       width: 80%;
       height: 100%;
@@ -108,13 +123,15 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: center;
-      padding: variables.$small_margin;
+      padding: $small_margin;
 
-      @media only screen and (max-width: variables.$phone_width) {
-        justify-content: flex-start;      }
+      @media only screen and (max-width: $phone_width) {
+        justify-content: flex-start;
+      }
 
+      // Spacing between bio paragraphs.
       p {
-        margin-bottom: variables.$small_margin;
+        margin-bottom: $small_margin;
       }
     }
   }

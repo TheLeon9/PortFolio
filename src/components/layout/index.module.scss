@@ -1,14 +1,23 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// Layout — Global wrapper styles (canvas, home button)
 //
-//          MAIN LAYOUT
-//
-// ------------------------------+
+// Owns:
+//   • the full-screen flex container that hosts the canvas + the React UI
+//   • the centred Home button with its FM logo
+//   • the WebGL canvas positioning (fixed, behind everything)
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Page-level wrapper -------------------------------------------------------
+// Full viewport (with `dvh` fallback for mobile browsers that change the
+// chrome size mid-scroll). Background uses the brand primary so the page
+// shows the brand colour during the first paint, before the radial shader
+// kicks in.
 .global_cont {
   width: 100vw;
   height: 100vh;
+  height: 100dvh;                            // dynamic vh for mobile browsers
   background-color: var(--color-primary);
   overflow: hidden;
   position: relative;
@@ -16,28 +25,34 @@
   justify-content: center;
   align-items: center;
 
+  // -- Home button container ------------------------------------------------
+  // Centred at the top of the page. Width/height match the standard button
+  // size token. Animation slides it in from above on first render.
   .home_btn_cont {
-    height: variables.$bouton_size;
-    width: variables.$bouton_size;
+    height: $bouton_size;
+    width: $bouton_size;
     position: absolute;
-    top: variables.$layout_margin;
+    top: $layout_margin;
     left: 50%;
     transform: translate(-50%, 0);
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: fadeIn variables.$text_animation ease-in-out;
-    z-index: variables.$top_zindex;
-    transition: variables.$transition;
+    animation: fadeIn $text_animation ease-in-out;
+    z-index: $top_zindex;
+    transition: $transition;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      top: calc(variables.$layout_margin / 2);
+    @media only screen and (max-width: $phone_width) {
+      top: $layout_margin_mob;
+      height: $bouton_size_mob;
+      width: $bouton_size_mob;
     }
 
+    // Mount entrance: slide down from above + fade in.
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translate(-50%, variables.$text_animation_negative_margin);
+        transform: translate(-50%, $text_animation_negative_margin);
       }
       to {
         opacity: 1;
@@ -45,25 +60,29 @@
       }
     }
 
+    // -- Inner button (resets native styles) --------------------------------
     .home_btn {
       border: none;
       background: none;
       outline: none;
 
+      // SVG logo inside the button.
       .home_logo {
-        height: variables.$bouton_size;
-        width: variables.$bouton_size;
-        transition: variables.$transition;
-        // cursor: pointer;
+        height: $bouton_size;
+        width: $bouton_size;
+        transition: $transition;
 
-        @media only screen and (max-width: variables.$phone_width) {
-          width: 28px;
-          height: 28px;
+        @media only screen and (max-width: $phone_width) {
+          width: $bouton_size_mob;
+          height: $bouton_size_mob;
         }
       }
     }
   }
 
+  // -- WebGL canvas ---------------------------------------------------------
+  // Fixed at (0, 0) so it stays put while the React UI re-renders. The
+  // outline reset removes the focus ring on click.
   .webgl {
     position: fixed;
     top: 0;

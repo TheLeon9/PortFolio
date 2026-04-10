@@ -1,94 +1,121 @@
-@use '@/styles/themes';
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// globals — Global CSS reset, typography helpers, accessibility rules
 //
-//            GLOBAL
-//
-// ------------------------------+
+// Loaded once by `_app.js`. Owns:
+//   • the universal `*` reset + the custom-cursor opt-in
+//   • the body baseline (overflow hidden because we drive scroll manually)
+//   • global text rules and `.p_*` typography helpers used by the partials
+//   • SVG `svg_color` helper bound to the CSS variable
+//   • selection styles (light & Firefox)
+//   • focus-visible outline for keyboard users
+//   • reduced motion override for users who request it
+// =============================================================================
 
+@use '@/styles/themes';                       // injects the :root CSS variables
+@use '@/styles/variables' as *;               // imports every $token
+
+// -- Universal reset ----------------------------------------------------------
+// Strip default margins/paddings, switch to border-box, and hide the system
+// cursor on hover-capable devices (the Cursor component takes over).
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  cursor: none;
+  // Hide the OS cursor only on real pointing devices (not touch).
+  @media (hover: hover) and (pointer: fine) {
+    cursor: none;
+  }
 }
 
+// -- Body baseline ------------------------------------------------------------
+// `overflow: hidden` because the scroll system is custom (see ThemeContext).
 body {
   overflow: hidden;
-  letter-spacing: variables.$letter_spacing;
-  line-height: variables.$line_height;
+  letter-spacing: $letter_spacing;
+  line-height: $line_height;
 }
 
-// ------------------------------+
-//
-//            TEXT
-//
-// ------------------------------+
-
+// -- Default paragraph styles -------------------------------------------------
+// Apply Nunito + the brand text colour to every <p>. Mobile drops to a smaller
+// size so the layout stays comfortable on phones.
 p {
-  font-family: variables.$second_font;
-  color: variables.$text_color;
-  font-weight: variables.$font_weight_regular;
+  font-family: $second_font;
+  color: $text_color;
+  font-weight: $font_weight_regular;
 
-  @media only screen and (max-width: variables.$phone_width) {
-    font-size: variables.$small_small_font_size;
+  @media only screen and (max-width: $phone_width) {
+    font-size: $small_small_font_size;
   }
 }
 
+// -- Paragraph size helpers ---------------------------------------------------
+// Reusable size classes (e.g. `class="p_small p_bold"`). Avoids re-declaring
+// the same media queries inside every component.
 .p {
   &_small_small {
-    font-size: variables.$small_small_font_size;
+    font-size: $small_small_font_size;
   }
   &_small {
-    font-size: variables.$small_font_size;
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$small_small_font_size;
+    font-size: $small_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
     }
   }
   &_medium {
-    font-size: variables.$medium_font_size;
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$small_small_font_size;
+    font-size: $medium_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
     }
   }
   &_big {
-    font-size: variables.$big_font_size;
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$small_small_font_size;
+    font-size: $big_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_font_size;
     }
   }
   &_bold {
-    font-weight: variables.$font_weight_bold;
+    font-weight: $font_weight_bold;
   }
 
   &_white {
-    color: variables.$white_color;
+    color: $white_color;
   }
 }
 
-// ------------------------------+
-//
-//              SVG
-//
-// ------------------------------+
-
+// -- SVG colour helper --------------------------------------------------------
+// Apply this class to SVG <path> elements that should follow the brand
+// colour. Bound to the CSS variable so the ColorPicker live-updates them.
 .svg_color {
   fill: var(--color-primary);
 }
 
-// ------------------------------+
-//
-//          SELECTION
-//
-// ------------------------------+
-
+// -- Selection colour ---------------------------------------------------------
+// Make the highlight stand out by inverting it: dark background, bright text.
 *::selection {
-  background-color: variables.$black_color;
-  color: variables.$succes_color;
+  background-color: $black_color;
+  color: $succes_color;
 }
 
+// Firefox-only selector — same rule applied via the `-moz` prefix.
 *::-moz-selection {
-  background-color: variables.$black_color;
-  color: variables.$succes_color;
+  background-color: $black_color;
+  color: $succes_color;
+}
+
+// -- Focus-visible ------------------------------------------------------------
+// Show a brand-coloured outline for keyboard users only (not on mouse click).
+*:focus-visible {
+  outline: 2px solid var(--color-primary, #0132b5);
+  outline-offset: 2px;
+}
+
+// -- Reduced motion -----------------------------------------------------------
+// Honour the user's OS preference: collapse every animation/transition to a
+// near-zero duration so motion-sensitive users get a calm experience.
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

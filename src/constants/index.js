@@ -1,3 +1,8 @@
+// 📦 Data for Portrait Overlay
+export const LION_STYLIZED = {
+  japanese_modern: 'ライオン',
+};
+
 // 📦 Data for All the sections
 export const sections = [
   { id: 'Home', range: [0, 25] },

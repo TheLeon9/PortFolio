@@ -1,0 +1,194 @@
+// =============================================================================
+// Portrait_Overlay — Mobile-portrait fallback overlay
+//
+// Overlay shown only on small screens in portrait orientation, asking the
+// user to rotate their phone to landscape. Owns the four corner ornaments,
+// the centre rotation icon and the pulsing animation.
+// =============================================================================
+
+@use '@/styles/variables' as *;
+
+// -- Overlay (visible only in mobile portrait) --------------------------------
+// Hidden by default; the media query below flips `display` to `flex` only
+// when the viewport is small AND in portrait orientation.
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: $black_color;
+  // Sit above the loader (which uses $z_loading) so it covers everything.
+  z-index: $z_loading + 100;
+  justify-content: center;
+  align-items: center;
+
+  // Show only on mobile portrait — outside this media query the overlay
+  // stays `display: none`.
+  @media only screen and (max-width: $mobile) and (orientation: portrait) {
+    display: flex;
+  }
+
+  // -- Header (centred logo at the top) ------------------------------------
+  .header {
+    position: absolute;
+    top: $layout_margin;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  // Brand logo size inside the header.
+  .header_logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  // -- Ornament base styles ------------------------------------------------
+  // Two layers per corner: a coloured (brand) one and a white outline one.
+  // Position absolute so the corner wrappers can place them.
+
+  // Coloured layer — uses the brand colour with reduced opacity.
+  .ornament_colored {
+    position: absolute;
+    width: $ornament_size_mob;
+    height: $ornament_size_mob;
+    color: var(--color-primary);
+    opacity: $less_less_opacity;
+    transition: color $transition_time;
+  }
+
+  // White outline layer — sits above the coloured layer for a soft glow effect.
+  .ornament {
+    position: absolute;
+    width: $ornament_size_mob;
+    height: $ornament_size_mob;
+    color: $white_color;
+    opacity: $less_opacity;
+  }
+
+  // -- Top-left corner (rotated 270°) --------------------------------------
+  // Each corner wrapper positions its two ornament layers and applies the
+  // appropriate rotation. The coloured layer is also offset slightly so it
+  // peeks out from behind the outline layer.
+  .ornament_top_left {
+    position: absolute;
+    top: $layout_margin_mob;
+    left: $layout_margin_mob;
+    width: $ornament_size_mob;
+    height: $ornament_size_mob;
+
+    .ornament_colored {
+      transform: translate($ornament_offset_x_mob, $ornament_offset_y_mob)
+        rotate(270deg);
+    }
+
+    .ornament {
+      transform: rotate(270deg);
+    }
+  }
+
+  // -- Top-right corner (no rotation) --------------------------------------
+  .ornament_top_right {
+    position: absolute;
+    top: $layout_margin_mob;
+    right: $layout_margin_mob;
+    width: $ornament_size_mob;
+    height: $ornament_size_mob;
+
+    .ornament_colored {
+      transform: translate(-$ornament_offset_x_mob, $ornament_offset_y_mob);
+    }
+
+    .ornament {
+      transform: rotate(0deg);
+    }
+  }
+
+  // -- Bottom-left corner (rotated 180°) -----------------------------------
+  .ornament_bottom_left {
+    position: absolute;
+    bottom: $layout_margin_mob;
+    left: $layout_margin_mob;
+    width: $ornament_size_mob;
+    height: $ornament_size_mob;
+
+    .ornament_colored {
+      transform: translate($ornament_offset_x_mob, -$ornament_offset_y_mob)
+        rotate(180deg);
+    }
+
+    .ornament {
+      transform: rotate(180deg);
+    }
+  }
+
+  // -- Bottom-right corner (rotated 90°) -----------------------------------
+  .ornament_bottom_right {
+    position: absolute;
+    bottom: $layout_margin_mob;
+    right: $layout_margin_mob;
+    width: $ornament_size_mob;
+    height: $ornament_size_mob;
+
+    .ornament_colored {
+      transform: translate(-$ornament_offset_x_mob, -$ornament_offset_y_mob)
+        rotate(90deg);
+    }
+
+    .ornament {
+      transform: rotate(90deg);
+    }
+  }
+
+  // -- Centre content (rotation icon + instruction text) ------------------
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $small_small_margin;
+    text-align: center;
+
+    // Phone rotation SVG icon — pulses to draw attention.
+    .icon {
+      width: 120px;
+      height: 120px;
+      color: var(--color-primary);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    // Instruction text below the icon.
+    .text {
+      font-size: $small_font_size;
+      max-width: 280px;
+      color: $white_color;
+    }
+  }
+
+  // -- Footer (centred at the bottom; reserved slot) -----------------------
+  .footer {
+    position: absolute;
+    bottom: $layout_margin;
+    left: 50%;
+    transform: translateX(-50%);
+
+    img {
+      width: 24px;
+      height: auto;
+    }
+  }
+}
+
+// -- Pulse animation for the rotation icon -----------------------------------
+// Two extremes: opacity 0.6 / scale 1 → opacity 1 / scale 1.05 (very subtle).
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: $less_opacity;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}

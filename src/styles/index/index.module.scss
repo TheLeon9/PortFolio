@@ -1,19 +1,25 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// IndexPage — Layout for the page-level container that holds each section
 //
-//          INDEX PAGES
-//
-// ------------------------------+
+// Splits the active section into a top half (custom content) and a bottom
+// half (the SectionPresentation header). Mobile tweaks the split ratio so
+// the bottom header gets a bit more room.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Page container -----------------------------------------------------------
+// Full-width box minus a margin on each side so the content does not stick
+// to the viewport edges.
 .global_page_container {
-  width: calc(100% - variables.$big_margin);
+  width: calc(100% - $big_margin);
   height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 
+  // Top half: custom content (only the Contact form for now).
   .section_top {
     width: 100%;
     height: 70%;
@@ -21,18 +27,21 @@
     justify-content: center;
     align-items: center;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      height: 75%;
+    @media only screen and (max-width: $phone_width) {
+      // Slightly smaller on mobile so the bottom half gets a bit more room.
+      height: 65%;
     }
   }
 
+  // Bottom half: section presentation header (title + tagline).
   .section_bot {
     width: 100%;
     height: 30%;
     position: relative;
+    z-index: 2;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      height: 25%;
+    @media only screen and (max-width: $phone_width) {
+      height: 35%;
     }
   }
 }

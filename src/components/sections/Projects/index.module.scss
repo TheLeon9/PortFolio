@@ -1,24 +1,26 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// SectionProject — Section wrapper for the Projects overlay
 //
-//      SECTION PROJECT
-//
-// ------------------------------+
+// Centres the cards horizontally and provides a fade-in entrance.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Section container --------------------------------------------------------
 .section_project_cont {
   width: 90%;
   height: 90%;
   z-index: 50;
-  animation: fadeIn variables.$text_animation ease-in;
   display: flex;
   justify-content: center;
   align-items: center;
+  // Mount entrance — fades in from below.
+  animation: fadeIn $text_animation ease-in;
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(variables.$text_animation_negative_margin);
+      transform: translateY($text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -26,6 +28,8 @@
     }
   }
 
+  // -- Card grid --------------------------------------------------------------
+  // 80% width on desktop, full width on mobile. Cards wrap automatically.
   .middle_project_wrapper {
     width: 80%;
     height: 100%;
@@ -34,7 +38,7 @@
     justify-content: center;
     align-items: center;
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
       width: 100%;
     }
   }

@@ -1,64 +1,87 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// Loader — Full-screen loading overlay (corners, logo, percentage, music)
 //
-//        Loader
+// Composed of three layers:
+//   1. Two black corner halves (left + right) that animate off-screen at the
+//      end of the loading sequence.
+//   2. A central column with a rotating circle ornament, the FM logo, and
+//      the percentage label.
+//   3. A bottom block with the music selector + a "we use ambient sound" tip.
 //
-// ------------------------------+
+// The corner halves use ::before for the gradient horizontal "line" and
+// ::after for the half-circle border that frames the centre ornament.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Local variables ----------------------------------------------------------
+// Diameter of the central rotating circle (also used to size the corner half-circles).
 $corner_width: 560px;
+// Smaller variant for mobile.
 $corner_width_phone: 280px;
+// Width of the transparent gap at each end of the horizontal gradient line.
 $transparent_percentage: 2%;
 
+// -- Loader container ---------------------------------------------------------
+// Full viewport overlay sitting above every other UI element.
 .loader_cont {
   width: 100%;
   height: 100%;
   position: relative;
   top: 0;
   left: 0;
-  z-index: variables.$top_zindex;
+  z-index: $top_zindex;
 
-  // Corner
+  // -- Corner halves (left + right) ---------------------------------------
+  // Each takes up exactly 50% of the viewport width and is animated off-
+  // screen at the end of the loading sequence by the JS (see Loader.jsx).
   .loader_corner_right,
   .loader_corner_left {
     width: 50%;
     height: 100%;
-    background-color: variables.$black_color;
+    background-color: $black_color;
   }
 
+  // -- Left corner --------------------------------------------------------
+  // Holds the left half of the gradient line (::before) and the left half
+  // of the central circle frame (::after).
   .loader_corner_left {
     position: absolute;
     top: 0;
     left: 0;
 
-    // Line
+    // Horizontal gradient line going from the left edge to the centre
+    // (where the circle sits).
     &::before {
       content: '';
       width: 100%;
-      height: variables.$border_width;
+      height: $border_width;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      // Gradient: transparent → brand colour → transparent (just before
+      // the central circle frame).
       background: linear-gradient(
         to right,
         transparent 0%,
         transparent $transparent_percentage,
-        var(--color-primary) calc(100% - ($corner_width / 2)),
+        $main_color calc(100% - ($corner_width / 2)),
         transparent calc(100% - ($corner_width / 2))
       );
 
-      @media only screen and (max-width: variables.$phone_width) {
+      // Mobile: smaller corner = different gradient stops.
+      @media only screen and (max-width: $phone_width) {
         background: linear-gradient(
           to right,
           transparent,
-          var(--color-primary) calc(100% - ($corner_width_phone / 2)),
+          $main_color calc(100% - ($corner_width_phone / 2)),
           transparent calc(100% - ($corner_width_phone / 2))
         );
       }
     }
 
-    // Center
+    // Half-circle border that frames the left side of the central ornament.
     &::after {
       content: '';
       width: calc($corner_width / 2);
@@ -67,12 +90,13 @@ $transparent_percentage: 2%;
       top: 50%;
       right: 0;
       transform: translate(0, -50%);
+      // Round the left side only — gives the half-circle look.
       border-top-left-radius: $corner_width;
       border-bottom-left-radius: $corner_width;
-      border-left: solid variables.$border_width var(--color-primary);
-      border-top: solid variables.$border_width var(--color-primary);
-      border-bottom: solid variables.$border_width var(--color-primary);
-      @media only screen and (max-width: variables.$phone_width) {
+      border-left: solid $border_width $main_color;
+      border-top: solid $border_width $main_color;
+      border-bottom: solid $border_width $main_color;
+      @media only screen and (max-width: $phone_width) {
         width: calc($corner_width_phone / 2);
         height: $corner_width_phone;
         border-top-left-radius: $corner_width_phone;
@@ -81,16 +105,18 @@ $transparent_percentage: 2%;
     }
   }
 
+  // -- Right corner -------------------------------------------------------
+  // Mirror of the left corner: same gradient + half-circle, flipped.
   .loader_corner_right {
     position: absolute;
     top: 0;
     right: 0;
 
-    // Line
+    // Horizontal gradient line going from the right edge to the centre.
     &::before {
       content: '';
       width: 100%;
-      height: variables.$border_width;
+      height: $border_width;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -99,21 +125,21 @@ $transparent_percentage: 2%;
         to left,
         transparent 0%,
         transparent $transparent_percentage,
-        var(--color-primary) calc(100% - ($corner_width / 2)),
+        $main_color calc(100% - ($corner_width / 2)),
         transparent calc(100% - ($corner_width / 2))
       );
 
-      @media only screen and (max-width: variables.$phone_width) {
+      @media only screen and (max-width: $phone_width) {
         background: linear-gradient(
           to left,
           transparent,
-          var(--color-primary) calc(100% - ($corner_width_phone / 2)),
+          $main_color calc(100% - ($corner_width_phone / 2)),
           transparent calc(100% - ($corner_width_phone / 2))
         );
       }
     }
 
-    // Center
+    // Mirror of the left ::after — half-circle frame on the right side.
     &::after {
       content: '';
       width: calc($corner_width / 2);
@@ -124,11 +150,11 @@ $transparent_percentage: 2%;
       transform: translate(0, -50%);
       border-top-right-radius: $corner_width;
       border-bottom-right-radius: $corner_width;
-      border-right: solid variables.$border_width var(--color-primary);
-      border-top: solid variables.$border_width var(--color-primary);
-      border-bottom: solid variables.$border_width var(--color-primary);
+      border-right: solid $border_width $main_color;
+      border-top: solid $border_width $main_color;
+      border-bottom: solid $border_width $main_color;
 
-      @media only screen and (max-width: variables.$phone_width) {
+      @media only screen and (max-width: $phone_width) {
         width: calc($corner_width_phone / 2);
         height: $corner_width_phone;
         border-top-right-radius: $corner_width_phone;
@@ -137,7 +163,8 @@ $transparent_percentage: 2%;
     }
   }
 
-  // Center Loader
+  // -- Central column (rotating circle + logo + percentage) ---------------
+  // Centred via absolute positioning + transform translate.
   .loader_cont_center {
     width: 60%;
     height: 40%;
@@ -150,13 +177,15 @@ $transparent_percentage: 2%;
     justify-content: center;
     align-items: center;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      height: 60%;
+    @media only screen and (max-width: $phone_width) {
+      height: 40%;
     }
 
+    // Rotating blue circle ornament — uses screen blend mode so it pops on
+    // top of the corner gradient.
     .blue_circle {
-      width: calc($corner_width - variables.$small_margin);
-      height: calc($corner_width - variables.$small_margin);
+      width: calc($corner_width - $small_margin);
+      height: calc($corner_width - $small_margin);
       position: absolute;
       top: 50%;
       left: 50%;
@@ -165,6 +194,7 @@ $transparent_percentage: 2%;
       will-change: transform;
       mix-blend-mode: screen;
 
+      // Slow 360° rotation — kept slow so it never feels distracting.
       @keyframes rotate_circle {
         0% {
           transform: translate(-50%, -50%) rotate(0deg);
@@ -174,21 +204,22 @@ $transparent_percentage: 2%;
         }
       }
 
-      @media only screen and (max-width: variables.$phone_width) {
-        width: calc($corner_width_phone - variables.$small_margin);
-        height: calc($corner_width_phone - variables.$small_margin);
+      @media only screen and (max-width: $phone_width) {
+        width: calc($corner_width_phone - $small_margin);
+        height: calc($corner_width_phone - $small_margin);
       }
     }
 
+    // White FM logo — fades in on mount.
     .loader_logo_white {
       width: 120px;
       height: 120px;
-      animation: fadeIn variables.$text_animation ease-in-out;
+      animation: fadeIn $text_animation ease-in-out;
 
       @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(variables.$text_animation_negative_margin);
+          transform: translateY($text_animation_negative_margin);
         }
         to {
           opacity: 1;
@@ -196,12 +227,13 @@ $transparent_percentage: 2%;
         }
       }
 
-      @media only screen and (max-width: variables.$phone_width) {
+      @media only screen and (max-width: $phone_width) {
         width: 80px;
         height: 80px;
       }
     }
 
+    // Text container below the logo (percentage + animated sentence).
     .loader_text_cont {
       width: 100%;
       height: auto;
@@ -209,55 +241,65 @@ $transparent_percentage: 2%;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      margin-top: variables.$big_margin;
+      margin-top: $big_margin;
 
+      @media only screen and (max-width: $phone_width) {
+        margin-top: $margin;
+      }
+
+      // The big percentage label. The "%" is added via ::after so the
+      // number can be padded to a fixed width without affecting the suffix.
       .loader_percentage {
-        font-family: variables.$first_font;
-        font-size: variables.$medium_font_size;
-        font-weight: variables.$font_weight_regular;
-        color: variables.$white_color;
-        margin-bottom: variables.$small_margin;
+        font-family: $first_font;
+        font-size: $medium_font_size;
+        font-weight: $font_weight_regular;
+        color: $white_color;
+        margin-bottom: $small_margin;
         position: relative;
         width: 60px;
         display: flex;
         justify-content: center;
         align-items: center;
 
+        // Append a "%" suffix without including it in the JS state.
         &::after {
           content: '%';
           position: absolute;
           right: -10px;
         }
 
-        @media only screen and (max-width: variables.$phone_width) {
-          font-size: variables.$small_small_font_size;
+        @media only screen and (max-width: $phone_width) {
+          font-size: $small_small_small_font_size;
           text-align: center;
         }
       }
     }
   }
 
+  // -- Bottom block (music selector + tip text) ---------------------------
+  // Pinned to the bottom centre. Slides up + fades in on mount.
   .music_wrapper {
     width: 400px;
     height: auto;
     position: absolute;
     left: 50%;
-    bottom: variables.$layout_margin;
+    bottom: $layout_margin;
     transform: translate(-50%, 0%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    animation: fadeInMusic variables.$text_animation ease-in-out;
+    animation: fadeInMusic $text_animation ease-in-out;
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
       width: 90%;
+      bottom: $layout_margin_mob;
     }
 
     @keyframes fadeInMusic {
       from {
         opacity: 0;
-        transform: translate(-50%, variables.$text_animation_margin);
+        transform: translate(-50%, $text_animation_margin);
       }
       to {
         opacity: 1;
@@ -265,24 +307,37 @@ $transparent_percentage: 2%;
       }
     }
 
+    // Music selector pill — same shape as the floating MusicSelector partial.
     .music_selector_cont {
       width: 80px;
       height: 30px;
-      background-color: variables.$white_color;
-      border-radius: calc(variables.$bouton_size / 2);
+      background-color: $white_color;
+      border-radius: calc($bouton_size / 2);
       overflow: hidden;
-      z-index: variables.$top_zindex;
-      transition: variables.$transition;
+      z-index: $top_zindex;
+      transition: $transition;
+
+      @media only screen and (max-width: $phone_width) {
+        width: 60px;
+        height: 24px;
+        border-radius: calc($bouton_size_mob / 2);
+      }
     }
 
+    // Tip text below the music selector.
     .text_music {
-      margin-top: variables.$margin;
+      margin-top: $margin;
       text-align: center;
-      font-family: variables.$first_font;
-      font-weight: variables.$font_weight_regular;
-      color: variables.$white_color;
-      font-size: variables.$small_font_size;
+      font-family: $first_font;
+      font-weight: $font_weight_regular;
+      color: $white_color;
+      font-size: $small_font_size;
       text-transform: lowercase;
+
+      @media only screen and (max-width: $phone_width) {
+        font-size: $small_small_small_font_size;
+        margin-top: $small_small_margin;
+      }
     }
   }
 }

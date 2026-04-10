@@ -1,61 +1,80 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// CardProject — Project card with hover reveal animation
 //
-//          CARD PROJECT
-//
-// ------------------------------+
+// At rest the card shows the big project number + title. On hover it widens,
+// reveals the description and slides the number/title to a corner so the
+// description has room. On mobile the hover state stacks vertically.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Card container -----------------------------------------------------------
+// Frosted glass card with rounded corners and a soft glow.
 .card_project {
+  // Box
   width: 140px;
   height: 100%;
-  padding: variables.$small_margin;
-  margin: variables.$small_margin;
+  padding: $small_margin;
+  margin: $small_margin;
+
+  // Layout
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: variables.$white_color_rgba;
-  border: solid variables.$border_width variables.$white_color;
-  border-radius: variables.$border_radius;
-  box-shadow: 0 0 10px variables.$white_color;
-  transition: variables.$transition;
   position: relative;
-  // cursor: pointer;
-  overflow: hidden;
+  overflow: hidden;          // prevents the description text from spilling out
 
-  @media only screen and (max-width: variables.$phone_width) {
+  // Visual
+  background-color: $white_color_rgba;
+  border: solid $border_width $white_color;
+  border-radius: $border_radius;
+  box-shadow: 0 0 10px $white_color;
+
+  // Animation (default state).
+  transition: $transition;
+
+  // Mobile: card stretches across the section.
+  @media only screen and (max-width: $phone_width) {
     width: 80%;
     height: 40px;
   }
 
+  // -- Hover state ------------------------------------------------------------
+  // Card grows wider, gets a coloured glow, slides upwards (a "lift"), and
+  // reveals the description while pushing the number/title to the corner.
   &:hover {
-    background-color: variables.$white_color;
+    background-color: $white_color;
     box-shadow: 0 0 20px var(--color-primary);
     width: 220px;
-    transform: translateY(calc(variables.$small_margin) * -1);
+    transform: translateY(calc($small_margin) * -1); // lift effect
 
-    @media only screen and (max-width: variables.$phone_width) {
+    // Mobile: switch to a stacked layout instead of widening.
+    @media only screen and (max-width: $phone_width) {
       width: 90%;
       height: 160px;
       transform: translateY(0);
     }
 
+    // Description fades in.
     .card_content {
       opacity: 1;
       transform: translatey(0%);
       visibility: visible;
     }
 
+    // Title and number switch to the brand colour.
     .card_project_title,
     .card_project_number {
       color: var(--color-primary);
     }
 
+    // Number slides to the bottom-left corner.
     .card_project_number {
       top: 100%;
       left: 2%;
       transform: translate(-2%, -100%);
     }
+    // Title slides to the bottom-centre.
     .card_project_title {
       margin-top: 0;
       top: 100%;
@@ -63,39 +82,49 @@
     }
   }
 
+  // -- Description (hidden by default, revealed on hover) -------------------
   .card_content {
     height: 100%;
     width: 100%;
-    padding: variables.$small_margin;
+    padding: $small_margin;
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
     text-align: center;
-    transform: translatey(variables.$text_animation_negative_margin);
-    transition: transform variables.$transition_time ease-in-out, opacity variables.$transition_time 0.2s;
+    // Hidden state
+    opacity: 0;
+    transform: translatey($text_animation_negative_margin);
     visibility: hidden;
+    // Smooth opacity + slide-in. Opacity is delayed so it appears after the
+    // description has slid into place.
+    transition: transform $transition_time ease-in-out, opacity $transition_time 0.2s;
   }
 
+  // -- Big project number ---------------------------------------------------
+  // Centered by default; absolute positioning so the hover transform can
+  // move it freely without affecting the layout.
   .card_project_number {
-    font-size: variables.$title_font_size;
-    font-family: variables.$first_font;
-    color: variables.$text_color;
+    font-size: $title_font_size;
+    font-family: $first_font;
+    color: $text_color;
     font-weight: bold;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    transition: variables.$transition;
+    transition: $transition;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$medium_font_size;
+    // Mobile: smaller and pushed to the left.
+    @media only screen and (max-width: $phone_width) {
+      font-size: $medium_font_size;
       top: 50%;
       left: 10%;
       transform: translate(-10%, -50%);
     }
   }
 
+  // -- Project title ---------------------------------------------------------
+  // Sits below the number by default (margin-top), centred horizontally.
   .card_project_title {
     width: 100%;
     height: 40px;
@@ -108,10 +137,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin-top: variables.$big_margin;
-    transition: variables.$transition;
+    margin-top: $big_margin;
+    transition: $transition;
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
       height: auto;
       margin-top: 0;
     }

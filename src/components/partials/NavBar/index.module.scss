@@ -1,14 +1,23 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// NavBar — Vertical navigation dots + chevron buttons
 //
-//          NAV BAR
-//
-// ------------------------------+
+// Owns:
+//   • the vertical layout pinned to the top-left of the viewport
+//   • the active vs not-active dot variants
+//   • the section title that pops out next to the active dot
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Local variables ----------------------------------------------------------
+// Width/height of the active dot (the one currently selected).
 $activeWH: 40px;
+// Width/height of every other dot.
 $notActiveWH: 10px;
 
+// -- Vertical container -------------------------------------------------------
+// Pinned to the top-left corner. Children are stacked vertically with
+// space-between so the chevrons stick to the top and bottom.
 .header_cont {
   height: 180px;
   width: 40px;
@@ -17,16 +26,17 @@ $notActiveWH: 10px;
   justify-content: space-between;
   align-items: center;
   position: absolute;
-  top: variables.$layout_margin;
-  left: variables.$layout_margin;
-  animation: fadeIn variables.$text_animation ease-in-out;
-  z-index: variables.$top_zindex;
-  transition: variables.$transition;
+  top: $layout_margin;
+  left: $layout_margin;
+  animation: fadeIn $text_animation ease-in-out;
+  z-index: $top_zindex;
+  transition: $transition;
 
+  // Mount entrance: slide in from the left.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX(variables.$text_animation_negative_margin);
+      transform: translateX($text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -34,11 +44,16 @@ $notActiveWH: 10px;
     }
   }
 
-  @media only screen and (max-width: variables.$phone_width) {
-    top: calc(variables.$layout_margin / 2);
-    left: calc(variables.$layout_margin / 2);
+  // Mobile: smaller container + tighter offsets.
+  @media only screen and (max-width: $phone_width) {
+    top: $layout_margin_mob;
+    left: $layout_margin_mob;
+    height: 120px;
+    width: $bouton_size_mob;
   }
 
+  // -- Chevron buttons (previous / next) ------------------------------------
+  // Reset native button styles, partial opacity by default, opaque on hover.
   .change_active_section {
     width: 100%;
     height: 20px;
@@ -48,48 +63,78 @@ $notActiveWH: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    // cursor: pointer;
-    transition: variables.$transition;
-    opacity: variables.$less_opacity;
+    transition: $transition;
+    opacity: $less_opacity;
 
-    &:hover {
-      opacity: 1;
+    // Only switch on hover-capable devices (avoid sticky :hover on touch).
+    @media (hover: hover) {
+      &:hover {
+        opacity: 1;
+      }
     }
 
+    // SVG icon inside the button.
     img {
       width: 20px;
       height: 20px;
     }
+
+    // Mobile sizing.
+    @media only screen and (max-width: $phone_width) {
+      height: 16px;
+
+      img {
+        width: 16px;
+        height: 16px;
+      }
+    }
   }
 
+  // -- Shared base styles for active + inactive dots -----------------------
   .nav_bar_link_active,
   .nav_bar_link_not_active {
-    background-color: variables.$white_color;
-    border-radius: variables.$circle_border_radius;
+    background-color: $white_color;
+    border-radius: $circle_border_radius;
     border: none;
     outline: none;
-    // cursor: pointer;
-    transition: variables.$transition;
+    transition: $transition;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
   }
 
+  // -- Inactive dot ---------------------------------------------------------
+  // Small dot, no inner labels.
   .nav_bar_link_not_active {
     width: $notActiveWH;
     height: $notActiveWH;
 
+    @media only screen and (max-width: $phone_width) {
+      width: 8px;
+      height: 8px;
+    }
+
+    // Hide inner labels — only the active dot shows them.
     .nav_title_section,
     .nav_title_btn {
       display: none;
     }
   }
 
+  // -- Active dot -----------------------------------------------------------
+  // Larger circle that displays the section index inside and a side label
+  // floating to the right of it.
   .nav_bar_link_active {
     width: $activeWH;
     height: $activeWH;
 
+    @media only screen and (max-width: $phone_width) {
+      width: $bouton_size_mob;
+      height: $bouton_size_mob;
+    }
+
+    // Fade-in animation for the labels when the dot becomes active.
     @keyframes appearNext {
       from {
         opacity: 0;
@@ -99,35 +144,41 @@ $notActiveWH: 10px;
       }
     }
 
+    // Section index displayed inside the dot ("01", "02", ...).
     .nav_title_btn {
-      font-family: variables.$first_font;
-      font-weight: variables.$font_weight_bold;
-      color: variables.$text_color;
-      font-size: variables.$small_small_font_size;
-      transition: variables.$transition;
-      animation: appearNext variables.$transition_time ease-in-out;
+      font-family: $first_font;
+      font-weight: $font_weight_bold;
+      color: $text_color;
+      font-size: $small_small_font_size;
+      transition: $transition;
+      animation: appearNext $transition_time ease-in-out;
+
+      @media only screen and (max-width: $phone_width) {
+        font-size: $small_small_small_font_size;
+      }
     }
 
+    // Section name floating to the right of the active dot.
     .nav_title_section {
       width: 100px;
       height: 26px;
       overflow: hidden;
       position: absolute;
       top: 50%;
-      left: 110%;
+      left: 110%;                           // sit just outside the right edge
       transform: translate(0%, -50%);
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      font-family: variables.$first_font;
-      font-weight: variables.$font_weight_bold;
-      color: variables.$text_color;
-      font-size: variables.$small_font_size;
+      font-family: $first_font;
+      font-weight: $font_weight_bold;
+      color: $text_color;
+      font-size: $small_font_size;
       text-transform: capitalize;
-      animation: appearNext variables.$transition_time ease-in-out;
+      animation: appearNext $transition_time ease-in-out;
 
-      @media only screen and (max-width: variables.$phone_width) {
-        font-size: variables.$small_small_font_size;
+      @media only screen and (max-width: $phone_width) {
+        font-size: $small_small_small_font_size;
       }
     }
   }

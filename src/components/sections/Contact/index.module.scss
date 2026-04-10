@@ -1,25 +1,46 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// SectionContact — Contact form layout (form fields + social links row)
 //
-//      SECTION CONTACT
-//
-// ------------------------------+
+// Two stacked blocks:
+//   • the form itself (h6 + 2 input rows + textarea + submit)
+//   • a small icon row at the bottom for the social links
+// All inputs share the same frosted-glass styling + focus state.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Section container --------------------------------------------------------
+// Vertical flex with the form on top and the icon row at the bottom.
 .section_contact_cont {
   width: 90%;
   height: 90%;
-  z-index: 50;
-  animation: fadeIn variables.$text_animation ease-in;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  animation: fadeIn $text_animation ease-in;
 
+  // Mobile: switch to centred absolute positioning + auto height.
+  // Also override the entrance animation so the fade-in keyframe preserves
+  // the centering transform — otherwise the form appears bottom-right then
+  // snaps to the centre when the animation ends.
+  @media only screen and (max-width: $phone_width) {
+    position: absolute;
+    width: 45%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    animation: fadeInMobile $text_animation ease-in;
+  }
+
+  // Mount entrance (desktop): fade in from below.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(variables.$text_animation_negative_margin);
+      transform: translateY($text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -27,6 +48,22 @@
     }
   }
 
+  // Mount entrance (mobile): same fade-in but the transform keeps the
+  // (-50%, -50%) centering so the form never jumps.
+  @keyframes fadeInMobile {
+    from {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% + #{$text_animation_negative_margin}));
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  // -- Contact form ---------------------------------------------------------
+  // 40% width on desktop so the form sits in the centre column. On mobile
+  // it expands to fill the section.
   .contact_form {
     width: 40%;
     height: 90%;
@@ -35,148 +72,204 @@
     align-items: center;
     justify-content: flex-end;
 
+    // Form heading (Let's have a chat).
     h6 {
-      font-family: variables.$second_font;
-      font-size: variables.$medium_font_size;
-      margin-bottom: variables.$big_margin;
+      font-family: $second_font;
+      font-size: $medium_font_size;
+      margin-bottom: $big_margin;
+
+      @media only screen and (max-width: $phone_width) {
+        margin-bottom: calc($small_margin + $small_small_margin);
+        font-size: $small_small_small_font_size;
+      }
     }
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
       width: 100%;
     }
 
+    // -- Two-input row (first/last name, email/phone) ---------------------
     .form_group {
       width: 100%;
       display: flex;
       justify-content: space-between;
-      margin-bottom: variables.$big_margin;
+      margin-bottom: $big_margin;
 
-      @media only screen and (max-width: variables.$phone_width) {
-        margin-bottom: calc(variables.$margin + variables.$small_margin);
+      @media only screen and (max-width: $phone_width) {
+        margin-bottom: $margin;
       }
 
+      // Wrapper for one input + its absolute label.
       .form_input_wrapper {
         width: 48%;
         height: 40px;
         position: relative;
 
-        .form_label {
-          position: absolute;
-          top: calc(variables.$margin * -1);
-          left: variables.$small_margin;
-          font-size: variables.$small_small_font_size;
-          font-family: variables.$second_font;
+        @media only screen and (max-width: $phone_width) {
+          width: 48%;
+          height: 30px;
         }
 
+        // Floating label sitting above the input field.
+        .form_label {
+          position: absolute;
+          top: calc($margin * -1);
+          left: $small_margin;
+          font-size: $small_small_font_size;
+          font-family: $second_font;
+
+          @media only screen and (max-width: $phone_width) {
+            top: calc(($small_margin + $small_small_margin) * -1);
+            font-size: $tiny_font_size;
+          }
+        }
+
+        // Frosted-glass input style — same as the textarea below.
         .form_input {
           width: 100%;
           height: 100%;
-          padding: variables.$small_margin;
-          background-color: variables.$white_color_rgba;
-          border: variables.$border_width solid variables.$white_color;
-          border-radius: variables.$border_radius;
-          box-shadow: 0 0 10px variables.$white_color;
+          padding: $small_margin;
+          background-color: $white_color_rgba;
+          border: $border_width solid $white_color;
+          border-radius: $border_radius;
+          box-shadow: 0 0 10px $white_color;
           outline: none;
-          transition: variables.$transition;
-          font-family: variables.$second_font;
+          transition: $transition;
+          font-family: $second_font;
 
+          @media only screen and (max-width: $phone_width) {
+            padding: $small_small_margin;
+            font-size: $small_small_small_font_size;
+          }
+
+          // Focus state — solid white background + brand-coloured glow.
           &:focus {
             box-shadow: 0 0 20px var(--color-primary);
-            background-color: variables.$white_color;
+            background-color: $white_color;
             color: var(--color-primary);
           }
         }
       }
     }
 
+    // -- Big textarea (message) -------------------------------------------
     .form_input_wrapper_text_area {
       position: relative;
       width: 100%;
       height: 100px;
-      margin-bottom: variables.$margin;
+      margin-bottom: $margin;
 
-      @media only screen and (max-width: variables.$phone_width) {
-        margin-bottom: variables.$small_margin;
+      @media only screen and (max-width: $phone_width) {
+        margin-bottom: $small_margin;
+        height: 45px;
       }
 
+      // Floating label above the textarea.
       .form_label {
         position: absolute;
-        top: calc(variables.$margin * -1);
-        left: variables.$small_margin;
-        font-size: variables.$small_small_font_size;
-        font-family: variables.$second_font;
+        top: calc($margin * -1);
+        left: $small_margin;
+        font-size: $small_small_font_size;
+        font-family: $second_font;
+
+        @media only screen and (max-width: $phone_width) {
+          top: calc(($small_margin + $small_small_margin) * -1);
+          font-size: $tiny_font_size;
+        }
       }
 
+      // Frosted-glass textarea matching the inputs.
       .textarea {
         width: 100%;
         height: 100%;
-        padding: variables.$small_margin;
-        background-color: variables.$white_color_rgba;
-        border: variables.$border_width solid variables.$white_color;
-        border-radius: variables.$border_radius;
-        box-shadow: 0 0 10px variables.$white_color;
+        padding: $small_margin;
+        background-color: $white_color_rgba;
+        border: $border_width solid $white_color;
+        border-radius: $border_radius;
+        box-shadow: 0 0 10px $white_color;
+        // Disable resize handle so users can't break the layout.
         resize: none;
         outline: none;
-        transition: variables.$transition;
-        font-family: variables.$second_font;
+        transition: $transition;
+        font-family: $second_font;
+
+        @media only screen and (max-width: $phone_width) {
+          font-size: $small_small_small_font_size;
+        }
 
         &:focus {
           box-shadow: 0 0 20px var(--color-primary);
-          background-color: variables.$white_color;
+          background-color: $white_color;
           color: var(--color-primary);
         }
       }
     }
 
+    // -- Submit button -----------------------------------------------------
     .btn_send {
       width: 100%;
       height: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-weight: variables.$font_weight_bold;
-      font-family: variables.$first_font;
-      padding: variables.$small_margin;
-      background-color: variables.$white_color_rgba;
-      border: variables.$border_width solid variables.$white_color;
-      border-radius: variables.$border_radius;
-      box-shadow: 0 0 10px variables.$white_color;
+      font-weight: $font_weight_bold;
+      font-family: $first_font;
+      padding: $small_margin;
+      background-color: $white_color_rgba;
+      border: $border_width solid $white_color;
+      border-radius: $border_radius;
+      box-shadow: 0 0 10px $white_color;
       outline: none;
-      // cursor: pointer;
-      transition: variables.$transition;
+      transition: $transition;
       text-transform: uppercase;
 
+      @media only screen and (max-width: $phone_width) {
+        height: 25px;
+        font-size: $small_small_font_size;
+      }
+
+      // Hover state mirrors the input focus state for consistency.
       &:hover {
         box-shadow: 0 0 20px var(--color-primary);
-        background-color: variables.$white_color;
+        background-color: $white_color;
         color: var(--color-primary);
       }
     }
 
+    // -- Success banner (replaces the submit btn after submission) --------
     .banner {
       width: 100%;
       height: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: variables.$small_margin;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: variables.$white_color;
-      border: variables.$border_width solid variables.$white_color;
-      border-radius: variables.$border_radius;
+      padding: $small_margin;
+      background-color: $white_color;
+      border: $border_width solid $white_color;
+      border-radius: $border_radius;
       box-shadow: 0 0 20px var(--color-primary);
       text-transform: uppercase;
 
+      @media only screen and (max-width: $phone_width) {
+        height: 25px;
+      }
+
+      // Banner text uses the brand colour to celebrate the success.
       p {
-        font-weight: variables.$font_weight_bold;
-        font-family: variables.$first_font;
+        font-weight: $font_weight_bold;
+        font-family: $first_font;
         color: var(--color-primary);
+
+        @media only screen and (max-width: $phone_width) {
+          font-size: $small_small_font_size;
+        }
       }
     }
   }
 
+  // -- Social icons row -----------------------------------------------------
+  // Three round icon buttons (GitHub, LinkedIn, Mail) at the bottom of the
+  // section.
   .images_container {
     width: 200px;
     height: 10%;
@@ -184,28 +277,34 @@
     justify-content: space-between;
     align-items: center;
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
       width: 140px;
     }
 
+    // Each social icon button.
     .btn_share_contact {
-      height: variables.$bouton_size;
-      width: variables.$bouton_size;
+      height: $bouton_size;
+      width: $bouton_size;
       display: flex;
       justify-content: center;
       align-items: center;
       border: none;
       background: none;
-      opacity: variables.$less_opacity;
+      opacity: $less_opacity;
       outline: none;
-      transition: variables.$transition;
-      // cursor: pointer;
+      transition: $transition;
 
       img {
         width: 20px;
         height: 20px;
+
+        @media only screen and (max-width: $phone_width) {
+          width: 15px;
+          height: 15px;
+        }
       }
 
+      // Hover bumps the icon to full opacity.
       &:hover {
         opacity: 1;
       }

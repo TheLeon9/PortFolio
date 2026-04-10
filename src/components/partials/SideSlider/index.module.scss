@@ -1,39 +1,50 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// SideSlider — Decorative left-side info tab (slides out on hover)
 //
-//          SIDE SLIDER
-//
-// ------------------------------+
+// At rest the slider sits off-screen on the left edge — only the small
+// "info" tab pokes out. Hovering pulls the slider fully into view.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Local variables ----------------------------------------------------------
+// Total width of the slider when fully open.
 $slide_width: 200px;
+// Width of the small tab that always pokes out at the right edge.
 $slide_tab_width: 20px;
 
+// -- Slider container ---------------------------------------------------------
+// Positioned vertically centred and pulled fully off-screen by default
+// (`left: -$slide_width`). On hover it slides to `left: 0`.
 .slider_cont {
   width: $slide_width;
   height: 180px;
   position: absolute;
   top: 50%;
+  // Negative left offset = the slider lives off-screen by default.
   left: calc($slide_width * -1);
   transform: translate(0, -50%);
-  z-index: variables.$top_zindex;
-  transition: variables.$transition;
-  animation: fadeIn variables.$text_animation ease-in-out;
+  z-index: $top_zindex;
+  transition: $transition;
+  animation: fadeIn $text_animation ease-in-out;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: variables.$shadow_box;
-  border-radius: 0 variables.$border_radius variables.$border_radius 0;
-  background-color: variables.$white_color_rgba;
+  box-shadow: $shadow_box;
+  // Round the right edge only (left edge is hidden off-screen).
+  border-radius: 0 $border_radius $border_radius 0;
+  background-color: $white_color_rgba;
 
+  // Reveal on hover.
   &:hover {
     left: 0;
   }
 
+  // Slide-in entrance on mount.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translate(variables.$text_animation_negative_margin, -50%);
+      transform: translate($text_animation_negative_margin, -50%);
     }
     to {
       opacity: 1;
@@ -41,6 +52,7 @@ $slide_tab_width: 20px;
     }
   }
 
+  // -- Inner content (placeholder) -----------------------------------------
   .slider_content {
     width: 100%;
     height: 100%;
@@ -48,12 +60,14 @@ $slide_tab_width: 20px;
     justify-content: center;
     align-items: center;
 
+    // Reserved for an icon — kept as `img` selector for future markup.
     img {
       width: auto;
       height: 80%;
     }
   }
 
+  // -- Inner tab marker (left edge of the visible tab) ---------------------
   .slider_tab_in {
     width: calc($slide_tab_width / 2);
     height: 40%;
@@ -61,33 +75,36 @@ $slide_tab_width: 20px;
     top: 50%;
     right: 0;
     transform: translate(0, -50%);
-    background-color: variables.$white_color;
-    border-radius: variables.$border_radius 0 0 variables.$border_radius;
-    border-left: solid variables.$border_width var(--color-primary);
-    // cursor: pointer;
+    background-color: $white_color;
+    border-radius: $border_radius 0 0 $border_radius;
+    border-left: solid $border_width var(--color-primary);
   }
 
+  // -- Outer tab (the part that pokes out on the right) -------------------
+  // Holds the rotated "info" label.
   .slider_tab_out {
     width: $slide_tab_width;
     height: 40%;
     position: absolute;
     top: 50%;
+    // Positive right offset → the tab sits outside the slider's right edge.
     right: calc($slide_tab_width * -1);
     transform: translate(0, -50%);
-    background-color: variables.$white_color;
-    border-radius: 0 variables.$border_radius variables.$border_radius 0;
+    background-color: $white_color;
+    border-radius: 0 $border_radius $border_radius 0;
+    // Vertical text via writing-mode + mixed orientation so it reads upright.
     writing-mode: vertical-rl;
     text-orientation: mixed;
     display: flex;
     align-items: center;
     justify-content: center;
-    // cursor: pointer;
 
+    // The "info" label.
     .custom_title {
-      font-family: variables.$first_font;
-      font-weight: variables.$font_weight_bold;
-      color: variables.$text_color;
-      font-size: variables.$small_font_size;
+      font-family: $first_font;
+      font-weight: $font_weight_bold;
+      color: $text_color;
+      font-size: $small_font_size;
       text-transform: lowercase;
     }
   }

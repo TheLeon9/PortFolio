@@ -1,28 +1,39 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// MusicSelector — Floating wrapper around the MusicButton
 //
-//         MUSIC SELECTOR
-//
-// ------------------------------+
+// Pinned to the bottom-left corner of the layout. The MusicButton itself owns
+// its bars; this file only handles positioning, the pill background and the
+// fade-in entrance.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Pill container -----------------------------------------------------------
 .music_selector_cont {
+  // Box
   width: 80px;
   height: 30px;
+
+  // Layout
   position: absolute;
-  bottom: variables.$layout_margin;
-  left: variables.$layout_margin;
-  background-color: variables.$white_color;
-  border-radius: calc(variables.$bouton_size / 2);
+  bottom: $layout_margin;
+  left: $layout_margin;
+  z-index: $top_zindex;
+
+  // Visual
+  background-color: $white_color;
+  border-radius: calc($bouton_size / 2); // perfect pill
   overflow: hidden;
-  z-index: variables.$top_zindex;
-  transition: variables.$transition;
-  animation: fadeIn variables.$text_animation ease-in-out;
+
+  // Animation
+  transition: $transition;
+  // Slide in from the left on mount.
+  animation: fadeIn $text_animation ease-in-out;
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX(variables.$text_animation_negative_margin);
+      transform: translateX($text_animation_negative_margin);
     }
     to {
       opacity: 1;
@@ -30,8 +41,12 @@
     }
   }
 
-  @media only screen and (max-width: variables.$phone_width) {
-    bottom: calc(variables.$layout_margin / 2);
-    left: calc(variables.$layout_margin / 2);
+  // Mobile: smaller dimensions + tighter offset.
+  @media only screen and (max-width: $phone_width) {
+    bottom: $layout_margin_mob;
+    left: $layout_margin_mob;
+    width: 60px;
+    height: 24px;
+    border-radius: calc($bouton_size_mob / 2);
   }
 }

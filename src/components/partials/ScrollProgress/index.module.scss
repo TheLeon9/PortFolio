@@ -1,15 +1,19 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// ScrollProgress — Vertical scroll percentage indicator
 //
-//      SCROLL PROGRESS
-//
-// ------------------------------+
+// Two columns of small horizontal segments stacked above and below a
+// vertical "XX %" label. Pinned to the right edge of the viewport.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Vertical container -------------------------------------------------------
+// Pinned to the right side, vertically centred. `pointer-events: none` so the
+// element never blocks the scroll handlers behind it.
 .scroll_progress_cont {
   position: absolute;
   top: 50%;
-  right: variables.$layout_margin;
+  right: $layout_margin;
   transform: translate(0, -50%);
   width: auto;
   height: auto;
@@ -17,16 +21,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  animation: fadeIn variables.$text_animation ease-in-out;
-  transition: variables.$transition;
-  gap: variables.$small_small_margin;
+  animation: fadeIn $text_animation ease-in-out;
+  transition: $transition;
+  gap: $small_small_margin;
   pointer-events: none;
-  z-index: variables.$top_zindex;
+  z-index: $top_zindex;
 
+  // Slide-in from the right on mount.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translate(variables.$text_animation_margin, -50%);
+      transform: translate($text_animation_margin, -50%);
     }
     to {
       opacity: 1;
@@ -34,34 +39,57 @@
     }
   }
 
-  @media only screen and (max-width: variables.$phone_width) {
-    right: calc(variables.$layout_margin / 2);
+  @media only screen and (max-width: $phone_width) {
+    right: $layout_margin_mob;
+    gap: 3px;
   }
 
+  // -- Decorative segments (small horizontal bars) --------------------------
+  // Default colour is the brand primary; every other one switches to black
+  // to give the column a striped rhythm.
   .progress_segment {
-    width: variables.$small_small_margin;
-    height: variables.$border_width;
+    width: $small_small_margin;
+    height: $border_width;
     background-color: var(--color-primary);
 
     &:nth-child(even) {
-      background-color: variables.$black_color;
+      background-color: $black_color;
+    }
+
+    @media only screen and (max-width: $phone_width) {
+      width: 3px;
     }
   }
 
+  // -- Percentage label container -------------------------------------------
   .percentage_container {
     width: auto;
-    height: calc(variables.$margin + variables.$small_small_margin);
+    // Slightly taller than the standard margin so the vertical text fits.
+    height: calc($margin + $small_small_margin);
+    // Extra vertical breathing room so the text is clearly separated from
+    // the segment columns above and below.
+    margin: $small_margin 0;
+
+    @media only screen and (max-width: $phone_width) {
+      height: $margin;
+      margin: $small_small_margin 0;
+    }
     display: flex;
     justify-content: center;
     align-items: center;
 
+    // The actual "XX %" text — rendered vertically via writing-mode.
     .percentage_text {
-      font-family: variables.$first_font;
-      font-weight: variables.$font_weight_bold;
-      color: variables.$text_color;
-      font-size: variables.$small_small_small_font_size;
+      font-family: $first_font;
+      font-weight: $font_weight_bold;
+      color: $text_color;
+      font-size: $small_small_small_font_size;
       text-transform: lowercase;
-      writing-mode: vertical-lr;
+      writing-mode: vertical-lr;            // rotate the text 90° clockwise
+
+      @media only screen and (max-width: $phone_width) {
+        font-size: $tiny_font_size;
+      }
     }
   }
 }

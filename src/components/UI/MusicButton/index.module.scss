@@ -1,11 +1,17 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// MusicButton — Equaliser-style music toggle
 //
-//         MUSIC BUTTON
-//
-// ------------------------------+
+// 12 vertical bars + a label "on/off" inside a pill button. The bars are
+// individually animated by a CSS keyframe; gradient masks on the left/right
+// edges fade them out smoothly so the wave looks like it disappears off the
+// edges of the button.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Button shell -------------------------------------------------------------
+// Reset native button styles and use flex to split the bars row from the
+// "on/off" label.
 .music_btn {
   width: 100%;
   height: 100%;
@@ -15,38 +21,44 @@
   border: none;
   background: none;
   outline: none;
-  // cursor: pointer;
 
+  // -- Bars row ---------------------------------------------------------------
   .music_line {
     width: 65%;
     height: 100%;
-    position: relative;
+    position: relative;        // anchor for the gradient masks
     display: flex;
     justify-content: center;
     align-items: center;
 
+    // Each individual bar.
     .bar {
-      width: variables.$border_width_big;
-      margin: 0 1px;
+      width: $border_width_big;
+      margin: 0 1px;            // tight horizontal spacing
       background-color: var(--color-primary);
       display: inline-block;
       transform-origin: center center;
-      transition: variables.$transition;
+      transition: $transition;
 
+      // Resting state — bar is just a small dot.
       &.not_active {
-        height: variables.$border_width_big;
+        height: $border_width_big;
       }
 
+      // Active state — bar takes 50% of the height and bounces.
       &.active {
-        animation: bounce variables.$big_transition_time infinite ease-in-out;
+        animation: bounce $big_transition_time infinite ease-in-out;
         height: 50%;
       }
 
+      // Alternate every other bar with the dark colour for visual rhythm.
       &:nth-child(even) {
-        background-color: variables.$black_color;
+        background-color: $black_color;
       }
     }
 
+    // Bouncing animation used by the active bars. Four keyframes so the
+    // motion never reads as a flat 0%↔100% cycle.
     @keyframes bounce {
       0% {
         transform: scaleY(1);
@@ -65,8 +77,9 @@
       }
     }
 
+    // Left edge gradient mask — fades the bars out smoothly.
     .hide_left {
-      background: linear-gradient(to right, variables.$white_color 20%, transparent 100%);
+      background: linear-gradient(to right, $white_color 20%, transparent 100%);
       position: absolute;
       top: 0;
       left: 0;
@@ -74,8 +87,9 @@
       height: 100%;
     }
 
+    // Right edge gradient mask — mirror of `.hide_left`.
     .hide_right {
-      background: linear-gradient(to left, variables.$white_color 20%, transparent 100%);
+      background: linear-gradient(to left, $white_color 20%, transparent 100%);
       position: absolute;
       top: 0;
       right: 0;
@@ -84,6 +98,7 @@
     }
   }
 
+  // -- "on/off" label ---------------------------------------------------------
   .music_text_cont {
     width: 35%;
     height: 100%;
@@ -91,12 +106,17 @@
     justify-content: center;
     align-items: center;
 
+    // The actual text node.
     .music_text {
-      font-family: variables.$first_font;
-      font-weight: variables.$font_weight_bold;
-      color: variables.$text_color;
-      font-size: variables.$small_font_size;
+      font-family: $first_font;
+      font-weight: $font_weight_bold;
+      color: $text_color;
+      font-size: $small_font_size;
       text-transform: lowercase;
+
+      @media only screen and (max-width: $phone_width) {
+        font-size: $small_small_small_font_size;
+      }
     }
   }
 }

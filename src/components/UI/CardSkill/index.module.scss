@@ -1,37 +1,50 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// CardSkill — Small skill badge styles
 //
-//          CARD LIST
-//
-// ------------------------------+
+// Frosted-glass background with a hover state that flips the colours and
+// adds a coloured glow.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Card container -----------------------------------------------------------
+// Pill-shaped badge with the skill label centred inside.
 .card_skill {
+  // Box
   width: 100px;
   height: 40px;
-  padding: variables.$small_margin;
+  padding: $small_margin;
+  margin: $small_margin;
+
+  // Layout
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: variables.$white_color_rgba;
-  border: solid variables.$border_width variables.$white_color;
-  border-radius: variables.$border_radius;
-  margin: variables.$small_margin;
-  box-shadow: 0 0 10px variables.$white_color;
-  transition: variables.$transition;
-  // cursor: pointer;
 
+  // Visual
+  background-color: $white_color_rgba;
+  border: solid $border_width $white_color;
+  border-radius: $border_radius;
+  box-shadow: 0 0 10px $white_color;
+
+  // Animation
+  transition: $transition;
+
+  // Hover: flip the background to solid white and add a coloured glow +
+  // colour the inner title.
   &:hover {
-    background-color: variables.$white_color;
+    background-color: $white_color;
     box-shadow: 0 0 20px var(--color-primary);
 
+    // Inner title takes the brand colour on hover.
     .card_title {
       color: var(--color-primary);
     }
   }
 
+  // Inner skill label.
   .card_title {
     font-weight: bold;
-    transition: variables.$transition;
+    transition: $transition;
   }
 }

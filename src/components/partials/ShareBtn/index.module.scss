@@ -1,25 +1,32 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// ShareBtn — Toggleable social links pinned to the top-right
 //
-//          SHARE BTN
-//
-// ------------------------------+
+// Closed state: only the round main button is visible. Open state: three
+// circular buttons (GitHub, LinkedIn, Mail) drop down stacked vertically
+// below the main button. The "social" hover label uses two stacked spans
+// that swap on hover for a clean reveal animation.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Container ----------------------------------------------------------------
+// Pinned to the top-right corner. Width/height match the standard button
+// size; child buttons are absolutely positioned underneath.
 .share_btn_cont {
-  height: variables.$bouton_size;
-  width: variables.$bouton_size;
+  height: $bouton_size;
+  width: $bouton_size;
   position: absolute;
-  top: variables.$layout_margin;
-  right: variables.$layout_margin;
-  animation: fadeIn variables.$text_animation ease-in-out;
-  z-index: variables.$top_zindex;
-  transition: variables.$transition;
+  top: $layout_margin;
+  right: $layout_margin;
+  animation: fadeIn $text_animation ease-in-out;
+  z-index: $top_zindex;
+  transition: $transition;
 
+  // Mount entrance: slide in from the right.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateX(variables.$text_animation_margin);
+      transform: translateX($text_animation_margin);
     }
     to {
       opacity: 1;
@@ -27,23 +34,35 @@
     }
   }
 
-  @media only screen and (max-width: variables.$phone_width) {
-    top: calc(variables.$layout_margin / 2);
-    right: calc(variables.$layout_margin / 2);
+  // Mobile: smaller dimensions + tighter offsets.
+  @media only screen and (max-width: $phone_width) {
+    top: $layout_margin_mob;
+    right: $layout_margin_mob;
+    height: $bouton_size_mob;
+    width: $bouton_size_mob;
   }
 
-  &:hover {
-    .btn_title {
-      span:nth-child(1) {
-        transform: translateY(-120%);
-      }
-      span:nth-child(2) {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+  // -- "social" hover label rotation ----------------------------------------
+  // On hover, the first span slides up out of view and the second span
+  // slides into the visible spot.
+  @media (hover: hover) {
+    &:hover {
+      .btn_title {
+        // Slide span 1 above the visible area.
+        span:nth-child(1) {
+          transform: translateY(-120%);
+        }
+        // Reveal span 2 at the visible spot.
+        span:nth-child(2) {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
       }
     }
   }
 
+  // -- "social" label container --------------------------------------------
+  // Sits to the LEFT of the share button (right: 100%).
   .btn_title {
     width: 60px;
     height: 26px;
@@ -55,66 +74,84 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: variables.$first_font;
-    font-weight: variables.$font_weight_bold;
-    color: variables.$text_color;
-    font-size: variables.$small_font_size;
+    font-family: $first_font;
+    font-weight: $font_weight_bold;
+    color: $text_color;
+    font-size: $small_font_size;
     text-transform: lowercase;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$small_small_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_small_font_size;
     }
 
+    // Two stacked spans that swap on hover (see :hover above).
     span {
       display: inline-block;
 
+      // Default visible span.
       &:nth-child(1) {
         transform-origin: top;
-        transition: transform variables.$transition_time ease-in-out;
+        transition: transform $transition_time ease-in-out;
       }
+      // Hidden duplicate sitting just below the visible area.
       &:nth-child(2) {
-        transform: translate3d(0, variables.$text_animation_margin, 0);
+        transform: translate3d(0, $text_animation_margin, 0);
         position: absolute;
         opacity: 1;
-        transition: all variables.$transition_time ease-in-out;
+        transition: all $transition_time ease-in-out;
       }
     }
   }
 
+  // -- Shared base styles for every round button ---------------------------
+  // Mail/GitHub/LinkedIn/Share all share the same circle dimensions and
+  // transition. Position is set per-button below.
   .btn_mail,
   .btn_github,
   .btn_link,
   .btn_share {
     position: absolute;
-    height: variables.$bouton_size;
-    width: variables.$bouton_size;
+    height: $bouton_size;
+    width: $bouton_size;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: variables.$circle_border_radius;
-    // cursor: pointer;
+    border-radius: $circle_border_radius;
     outline: none;
-    transition: variables.$transition;
+    transition: $transition;
+
+    @media only screen and (max-width: $phone_width) {
+      height: $bouton_size_mob;
+      width: $bouton_size_mob;
+    }
 
     img {
       width: 20px;
       height: 20px;
+
+      @media only screen and (max-width: $phone_width) {
+        width: 14px;
+        height: 14px;
+      }
     }
   }
 
+  // -- Main toggle button (open / close states) ----------------------------
   .btn_share {
+    // Solid white background in both open and close states.
     &.btn_share_close,
     &.btn_share_open {
       border: none;
-      background: variables.$white_color;
+      background: $white_color;
     }
 
+    // Close state shows a smaller "X" icon.
     &.btn_share_close {
       img {
         width: 14px;
         height: 14px;
 
-        @media only screen and (max-width: variables.$phone_width) {
+        @media only screen and (max-width: $phone_width) {
           width: 10px;
           height: 10px;
         }
@@ -122,21 +159,39 @@
     }
   }
 
+  // -- Per-button vertical positioning -------------------------------------
+  // Each social button is offset further down so they stack with even spacing.
+
   .btn_github {
     opacity: 0;
-    top: calc(variables.$big_margin + variables.$small_margin);
+    top: calc($big_margin + $small_margin);
+
+    @media only screen and (max-width: $phone_width) {
+      top: calc($bouton_size_mob + $small_small_margin);
+    }
   }
 
   .btn_link {
     opacity: 0;
-    top: calc((variables.$big_margin + variables.$small_margin) * 2);
+    top: calc(($big_margin + $small_margin) * 2);
+
+    @media only screen and (max-width: $phone_width) {
+      top: calc(($bouton_size_mob + $small_small_margin) * 2);
+    }
   }
 
   .btn_mail {
     opacity: 0;
-    top: calc((variables.$big_margin + variables.$small_margin) * 3);
+    top: calc(($big_margin + $small_margin) * 3);
+
+    @media only screen and (max-width: $phone_width) {
+      top: calc(($bouton_size_mob + $small_small_margin) * 3);
+    }
   }
 
+  // -- Open / Close transition for the three social buttons ----------------
+  // `.btn_open` = closed share menu (buttons hidden above the main btn).
+  // `.btn_close` = open share menu (buttons revealed and clickable).
   .btn_github,
   .btn_mail,
   .btn_link {
@@ -144,21 +199,26 @@
     background: none;
     z-index: -1;
 
+    // Closed state: hidden above, no pointer events.
     &.btn_open {
-      transform: translateY(variables.$text_animation_negative_margin);
+      transform: translateY($text_animation_negative_margin);
       opacity: 0;
       pointer-events: none;
       z-index: -1;
     }
 
+    // Open state: visible at resting position, clickable.
     &.btn_close {
       transform: translateY(0);
-      opacity: variables.$less_opacity;
-      z-index: variables.$top_zindex;
+      opacity: $less_opacity;
+      z-index: $top_zindex;
       pointer-events: auto;
 
-      &:hover {
-        opacity: 1;
+      // Hover bumps the opacity to full.
+      @media (hover: hover) {
+        &:hover {
+          opacity: 1;
+        }
       }
     }
   }

@@ -1,5 +1,17 @@
+// =============================================================================
+// themes — Global CSS variables overridden at runtime by the JS ColorPicker
+//
+// These three variables form the only piece of state shared with vanilla CSS.
+// The React ColorPicker writes new values into them via
+// `document.documentElement.style.setProperty(...)`, so any rule that reads
+// `var(--color-primary)` updates instantly without a React re-render.
+// =============================================================================
+
 :root {
+  // Brand primary colour (mutated by the ColorPicker / debug GUI).
   --color-primary: #0132b5;
+  // Background colour. Mirrors `$white_color` from variables.scss.
   --color-background: #f8f8ff;
+  // Body text colour. Mirrors `$text_color` from variables.scss.
   --color-text: #1c1c1c;
 }

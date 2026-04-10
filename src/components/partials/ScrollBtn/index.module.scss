@@ -1,33 +1,47 @@
-@use '@/styles/variables';
-
-// ------------------------------+
+// =============================================================================
+// ScrollBtn — Animated "scroll" indicator pinned to the bottom centre
 //
-//          SCROLL BTN
+// Composed of:
+//   • two half-circle arcs that rotate inward like an iris
+//   • a dot that drops down through the iris
+//   • the text "scroll down" that wiggles gently
 //
-// ------------------------------+
+// Everything is purely CSS-driven via three keyframe animations sharing the
+// same `$big_transition_time` cycle so they stay in sync.
+// =============================================================================
 
+@use '@/styles/variables' as *;
+
+// -- Local variables ----------------------------------------------------------
+// Rotation tilt of the "scroll" word during its wiggle.
 $rotation_up: 10deg;
+// Rotation tilt of the "down" word during its wiggle.
 $rotation_down: -10deg;
+// Y offset used by the wiggle animations.
 $translate: 4px;
+// Vertical offset used by the dropping dot.
 $translate_circle_dot: 10px;
 
+// -- Container ----------------------------------------------------------------
+// Pinned to the bottom centre of the viewport.
 .scroll_btn_cont {
   position: absolute;
   left: 50%;
-  bottom: variables.$layout_margin;
+  bottom: $layout_margin;
   transform: translate(-50%, 0);
   width: 110px;
   height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: fadeIn variables.$text_animation ease-in-out;
-  transition: variables.$transition;
+  animation: fadeIn $text_animation ease-in-out;
+  transition: $transition;
 
+  // Mount entrance: slide up + fade in.
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translate(-50%, variables.$text_animation_margin);
+      transform: translate(-50%, $text_animation_margin);
     }
     to {
       opacity: 1;
@@ -35,11 +49,15 @@ $translate_circle_dot: 10px;
     }
   }
 
-  @media only screen and (max-width: variables.$phone_width) {
-    width: 100px;
-    bottom: calc(variables.$layout_margin / 2);
+  // Mobile: smaller width and tighter vertical offset.
+  @media only screen and (max-width: $phone_width) {
+    width: 80px;
+    bottom: $small_small_margin;
   }
 
+  // -- Iris arcs (left + right halves) --------------------------------------
+  // Both arcs share the same base styles. Only the bottom border is solid;
+  // the others are transparent which gives the half-circle look.
   .scroll_circle_right,
   .scroll_circle_left {
     position: absolute;
@@ -48,17 +66,17 @@ $translate_circle_dot: 10px;
     top: -20px;
     background-color: transparent;
     opacity: 1;
-    border-top: solid variables.$border_width transparent;
-    border-left: solid variables.$border_width transparent;
-    border-right: solid variables.$border_width transparent;
-    border-bottom: solid variables.$border_width var(--color-primary);
-    border-radius: variables.$circle_border_radius;
+    border-top: solid $border_width transparent;
+    border-left: solid $border_width transparent;
+    border-right: solid $border_width transparent;
+    border-bottom: solid $border_width var(--color-primary);
+    border-radius: $circle_border_radius;
   }
 
+  // -- Left arc animation: rotates from 0° to 160° on the second half ------
   .scroll_circle_left {
     will-change: transform;
-    animation: scrollCircleLeft variables.$big_transition_time infinite
-      ease-in-out;
+    animation: scrollCircleLeft $big_transition_time infinite ease-in-out;
 
     @keyframes scrollCircleLeft {
       0%,
@@ -68,10 +86,12 @@ $translate_circle_dot: 10px;
       50% {
         opacity: 0;
       }
+      // Snap visible at the start of the second half.
       51% {
         opacity: 1;
         transform: rotate(0deg);
       }
+      // Spin to 160° just before fading out.
       74% {
         opacity: 1;
         transform: rotate(160deg);
@@ -82,8 +102,9 @@ $translate_circle_dot: 10px;
     }
   }
 
+  // -- Right arc animation: mirror of the left one (rotates -160°) ---------
   .scroll_circle_right {
-    animation: scrollCircleRight variables.$big_transition_time infinite linear;
+    animation: scrollCircleRight $big_transition_time infinite linear;
     will-change: transform;
 
     @keyframes scrollCircleRight {
@@ -108,16 +129,20 @@ $translate_circle_dot: 10px;
     }
   }
 
+  // -- Falling dot ----------------------------------------------------------
+  // Tiny round dot that drops down through the iris. The keyframe pattern
+  // is intentionally non-uniform so the dot bounces unpredictably.
   .scroll_circle_dot {
     position: absolute;
     width: 4px;
     height: 4px;
     background-color: var(--color-primary);
-    border-radius: variables.$circle_border_radius;
-    animation: scrollCircleDot variables.$big_transition_time infinite linear;
+    border-radius: $circle_border_radius;
+    animation: scrollCircleDot $big_transition_time infinite linear;
     will-change: transform;
 
-    @media only screen and (max-width: variables.$phone_width) {
+    @media only screen and (max-width: $phone_width) {
+      // Smaller drop distance on mobile.
       $translate_circle_dot: 4px;
     }
 
@@ -126,19 +151,23 @@ $translate_circle_dot: 10px;
       100% {
         transform: translateY(0);
       }
+      // Drop slightly below the start position.
       25%,
       26% {
         transform: translateY($translate_circle_dot);
         opacity: 1;
       }
+      // Pop up above the start position.
       50% {
         transform: translateY(-10px);
         opacity: 1;
       }
+      // Disappear during the iris animation.
       51%,
       74% {
         opacity: 0;
       }
+      // Reappear high up to "reset" before the loop restarts.
       75% {
         opacity: 1;
         transform: translateY(-30px);
@@ -146,41 +175,46 @@ $translate_circle_dot: 10px;
     }
   }
 
+  // -- "scroll down" wiggling text -----------------------------------------
+  // Holds two pseudo-elements (`::before` = "scroll", `::after` = "down")
+  // that wiggle in opposite directions to give a playful look.
   .scroll_down_sentence {
-    font-family: variables.$first_font;
-    font-weight: variables.$font_weight_bold;
-    color: variables.$text_color;
-    font-size: variables.$small_font_size;
+    font-family: $first_font;
+    font-weight: $font_weight_bold;
+    color: $text_color;
+    font-size: $small_font_size;
     text-transform: lowercase;
 
-    @media only screen and (max-width: variables.$phone_width) {
-      font-size: variables.$small_small_font_size;
+    @media only screen and (max-width: $phone_width) {
+      font-size: $small_small_small_font_size;
     }
 
     .dot {
       width: 4px;
       height: 4px;
       background-color: transparent;
-      border-radius: variables.$circle_border_radius;
+      border-radius: $circle_border_radius;
 
+      // "scroll" word — rotates clockwise on the wiggle.
       &::before {
         content: 'scroll';
         position: absolute;
         top: 50%;
         left: 0%;
         transform: translate(0%, -50%);
-        animation: scrollAnimation variables.$big_transition_time infinite
-          linear;
+        animation: scrollAnimation $big_transition_time infinite linear;
         transform-origin: right;
 
         @keyframes scrollAnimation {
           0% {
             transform: translate(0, -50%) rotate(0deg);
           }
+          // Mid-wiggle pose: slight downward translate + tilt.
           25% {
             transform: translate(0, calc(-50% + $translate))
               rotate($rotation_up);
           }
+          // Snap back to neutral.
           50% {
             transform: translate(0, -50%);
           }
@@ -190,13 +224,14 @@ $translate_circle_dot: 10px;
         }
       }
 
+      // "down" word — mirror wiggle (counter-clockwise).
       &::after {
         content: 'down';
         position: absolute;
         top: 50%;
         right: 0%;
         transform: translate(0%, -50%);
-        animation: downAnimation variables.$big_transition_time infinite linear;
+        animation: downAnimation $big_transition_time infinite linear;
         transform-origin: left;
 
         @keyframes downAnimation {

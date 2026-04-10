@@ -1,78 +1,147 @@
-// color
+// =============================================================================
+// variables — Shared design tokens (colors, borders, fonts, sizes, z-index)
+//
+// Single source of truth for every design value used by the SCSS modules.
+// Each module imports this file via `@use '@/styles/variables' as *;`.
+// Tweaking a value here propagates everywhere it is referenced.
+// =============================================================================
+
+// -- Brand colours -------------------------------------------------------------
+// Off-white background colour used as the base of the UI.
 $white_color: #f8f8ff;
+// Translucent variant — used for "frosted glass" backgrounds (cards, etc.).
 $white_color_rgba: rgba(248, 248, 255, 0.4);
+// Translucent variant of the dark colour — used for overlays.
 $black_color_rgba: rgba(4, 11, 18, 0.5);
+// Lighter translucent dark — used for subtle hovers.
 $black_color_rgba_light: rgba(4, 11, 18, 0.4);
+// Brand near-black (text and accents).
 $black_color: #040b12;
+// Slightly softer black used for body text — keeps contrast comfortable.
 $text_color: #1c1c1c;
+// Brand primary blue. Mirrored by the CSS variable `--color-primary` so the
+// JS ColorPicker can override it at runtime.
 $main_color: #0132b5;
+// Translucent primary used for hover backgrounds.
 $main_color_rgba: rgba(1, 50, 181, 0.2);
+// Status colours.
 $error_color: crimson;
 $succes_color: aqua;
 $succes_color_two: green;
 
-// border
+// -- Borders -------------------------------------------------------------------
+// Small radius for inputs and tight controls.
 $small_border_radius: 4px;
+// Standard radius for cards and buttons.
 $border_radius: 10px;
+// Perfect circle radius (avatars, dots).
 $circle_border_radius: 50%;
+// Hairline border thickness used for most outlines.
 $border_width: 1px;
+// Thicker border for emphasis (active states).
 $border_width_big: 2px;
 
-// font
+// -- Fonts ---------------------------------------------------------------------
+// Display font used for titles and labels.
 $first_font: 'Orbitron', sans-serif;
+// Body font used for paragraphs.
 $second_font: 'Nunito', sans-serif;
+// Bold weight used by titles and emphasis.
 $font_weight_bold: 600;
+// Default body weight.
 $font_weight_regular: normal;
 
-// font size
-$small_small_small_font_size: 8px;
-$small_small_font_size: 12px;
-$small_font_size: 14px;
-$font_size: 16px;
-$medium_font_size: 18px;
-$big_font_size: 24px;
-$title_font_size: 32px;
+// -- Font sizes ----------------------------------------------------------------
+// Tightly stacked sizes — easy to pick the right one without re-reading the file.
+$tiny_font_size: 8px;                // tiniest readable size (mobile scroll %)
+$small_small_small_font_size: 10px;  // micro labels (skill bands, highlights)
+$small_small_font_size: 12px;        // small captions
+$small_font_size: 14px;              // standard small text
+$font_size: 16px;                    // body baseline
+$medium_font_size: 18px;             // emphasized body
+$big_font_size: 24px;                // section headers
+$title_font_size: 32px;              // page titles
 
-// text
+// -- Text ----------------------------------------------------------------------
+// Default first-line indent for paragraphs (not used everywhere — kept for parity).
 $text_indent: 20px;
+// Letter spacing baseline — `normal` so child rules can override.
 $letter_spacing: normal;
+// Line height baseline — `normal` so child rules can override.
 $line_height: normal;
 
-// animation
+// -- Animations ----------------------------------------------------------------
+// Shorthand for the standard transition (used in `transition: $transition`).
 $transition: 0.6s all;
+// Same value as a duration token (for `transition: opacity $transition_time ease`).
 $transition_time: 0.6s;
+// One-second transition for medium-length tweens.
 $medium_transition_time: 1s;
+// Long transition used by the equaliser bars in MusicButton.
 $big_transition_time: 2.8s;
 
+// Standard duration for one-shot fade-in animations on element appearance.
 $text_animation: 1s;
+// Y offset used by the entry animations (positive = comes from below).
 $text_animation_margin: 26px;
+// Negative version (comes from above).
 $text_animation_negative_margin: -26px;
 
-// margin
+// -- Margins / spacing ---------------------------------------------------------
+// Tiny spacing between two adjacent micro elements.
 $small_small_margin: 5px;
+// Small spacing — used for input padding, card gaps.
 $small_margin: 10px;
+// Standard spacing — used for vertical rhythm.
 $margin: 20px;
+// Large spacing — used between sections.
 $big_margin: 40px;
 
+// Margin from the viewport edge for fixed/absolute positioned UI (NavBar, etc.).
 $layout_margin: 20px;
 
-// opacity
+// -- Opacity -------------------------------------------------------------------
+// Less-than-opaque variant for hover hints.
 $less_opacity: 0.6;
+// Even more transparent — used for ornaments and decorative elements.
 $less_less_opacity: 0.4;
 
-// zIndex
+// -- z-index -------------------------------------------------------------------
+// Top layer used by floating UI (NavBar, ColorPicker, ScrollProgress, ...).
 $top_zindex: 100;
 
-// phone
+// -- Responsive breakpoint -----------------------------------------------------
+// Below this width we treat the device as a phone.
 $phone_width: 1000px;
 
-// bouton
+// -- Buttons -------------------------------------------------------------------
+// Standard button size used by share, music, etc.
 $bouton_size: 40px;
+// Smaller variant used on mobile.
+$bouton_size_mob: 30px;
 
-// shadow box
+// -- Shadows -------------------------------------------------------------------
+// Default drop shadow used by cards and modals.
 $shadow_box: 0 8px 40px rgba(0, 0, 0, 0.2);
+// Subtle shadow used by the custom cursor.
 $cursor_shadow_box: 0 0 10px  rgba(0, 0, 0, 0.8);
 
-// Image width and height
+// -- Image dimensions ----------------------------------------------------------
+// Standard square image size used in social/share buttons.
 $image_height: 40px;
+// Double the standard size — used in larger icons.
 $double_image_height: 80px;
+
+// -- Mobile portrait overlay tokens --------------------------------------------
+// Width threshold below which the portrait overlay can show.
+$mobile: 600px;
+// Z-index used for the loader overlay (above everything else).
+$z_loading: 9999;
+// Reduced layout margin on mobile.
+$layout_margin_mob: 16px;
+// Size of the corner ornaments shown in the portrait overlay.
+$ornament_size_mob: 60px;
+// Horizontal offset of the coloured ornament relative to the outline one.
+$ornament_offset_x_mob: 4px;
+// Vertical offset of the coloured ornament relative to the outline one.
+$ornament_offset_y_mob: 4px;

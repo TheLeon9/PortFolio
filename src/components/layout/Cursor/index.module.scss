@@ -1,0 +1,56 @@
+// =============================================================================
+// Cursor — Custom cursor styles (desktop only)
+//
+// The cursor is a fixed-position circle that GSAP positions through the
+// `transform: translate(x, y)` shorthand inside index.js. The base styles
+// here only handle the visual look + the hover state classes.
+// =============================================================================
+
+@use '@/styles/variables' as *;
+
+// -- Local variables ----------------------------------------------------------
+// Width and height of the resting cursor (square).
+$cursor_wh: 25px;
+
+// -- Cursor circle ------------------------------------------------------------
+// Fixed positioning + transform-origin: center so GSAP scale tweens grow
+// from the centre. The element starts invisible (opacity 0) and is faded
+// in by the JS on the first mousemove.
+.cursor_custom {
+  // Layout
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;          // sits above every UI element
+
+  // Box
+  width: $cursor_wh;
+  height: $cursor_wh;
+
+  // Visual
+  background-color: var(--color-primary); // follows the live theme
+  border-radius: $circle_border_radius;
+  box-shadow: $cursor_shadow_box;
+  opacity: 0;            // hidden by default
+  pointer-events: none;  // never blocks the mouse
+
+  // Animation
+  transform: translate(-50%, -50%); // centre on the actual mouse coords
+  transform-origin: center;
+  transition:
+    scale $transition_time ease,
+    mix-blend-mode $transition_time ease,
+    opacity $transition_time ease;
+
+  // Hover variant on a `.hover_target_big` element. Uses `color-burn` to
+  // make the cursor blend into the underlying colour for emphasis.
+  &.is_hover_big {
+    mix-blend-mode: color-burn;
+    opacity: $less_opacity !important;
+  }
+
+  // Hover variant on a `.hover_target_small` element. Just dims the cursor.
+  &.is_hover_small {
+    opacity: $less_opacity !important;
+  }
+}
