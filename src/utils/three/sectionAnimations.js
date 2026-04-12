@@ -278,7 +278,8 @@ export const runSectionAnimations = (scrollProgress, state) => {
     // The wobble follows ONE continuous curve across the entire section so
     // there are no jarring direction changes between phases.
     const phase1T = clamp01(skillsT / 0.35);
-    const phase2T = clamp01((skillsT - 0.35) / 0.40);
+    const entryT = clamp01(skillsT / 0.55);
+    const liftT = clamp01((skillsT - 0.40) / 0.35);
     const phase3T = clamp01((skillsT - 0.75) / 0.25);
 
     const skillGroups = skills.children;
@@ -325,37 +326,25 @@ export const runSectionAnimations = (scrollProgress, state) => {
     uniforms.uWarpStrength.value = lerp(0.1, 1.8, clamp01(phase1T));
 
     // --- Skills sub-phase logic --------------------------------------------
-    if (skillsT <= 0.35) {
-      // Phase 1: staggered pop-in with gentle overshoot.
-      const globalP = easeInOut(phase1T);
+    if (skillsT <= 0.75) {
+      // Phases 1+2 combined: staggered entry with overshoot + additive lift.
+      // Entry spans 0→0.55 of skillsT (more time for late skills to settle).
+      // Lift starts at 0.40 and ramps to 0.75, overlapping with entry end.
+      const globalP = entryT;
+      const liftP = easeInOut(liftT);
 
       skillGroups.forEach((sk, i) => {
         const init = sk.userData.initialPosition;
-        const p = getStaggeredP(i, globalP, 0.35);
+        const p = getStaggeredP(i, globalP, 0.25);
         const eased = easeOutBack(p);
 
         sk.position.x = init.x;
-        sk.position.y = lerp(init.y - 3, init.y, eased);
+        sk.position.y = lerp(init.y - 3, init.y, eased) + liftP * 0.4;
         sk.position.z = init.z;
 
         const fadeP = clamp01(p * 2.5);
         sk.children.forEach((obj) => {
           if (obj.material) obj.material.opacity = fadeP;
-        });
-      });
-    } else if (skillsT <= 0.75) {
-      // Phase 2: hold V-formation, gentle lift.
-      const p = easeInOut(phase2T);
-
-      skillGroups.forEach((sk) => {
-        const init = sk.userData.initialPosition;
-
-        sk.position.x = init.x;
-        sk.position.y = init.y + p * 0.4;
-        sk.position.z = init.z;
-
-        sk.children.forEach((obj) => {
-          if (obj.material) obj.material.opacity = 1;
         });
       });
     } else {

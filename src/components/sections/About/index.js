@@ -9,13 +9,13 @@
 //-- Imports ------------------------------------------------------------------
 import React from 'react';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 
 // Personal data — single source of truth for name, age, location, bio.
 import { userList } from '@/constants';
 
 // Avatar served from /public.
-import LogoFM from 'p/img/about/shadow_lion.png';
+// import LogoFM from 'p/img/about/shadow_lion.png';
 
 // CSS module: profile layout, biography typography, responsive tweaks.
 import style from './index.module.scss';
@@ -32,13 +32,13 @@ const SectionAbout = () => {
         {/* Profile column: avatar + quick info (name / age / location). */}
         <div className={style.profile_section}>
           <div className={style.profile_picture}>
-            <Image
+            {/* <Image
               src={LogoFM.src}
               alt={`${userList.firstName} ${userList.lastName}`}
               width={200}
               height={200}
               className={style.profile_image}
-            />
+            /> */}
           </div>
           <div className={style.profile_info}>
             <p>

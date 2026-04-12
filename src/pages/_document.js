@@ -32,7 +32,7 @@ function Document() {
         />
         {/* Actual font stylesheet — Nunito for body text, Orbitron for titles. */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Orbitron:wght@400;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400&family=Orbitron:wght@400;600&display=swap"
           rel="stylesheet"
         />
       </Head>

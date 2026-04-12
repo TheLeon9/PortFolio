@@ -14,8 +14,8 @@
 //=============================================================================
 
 //-- Imports ------------------------------------------------------------------
-// lil-gui is a tiny dat.GUI fork with no dependencies. Imported as default.
-import GUI from 'lil-gui';
+// lil-gui is loaded dynamically to keep it out of the production bundle.
+// It is only needed when the user activates debug mode via #debug in the URL.
 
 //-- Module-level state -------------------------------------------------------
 
@@ -39,9 +39,11 @@ let _setMainColor = null;
  * @param {Function} params.setMainColor    - optional React setter
  * @param {Function} params.refreshAllTextures - callback to repaint canvas textures
  */
-export const buildDebugGUI = ({ state, setMainColor, refreshAllTextures }) => {
+export const buildDebugGUI = async ({ state, setMainColor, refreshAllTextures }) => {
   // Bail out if the scene is not ready yet or if the panel is already built.
   if (!state?.uniforms || !state?.material || _gui) return;
+
+  const { default: GUI } = await import('lil-gui');
 
   _setMainColor = setMainColor || null;
   // Mirror the current colours into a plain object the GUI can mutate.

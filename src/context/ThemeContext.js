@@ -145,6 +145,7 @@ export const ThemeProvider = ({ children }) => {
   // Lazily create the <audio> element on mount and clean it up on unmount.
   useEffect(() => {
     audioRef.current = new Audio('/audio/ambiance.mp3');
+    audioRef.current.preload = 'none';
     audioRef.current.loop = true;
     audioRef.current.volume = 0.4;
 
