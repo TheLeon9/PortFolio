@@ -172,6 +172,7 @@ const Loader = ({ wobbleRef, wobblePlateRef, setLoader, textRef }) => {
           height={120}
           className={style.blue_circle}
           priority
+          fetchPriority="high"
         />
         <Image
           src={LogoWhiteAnimated}
@@ -180,6 +181,7 @@ const Loader = ({ wobbleRef, wobblePlateRef, setLoader, textRef }) => {
           height={120}
           className={style.loader_logo_white}
           priority
+          fetchPriority="high"
         />
         <div className={style.loader_text_cont}>
           <p className={style.loader_percentage}>{percentage}</p>

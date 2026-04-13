@@ -42,10 +42,10 @@ $border_width: 1px;
 $border_width_big: 2px;
 
 // -- Fonts ---------------------------------------------------------------------
-// Display font used for titles and labels.
-$first_font: 'Orbitron', sans-serif;
-// Body font used for paragraphs.
-$second_font: 'Nunito', sans-serif;
+// Display font used for titles and labels (CSS variable injected by next/font).
+$first_font: var(--font-orbitron, 'Orbitron'), sans-serif;
+// Body font used for paragraphs (CSS variable injected by next/font).
+$second_font: var(--font-nunito, 'Nunito'), sans-serif;
 // Bold weight used by titles and emphasis.
 $font_weight_bold: 600;
 // Default body weight.

@@ -21,9 +21,28 @@ import { ThemeProvider } from '@/context/ThemeContext.js';
 // Brand favicon served from /public.
 import Logo from 'p/img/logo/logo_fm_white.svg';
 
+// Self-hosted Google Fonts via next/font — eliminates the render-blocking
+// stylesheet request to fonts.googleapis.com.
+import { Orbitron, Nunito } from 'next/font/google';
+
 // Global stylesheets — `variables` first so the rules in `globals` can use them.
 import '@/styles/variables.scss';
 import '@/styles/globals.scss';
+
+//-- Font instances ------------------------------------------------------------
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  display: 'swap',
+  variable: '--font-orbitron',
+});
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['400'],
+  display: 'swap',
+  variable: '--font-nunito',
+});
 
 //-- Constants ----------------------------------------------------------------
 
@@ -45,7 +64,7 @@ const SITE_DESCRIPTION =
 function MyApp({ Component, pageProps }) {
   //-- Render -----------------------------------------------------------------
   return (
-    <>
+    <div className={`${orbitron.variable} ${nunito.variable}`}>
       <Head>
         {/* Standard tags */}
         <title>{SITE_TITLE}</title>
@@ -104,7 +123,7 @@ function MyApp({ Component, pageProps }) {
           <Component {...pageProps} />
         </Layout>
       </ThemeProvider>
-    </>
+    </div>
   );
 }
 

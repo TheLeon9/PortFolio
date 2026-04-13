@@ -20,22 +20,9 @@ function Document() {
   //-- Render -----------------------------------------------------------------
   return (
     <Html lang="fr">
-      <Head>
-        {/* Preconnect tells the browser to open the TCP/TLS handshake to the
-            font hosts before it actually needs them — saves ~100ms on the
-            first load. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        {/* Actual font stylesheet — Nunito for body text, Orbitron for titles. */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400&family=Orbitron:wght@400;600&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
+      {/* Fonts are now self-hosted via next/font in _app.js — no external
+          stylesheet needed. */}
+      <Head />
       <body>
         {/* `Main` is where the page content gets injected, `NextScript` ships
             the runtime + chunks. Their order matters for hydration. */}
